@@ -68,6 +68,7 @@
         "@electron-forge/plugin-webpack": "6.0.0-beta.61",
         "@types/react": "^17.0.26",
         "@types/react-dom": "^17.0.9",
+        "@types/tough-cookie": "^4.0.1",
         "@typescript-eslint/eslint-plugin": "^4.0.1",
         "@typescript-eslint/parser": "^4.0.1",
         "@vercel/webpack-asset-relocator-loader": "1.7.0",
@@ -83,9 +84,13 @@
     },
     "dependencies": {
         "electron-squirrel-startup": "^1.0.0",
+        "got": "^11.8.2",
+        "html-entities": "^2.3.2",
+        "keytar": "^7.7.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "sass": "^1.42.1",
-        "sass-loader": "^12.1.0"
+        "sass-loader": "^12.1.0",
+        "tough-cookie": "^4.0.0"
     }
 }
