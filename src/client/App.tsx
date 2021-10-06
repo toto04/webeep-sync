@@ -14,10 +14,12 @@ let App: FC = () => {
     let [username, setUser] = useState<string>()
 
     useEffect(() => {
-        ipcRenderer.on('login-return', (e, success: boolean) => {
+        ipcRenderer.on('login-return', (e, success: boolean, username?: string) => {
             setLogging(false)
             setLogged(success)
+            setUser(username)
         })
+        ipcRenderer.send('credentials')
     }, [])
 
     return <div className="App">

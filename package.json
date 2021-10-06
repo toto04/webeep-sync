@@ -2,7 +2,7 @@
     "name": "webeep-sync",
     "productName": "webeep-sync",
     "version": "1.0.0",
-    "description": "My Electron application description",
+    "description": "keep your webeep files synced",
     "main": ".webpack/main",
     "scripts": {
         "start": "electron-forge start",
@@ -87,8 +87,10 @@
         "got": "^11.8.2",
         "html-entities": "^2.3.2",
         "keytar": "^7.7.0",
+        "lowdb": "^3.0.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-icons": "^4.3.1",
         "sass": "^1.42.1",
         "sass-loader": "^12.1.0",
         "tough-cookie": "^4.0.0"

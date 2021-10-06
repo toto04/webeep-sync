@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, IpcRendererEvent } from 'electron'
 import { Modal } from './components/Modal'
 
 export let LoginModal: FC<{ onClose: () => void }> = (props) => {
@@ -8,10 +8,12 @@ export let LoginModal: FC<{ onClose: () => void }> = (props) => {
     let [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        ipcRenderer.on('login-return', (e, success: boolean) => {
+        let listener = (e: IpcRendererEvent, success: boolean) => {
             setLoading(false)
             if (success) props.onClose()
-        })
+        }
+        ipcRenderer.on('login-return', listener)
+        return () => { ipcRenderer.removeListener('login-return', listener) }
     }, [])
 
     return <Modal onClose={() => props.onClose()}>
