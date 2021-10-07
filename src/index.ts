@@ -18,6 +18,9 @@ const createWindow = (): void => {
         width: 800,
         autoHideMenuBar: true,
         titleBarStyle: 'hidden',
+        titleBarOverlay: true,
+        minHeight: 400,
+        minWidth: 600,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
@@ -26,6 +29,9 @@ const createWindow = (): void => {
 
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
+    loginManager.on('ready', () => {
+        mainWindow.webContents.send('refresh-credentials')
+    })
 }
 
 // This method will be called when Electron has finished
@@ -61,6 +67,6 @@ ipcMain.on('credentials', e => {
 })
 
 ipcMain.on('logout', async e => {
-    loginManager.logout
+    await loginManager.logout()
     e.reply('login-return', false)
 })

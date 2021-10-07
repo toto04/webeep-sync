@@ -1,6 +1,8 @@
 @import url("./assets/fonts/fonts.scss");
 
 $system-blue: #0a84ff;
+$danger: #ff3b30;
+$danger-less: #cc2f2741;
 $bright: #40c8e0;
 $bright-less: #30b0c741;
 $accent: #ff9500;
@@ -16,13 +18,13 @@ body {
 .headbar {
     font-family: "Poppins", sans-serif;
     padding: 6px;
-    height: 28px;
+    height: 30px;
     box-sizing: border-box;
     -webkit-app-region: drag;
     user-select: none;
     text-align: center;
     vertical-align: middle;
-    font-size: 0.8em;
+    font-size: 0.9em;
     font-weight: bold;
 }
 
@@ -36,7 +38,7 @@ body {
         }
     }
     position: fixed;
-    top: 28px;
+    top: 30px;
     left: 0;
     display: flex;
     justify-content: center;
@@ -91,9 +93,12 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 8px 12px;
+    margin: 4px 8px;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: $very-light-gray;
     svg {
-        margin: 4px;
+        cursor: pointer;
         width: 24px;
         height: 24px;
     }
@@ -107,6 +112,44 @@ body {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+        justify-content: space-between;
+        span {
+            display: block;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+    }
+}
+
+.settings {
+    padding: 12px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    h3 {
+        margin: 0;
+        margin-bottom: 10px;
+        font-family: "Poppins";
+    }
+}
+
+.button-line-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+    button {
+        margin: 0;
+    }
+}
+
+button {
+    transition: all 0.3s ease-in-out;
+    &:hover {
+        filter: brightness(92%);
     }
 }
 
@@ -117,10 +160,36 @@ body {
     background-color: $bright;
     color: white;
     border: 0;
-    padding: 6px 12px;
+    padding: 6px 15px;
     font-size: 0.9em;
     border-radius: 8px;
-    box-shadow: 0px 0px 5px 2px $bright-less;
+    box-shadow: 0px 0px 6px 3px $bright-less;
+}
+
+.discard-button {
+    cursor: pointer;
+    box-sizing: border-box;
+    margin: auto;
+    background-color: $almost-white;
+    color: black;
+    border: 0;
+    padding: 6px 15px;
+    font-size: 0.9em;
+    border-radius: 8px;
+    box-shadow: 0px 0px 6px 3px #0002;
+}
+
+.danger-button {
+    cursor: pointer;
+    box-sizing: border-box;
+    margin: auto;
+    background-color: $danger;
+    color: white;
+    border: 0;
+    padding: 6px 15px;
+    font-size: 0.9em;
+    border-radius: 8px;
+    box-shadow: 0px 0px 6px 3px $danger-less;
 }
 
 .text-button {

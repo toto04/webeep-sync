@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events'
 import keytar from 'keytar'
 import got from 'got'
 import { CookieJar } from 'tough-cookie'
@@ -18,37 +19,46 @@ type TokenResult = {
     code: TokenStatusCode.login_error | TokenStatusCode.network_error
 }
 
-class LoginManager {
-    login: string
+class LoginManager extends EventEmitter {
+    login?: string = '...' // just to avoid an ugly undefined while loading
     password: string
     token: string
 
-    isLogged: boolean = false
+    isLogged: boolean = true
     expiring: boolean = false
 
     constructor() {
+        super()
         store.read().then(async () => {
-            // TODO: update UI when login is verified
             // get the credentials from storage on startup
-            let login = store.data.login
-            if (!login) return
-            let password = await keytar.getPassword('webeep-sync', login)
-            if (!password) return
-            this.login = login
-            this.password = password
-            console.log('restoring login as ' + login + '  ' + password)
-
-            let tknres = await this.refreshToken()
-            console.log('login status: ' + TokenStatusCode[tknres.code])
-            if (tknres.code !== TokenStatusCode.login_error) {
-                // keeps the app logged in the case of a network_error
-                // a new token will be requested as soon as internet connection is re-established
-                this.token = tknres.code === TokenStatusCode.success
-                    ? tknres.token
-                    : await keytar.getPassword('webeep-sync', 'moodle_token')
-                this.isLogged = true
+            if (!await this.restoreSession()) {
+                this.login = undefined
+                this.isLogged = false
             }
+            this.emit('ready')
         })
+    }
+
+    private async restoreSession(): Promise<boolean> {
+        let login = store.data.login
+        if (!login) return false
+        let password = await keytar.getPassword('webeep-sync', login)
+        if (!password) return false
+        this.login = login
+        this.password = password
+        console.log('restoring login as ' + login)
+
+        let tknres = await this.refreshToken()
+        console.log('login status: ' + TokenStatusCode[tknres.code])
+        if (tknres.code !== TokenStatusCode.login_error) {
+            // keeps the app logged in the case of a network_error
+            // a new token will be requested as soon as internet connection is re-established
+            this.token = tknres.code === TokenStatusCode.success
+                ? tknres.token
+                : await keytar.getPassword('webeep-sync', 'moodle_token')
+            this.isLogged = true
+            return true
+        } else return false
     }
 
     async updateCredentials(login: string, password: string) {
@@ -75,6 +85,12 @@ class LoginManager {
 
     async logout() {
         this.isLogged = false
+        store.data.login = undefined
+        await Promise.all([
+            store.write(),
+            this.login ? keytar.deletePassword('webeep-sync', this.login) : undefined
+        ])
+        delete this.login
     }
 
     async refreshToken(): Promise<TokenResult> {

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { ipcRenderer, IpcRendererEvent } from 'electron'
-import { Modal } from './components/Modal'
+import { Modal } from '../components/Modal'
 
 export let LoginModal: FC<{ onClose: () => void }> = (props) => {
     let [login, setLogin] = useState('');
