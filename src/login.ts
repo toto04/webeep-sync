@@ -6,7 +6,7 @@ import { decode } from 'html-entities'
 
 import { store } from './store'
 
-enum TokenStatusCode {
+export enum TokenStatusCode {
     success,
     network_error,
     login_error
@@ -20,6 +20,7 @@ type TokenResult = {
 }
 
 class LoginManager extends EventEmitter {
+    ready: boolean = false
     login?: string = '...' // just to avoid an ugly undefined while loading
     password: string
     token: string
@@ -35,6 +36,7 @@ class LoginManager extends EventEmitter {
                 this.login = undefined
                 this.isLogged = false
             }
+            this.ready = true
             this.emit('ready')
         })
     }

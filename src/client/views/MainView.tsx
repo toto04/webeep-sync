@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react'
-import { IoSettingsSharp, IoTime } from 'react-icons/io5'
+import { IoSettingsSharp, IoWarning } from 'react-icons/io5'
 import { LoginContext } from '../LoginContext'
 
 export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
@@ -10,16 +10,25 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
             <span>last synced</span>
             <h1>1 minute ago</h1>
         </div>
+        <button className="sync-now confirm-button">
+            sync<br /> now
+        </button>
         <div className="user-status">
             <div className="login-info">
                 {isLogged
-                    ? <span>{username}</span>
+                    ? <span>
+                        {expiring
+                            ? <IoWarning title={'your password is expiring'} className="warning" />
+                            : undefined
+                        }
+                        {username}
+                    </span>
                     : <a className="text-button" onClick={() => props.onLogin()}>
                         Accedi...
                     </a>
                 }
             </div>
-            <IoSettingsSharp onClick={() => props.onSettings()} />
+            <IoSettingsSharp className="clickable" onClick={() => props.onSettings()} />
         </div>
     </div>
 }
