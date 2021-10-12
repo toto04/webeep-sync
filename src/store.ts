@@ -3,7 +3,6 @@ import { app } from 'electron'
 import { Low, JSONFile } from 'lowdb'
 
 interface Store {
-    login?: string
     settings: {}
 }
 

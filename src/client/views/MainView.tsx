@@ -3,7 +3,7 @@ import { IoSettingsSharp, IoWarning } from 'react-icons/io5'
 import { LoginContext } from '../LoginContext'
 
 export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
-    let { isLogged, expiring, username } = useContext(LoginContext)
+    let { isLogged, username } = useContext(LoginContext)
     return <div className="main-view">
         <div className="sync-status">
             {/* <IoTime /> */}
@@ -17,10 +17,6 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
             <div className="login-info">
                 {isLogged
                     ? <span>
-                        {expiring
-                            ? <IoWarning title={'your password is expiring'} className="warning" />
-                            : undefined
-                        }
                         {username}
                     </span>
                     : <a className="text-button" onClick={() => props.onLogin()}>

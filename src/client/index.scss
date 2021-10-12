@@ -118,6 +118,8 @@ svg.warning {
             backdrop-filter: blur(2px) brightness(98%);
         }
     }
+    $modal-anim-time: 0.15s;
+
     z-index: 10;
     position: fixed;
     top: $headbar-height;
@@ -127,7 +129,7 @@ svg.warning {
     align-items: center;
     width: 100vw;
     height: calc(100vh - $headbar-height);
-    animation: modal-backdrop 0.2s cubic-bezier(0.5, 0.5, 0, 1);
+    animation: modal-backdrop $modal-anim-time cubic-bezier(0.5, 0.5, 0, 1);
     backdrop-filter: blur(2px) brightness(98%);
     .modal {
         @keyframes modal-opacity {
@@ -138,7 +140,7 @@ svg.warning {
                 opacity: 1;
             }
         }
-        animation: modal-opacity 0.2s cubic-bezier(0.5, 0.5, 0, 1);
+        animation: modal-opacity $modal-anim-time cubic-bezier(0.5, 0.5, 0, 1);
         border-radius: 12px;
         box-shadow: 0px 0px 10px 5px #0002;
         overflow: hidden;
