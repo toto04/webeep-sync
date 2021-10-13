@@ -2,10 +2,12 @@ import path from 'path'
 import { EventEmitter } from 'events'
 import got from 'got'
 import { loginManager, } from './login'
+import { initalizeStore, store } from './store'
 
 export interface Course {
     id: number,
-    name: string
+    name: string,
+    shouldSync: boolean,
 }
 
 export interface FileInfo {
@@ -105,14 +107,29 @@ export class MoodleClient extends EventEmitter {
     async getCourses(): Promise<Course[]> {
         let userid = this.userid ?? await this.getUserID()
         try {
+            await initalizeStore()
+
+            // once the store is initialized fetch and parse the courses
             let courses: any[] = await this.call('core_enrol_get_users_courses', { userid }, false)
-            let c = courses.map(c => {
+            let c: Course[] = courses.map(c => {
                 let { id, fullname } = c
                 let name = fullname
                 let m = name.match(/\d+ - (.+) \(.+\)/)
                 if (m) name = m[1]
-                return { id, name }
+                return { id, name, shouldSync: store.data.settings.syncNewCourses }
             })
+
+            // initialize storage for new courses 
+            c.forEach(course => {
+                if (!store.data.courseState[course.id]) {
+                    let { shouldSync } = course
+                    store.data.courseState[course.id] = { shouldSync, syncedFiles: {} }
+                } else {
+                    course.shouldSync = store.data.courseState[course.id].shouldSync
+                }
+            })
+            store.write()
+
             this.cachedCourses = c
             return c
         } catch (e) {

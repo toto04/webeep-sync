@@ -7,7 +7,7 @@ $bright: #40c8e0;
 $bright-less: #30b0c741;
 $accent: #ff9500;
 $almost-white: #f5f5f5;
-$very-light-gray: #dedede;
+$very-light-gray: #e5e5e5;
 
 $headbar-height: 30px;
 
@@ -19,7 +19,7 @@ body {
 }
 
 button {
-    transition: filter 0.2s cubic-bezier(0.42, 0, 0.52, 0.89);
+    transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
     &:hover {
         filter: brightness(90%);
     }
@@ -87,6 +87,24 @@ svg.warning {
     width: 20px;
     height: 20px;
     color: $accent;
+}
+
+.checkbox {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    svg {
+        &.active {
+            color: $bright;
+        }
+        cursor: pointer;
+        height: 22px;
+        width: 22px;
+        path:hover {
+            box-shadow: 0px 0px 5px 2px #0002;
+        }
+    }
 }
 
 .App {
@@ -215,19 +233,30 @@ svg.warning {
     margin: 8px;
     border-radius: 8px;
     box-sizing: border-box;
-    background-color: $very-light-gray;
+    background-color: white;
     .course-row {
+        display: flex;
         position: relative;
+        align-items: center;
         box-sizing: border-box;
         padding: 4px 8px;
+        margin-bottom: 1px;
         &:not(:last-child)::before {
+            $bar-offset-left: 36px;
             content: "";
             position: absolute;
             box-sizing: border-box;
-            left: 2%;
-            width: 96%;
-            bottom: 0;
-            border-bottom: 1px solid white;
+            left: $bar-offset-left;
+            width: calc(98% - $bar-offset-left);
+            bottom: -1px;
+            border-bottom: 1px solid $very-light-gray;
+        }
+        .checkbox svg:not(.active) {
+            filter: brightness(90%) saturate(80%);
+        }
+        span {
+            margin-left: 6px;
+            vertical-align: middle;
         }
     }
 }
