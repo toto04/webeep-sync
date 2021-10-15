@@ -1,16 +1,22 @@
+import { ipcRenderer } from 'electron'
 import React, { FC, useContext } from 'react'
 import { IoSettingsSharp, IoWarning } from 'react-icons/io5'
 import { LoginContext } from '../LoginContext'
 
 export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
-    let { isLogged, username } = useContext(LoginContext)
+    let { isLogged, username, syncing } = useContext(LoginContext)
     return <div className="main-view">
         <div className="sync-status">
             {/* <IoTime /> */}
             <span>last synced</span>
             <h1>1 minute ago</h1>
         </div>
-        <button className="sync-now confirm-button">
+        <button
+            className={"sync-now " + (syncing ? 'danger-button' : 'confirm-button')}
+            onClick={() => {
+                ipcRenderer.send(syncing ? 'sync-stop' : 'sync-start')
+            }}
+        >
             sync<br /> now
         </button>
         <div className="user-status">

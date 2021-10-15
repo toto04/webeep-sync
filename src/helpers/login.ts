@@ -64,6 +64,7 @@ class LoginManager extends EventEmitter {
                 this.loginWindow = new BrowserWindow({
                     height: 600,
                     width: 1000,
+                    autoHideMenuBar: true,
                     frame: true,
                     parent: BrowserWindow.getAllWindows()[0],
                     webPreferences: {

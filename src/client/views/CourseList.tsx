@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Course } from '../../moodle'
+import { Course } from '../../helpers/moodle'
 import { CourseRow } from '../components/CourseRow'
 
 export let CourseList: FC<{ courses: Course[] }> = (props) => {

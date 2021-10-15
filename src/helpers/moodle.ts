@@ -121,11 +121,11 @@ export class MoodleClient extends EventEmitter {
 
             // initialize storage for new courses 
             c.forEach(course => {
-                if (!store.data.courseState[course.id]) {
+                if (!store.data.persistence.courses[course.id]) {
                     let { shouldSync } = course
-                    store.data.courseState[course.id] = { shouldSync, syncedFiles: {} }
+                    store.data.persistence.courses[course.id] = { shouldSync }
                 } else {
-                    course.shouldSync = store.data.courseState[course.id].shouldSync
+                    course.shouldSync = store.data.persistence.courses[course.id].shouldSync
                 }
             })
             store.write()
@@ -137,8 +137,9 @@ export class MoodleClient extends EventEmitter {
         }
     }
 
-    async getFileInfos(courseid: number): Promise<FileInfo[]> {
-        let contents: Contents = await this.call('core_course_get_contents', { courseid })
+    async getFileInfos(course: Course): Promise<FileInfo[]> {
+        // TODO: course custom folder name
+        let contents: Contents = await this.call('core_course_get_contents', { courseid: course.id })
         let files: FileInfo[] = []
         let mat = contents.find(c => c.name === 'Materiali')
         if (!mat) return []
@@ -148,11 +149,19 @@ export class MoodleClient extends EventEmitter {
             for (const file of contents) {
                 if (file.type === 'file') {
                     let { filename, filepath, filesize, fileurl, timecreated, timemodified } = file
-                    filepath = path.join(modulename, filepath)
-                    files.push({ filename, filepath, filesize, fileurl, timecreated, timemodified })
+                    filepath = path.join(course.name, modulename, filepath)
+                    files.push({
+                        filename,
+                        filepath,
+                        filesize,
+                        fileurl,
+                        timecreated,
+                        timemodified
+                    })
                 }
             }
         }
         return files
     }
 }
+export let moodleClient = new MoodleClient()

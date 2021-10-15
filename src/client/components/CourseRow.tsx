@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Checkbox } from './Checkbox'
-import { Course } from '../../moodle'
+import { Course } from '../../helpers/moodle'
 import { ipcRenderer } from 'electron'
 
 export let CourseRow: FC<{ course: Course, index: number }> = (props) => {

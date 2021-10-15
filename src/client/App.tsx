@@ -6,7 +6,7 @@ import './index.scss'
 import { LoginContext } from './LoginContext'
 import { MainView } from './views/MainView'
 import { SettingsModal } from './views/Settings'
-import { Course } from '../moodle'
+import { Course } from '../helpers/moodle'
 import { CourseList } from './views/CourseList'
 
 let App: FC = () => {
@@ -15,6 +15,7 @@ let App: FC = () => {
     let [isLogged, setLogged] = useState(false)
     let [username, setUser] = useState<string>('...')
 
+    let [syncing, setSyncing] = useState(false)
     let [courses, setCourses] = useState<Course[]>()
 
     useEffect(() => {
@@ -25,18 +26,14 @@ let App: FC = () => {
         })
         ipcRenderer.send('get-logged')
 
-        ipcRenderer.on('username', (e, username: string) => {
-            setUser(username)
-        })
-
-        ipcRenderer.on('courses-return', (e, courses: Course[]) => {
-            setCourses(courses)
-        })
+        ipcRenderer.on('username', (e, username: string) => setUser(username))
+        ipcRenderer.on('syncing', (e, sync: boolean) => setSyncing(sync))
+        ipcRenderer.on('courses-return', (e, courses: Course[]) => setCourses(courses))
         ipcRenderer.send('courses')
     }, [])
 
     return <div className="App">
-        <LoginContext.Provider value={{ isLogged, username }}>
+        <LoginContext.Provider value={{ isLogged, username, syncing }}>
             <div className="headbar">
                 WeBeep Sync
             </div>
@@ -45,7 +42,7 @@ let App: FC = () => {
         {setting ? <SettingsModal onClose={() => {
             setSetting(false)
         }} /> : undefined}
-        {courses ? <CourseList courses={courses} /> : undefined}
+        {(isLogged && courses) ? <CourseList courses={courses} /> : undefined}
     </div>
 }
 
