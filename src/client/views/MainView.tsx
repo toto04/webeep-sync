@@ -5,7 +5,7 @@ import { LoginContext } from '../LoginContext'
 
 export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
     let { isLogged, username, syncing } = useContext(LoginContext)
-    return <div className="main-view">
+    return <div className="main-view section">
         <div className="sync-status">
             {/* <IoTime /> */}
             <span>last synced</span>

@@ -5,6 +5,7 @@ import './index.scss'
 
 import { LoginContext } from './LoginContext'
 import { MainView } from './views/MainView'
+import { SyncStatus } from './views/SyncStatus'
 import { SettingsModal } from './views/Settings'
 import { Course } from '../helpers/moodle'
 import { CourseList } from './views/CourseList'
@@ -38,11 +39,12 @@ let App: FC = () => {
                 WeBeep Sync
             </div>
             <MainView onLogin={() => { ipcRenderer.send('request-login') }} onSettings={() => setSetting(true)} />
+            <SyncStatus />
+            {(isLogged && courses) ? <CourseList courses={courses} /> : undefined}
+            {setting ? <SettingsModal onClose={() => {
+                setSetting(false)
+            }} /> : undefined}
         </LoginContext.Provider>
-        {setting ? <SettingsModal onClose={() => {
-            setSetting(false)
-        }} /> : undefined}
-        {(isLogged && courses) ? <CourseList courses={courses} /> : undefined}
     </div>
 }
 

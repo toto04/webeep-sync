@@ -1,11 +1,12 @@
 @import url("./assets/fonts/fonts.scss");
 
 $system-blue: #0a84ff;
+$positive: #34c759;
 $danger: #ff3b30;
 $danger-less: #cc2f2741;
 $bright: #40c8e0;
 $bright-less: #30b0c741;
-$accent: #ff9500;
+$warning: #ff9500;
 $almost-white: #f5f5f5;
 $very-light-gray: #e5e5e5;
 
@@ -80,13 +81,19 @@ svg.clickable {
     &:hover {
         backdrop-filter: brightness(90%);
     }
+    &.danger {
+        color: $danger;
+    }
+    &.positive {
+        color: $positive;
+    }
 }
 
 svg.warning {
     padding-right: 4px;
     width: 20px;
     height: 20px;
-    color: $accent;
+    color: $warning;
 }
 
 .checkbox {
@@ -111,6 +118,7 @@ svg.warning {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    overflow: hidden;
 }
 
 .headbar {
@@ -165,30 +173,12 @@ svg.warning {
     }
 }
 
-.login {
-    padding: 12px;
+.section {
+    margin: 8px;
+    border-radius: 8px;
     background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 300px;
-    h3 {
-        margin: 0;
-        margin-bottom: 10px;
-        font-family: "Poppins";
-    }
-    label {
-        margin-bottom: 12px;
-    }
-    input {
-        box-sizing: border-box;
-        background-color: $very-light-gray;
-        padding: 4px;
-        border-radius: 4px;
-        width: 100%;
-        display: block;
-        border: none;
-    }
+    padding: 8px;
+    box-sizing: border-box;
 }
 
 .main-view {
@@ -196,10 +186,7 @@ svg.warning {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 4px 8px;
-    padding: 8px;
-    border-radius: 8px;
-    background-color: $very-light-gray;
+    margin-top: 4px;
     .sync-status {
         h1 {
             font-family: "Poppins";
@@ -228,12 +215,43 @@ svg.warning {
     }
 }
 
+.sync-status {
+    margin-top: 0;
+    margin-bottom: 0;
+    .sync-settings {
+        .autosync {
+            display: flex;
+            align-items: center;
+            span {
+                font-family: "Poppins", sans-serif;
+                font-weight: bold;
+                font-size: 1em;
+                margin-left: 4px;
+            }
+        }
+        .download-path {
+            margin-bottom: 8px;
+            h3 {
+                font-size: 1.1em;
+                font-family: "Poppins", sans-serif;
+                margin: 0;
+            }
+            span {
+                font-size: 0.8em;
+                display: block;
+                margin-bottom: 4px;
+            }
+            svg:first-of-type {
+                margin-right: 4px;
+            }
+        }
+    }
+}
+
 .course-container {
     flex: 1;
-    margin: 8px;
-    border-radius: 8px;
-    box-sizing: border-box;
-    background-color: white;
+    padding: 0;
+    overflow: auto;
     .course-row {
         display: flex;
         position: relative;

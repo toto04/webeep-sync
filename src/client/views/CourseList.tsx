@@ -3,7 +3,7 @@ import { Course } from '../../helpers/moodle'
 import { CourseRow } from '../components/CourseRow'
 
 export let CourseList: FC<{ courses: Course[] }> = (props) => {
-    return <div className="course-container">
+    return <div className="course-container section">
         {props.courses.map((course, i) => <CourseRow
             course={course}
             index={i}

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, protocol, } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, protocol, } from 'electron'
 import { loginManager } from './helpers/login'
 import { Course, moodleClient } from './helpers/moodle'
 import { initalizeStore, store } from './helpers/store'
@@ -101,3 +101,27 @@ ipcMain.on('set-should-sync', async (e, courseid: number, shouldSync: boolean) =
 
 ipcMain.on('sync-start', e => downloadManager.sync())
 ipcMain.on('sync-stop', e => downloadManager.stop())
+
+ipcMain.on('sync-status', async e => {
+    await initalizeStore()
+    e.reply('download-path', store.data.settings.downloadPath)
+    e.reply('autosync', store.data.settings.autosyncEnabled)
+})
+
+ipcMain.on('select-download-path', async e => {
+    let path = await dialog.showOpenDialog({
+        properties: ['openDirectory', 'createDirectory',],
+        title: 'select download folder'
+    })
+    if (!path.canceled) {
+        store.data.settings.downloadPath = path.filePaths[0]
+        e.reply('download-path', path.filePaths[0])
+        await store.write()
+    }
+})
+ipcMain.on('set-autosync', async (e, sync: boolean) => {
+    await initalizeStore()
+    store.data.settings.autosyncEnabled = sync
+    e.reply('autosync', sync)
+    await store.write()
+})

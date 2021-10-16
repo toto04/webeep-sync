@@ -5,6 +5,7 @@ import { Low, JSONFile } from 'lowdb'
 export interface Settings {
     syncNewCourses?: boolean
     downloadPath?: string
+    autosyncEnabled?: boolean
 }
 
 export interface Persistence {
@@ -30,7 +31,8 @@ export interface Store {
 
 export const defaultSettings: Required<Settings> = {
     syncNewCourses: true,
-    downloadPath: path.join(app.getPath('documents'), '/WeBeep Sync/')
+    downloadPath: path.join(app.getPath('documents'), '/WeBeep Sync/'),
+    autosyncEnabled: true,
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')
