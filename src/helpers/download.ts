@@ -12,7 +12,23 @@ export declare interface DownloadManager {
 }
 export class DownloadManager extends EventEmitter {
     private stopped: boolean = false
+    syncing: boolean = false
     currentRequest?: CancelableRequest
+
+    constructor() {
+        super()
+        initalizeStore().then(() => {
+            setTimeout(() => {
+                let autosync = () => {
+                    if (!store.data.settings.autosyncEnabled) return
+                    let dt = Date.now() - store.data.persistence.lastSynced ?? 0
+                    if (dt > store.data.settings.autosyncInterval && !this.syncing)
+                        this.sync()
+                }
+                setInterval(() => autosync(), 60000) // try autosync every minute
+            }, Date.now() % 60000) // align the timer with the tick of the minute
+        })
+    }
 
     async stop() {
         if (!this.stopped) {
@@ -23,9 +39,15 @@ export class DownloadManager extends EventEmitter {
 
     async sync(): Promise<boolean> {
         console.log('started syncing')
+        this.syncing = true
         this.emit('sync')
         let result = await this._sync()
         console.log('finished syncing, res: ' + result)
+        if (result) {
+            store.data.persistence.lastSynced = Date.now()
+            store.write()
+        }
+        this.syncing = false
         this.emit('stop')
         return result
     }
@@ -77,7 +99,9 @@ export class DownloadManager extends EventEmitter {
                         store.write()
                     })
                 })
-            } catch (e) { }
+            } catch (e) {
+                return false
+            }
         }
         return true
     }

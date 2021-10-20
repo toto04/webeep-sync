@@ -125,3 +125,19 @@ ipcMain.on('set-autosync', async (e, sync: boolean) => {
     e.reply('autosync', sync)
     await store.write()
 })
+
+ipcMain.handle('lastsynced', e => {
+    return store.data.persistence.lastSynced
+})
+
+ipcMain.handle('settings', e => {
+    let settingsCopy = { ...store.data.settings }
+    // this two settings are not managed in the settings menu
+    delete settingsCopy.autosyncEnabled
+    delete settingsCopy.downloadPath
+    return settingsCopy
+})
+ipcMain.handle('set-settings', async (e, newSettings) => {
+    store.data.settings = { ...store.data.settings, ...newSettings }
+    await store.write()
+})

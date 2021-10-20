@@ -1,11 +1,12 @@
 import path from 'path'
-import { app, session } from 'electron'
+import { app } from 'electron'
 import { Low, JSONFile } from 'lowdb'
 
 export interface Settings {
     syncNewCourses?: boolean
     downloadPath?: string
     autosyncEnabled?: boolean
+    autosyncInterval?: number
 }
 
 export interface Persistence {
@@ -33,6 +34,7 @@ export const defaultSettings: Required<Settings> = {
     syncNewCourses: true,
     downloadPath: path.join(app.getPath('documents'), '/WeBeep Sync/'),
     autosyncEnabled: true,
+    autosyncInterval: 2 * 60 * 60 * 1000,
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')
