@@ -41,6 +41,7 @@ const createWindow = (): void => {
 
     downloadManager.on('sync', () => wc.send('syncing', true))
     downloadManager.on('stop', () => wc.send('syncing', false))
+    downloadManager.on('progress', progress => wc.send('progress', progress))
 }
 
 // This method will be called when Electron has finished
@@ -73,6 +74,7 @@ let coursesCache: Course[] = []
 ipcMain.on('get-logged', e => {
     e.reply('is-logged', loginManager.isLogged)
     e.reply('username', moodleClient.username)
+    e.reply('syncing', downloadManager.syncing)
 })
 
 ipcMain.on('logout', async e => {

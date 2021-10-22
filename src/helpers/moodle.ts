@@ -72,7 +72,8 @@ export class MoodleClient extends EventEmitter {
                 if (logged) return await this.call(wsfunction, data)
             } else return parsed
         } catch (e) {
-            console.log(e)
+            delete e.timings
+            console.error(e)
             if (catchNetworkError) {
                 this.connected = false
                 this.emit('disconnected')

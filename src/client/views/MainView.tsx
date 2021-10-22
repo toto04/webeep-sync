@@ -35,7 +35,7 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
     }, [])
 
     return <div className="main-view section">
-        <div className="sync-status">
+        <div className="last-synced">
             {/* <IoTime /> */}
             <span>last synced</span>
             <h1>{elapsedTime}</h1>

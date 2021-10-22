@@ -46,10 +46,16 @@ export async function initalizeStore() {
     if (!initialized) {
         await store.read()
         if (!store.data.settings) store.data.settings = {}
-        if (!store.data.persistence) store.data.persistence = {
-            courses: {},
-            syncedFiles: {},
+        if (!store.data.persistence) {
+            store.data.persistence = {
+                courses: {},
+                syncedFiles: {},
+            }
+        } else {
+            if (!store.data.persistence.courses) store.data.persistence.courses = {}
+            if (!store.data.persistence.syncedFiles) store.data.persistence.syncedFiles = {}
         }
+
         let setting: keyof Settings
         for (setting in defaultSettings) {
             if (store.data.settings[setting] === undefined)
