@@ -158,5 +158,11 @@ export class DownloadManager extends EventEmitter {
         }
         return filesToDownload
     }
+
+    async setAutosync(sync: boolean) {
+        await initalizeStore()
+        store.data.settings.autosyncEnabled = sync
+        store.write()
+    }
 }
 export let downloadManager = new DownloadManager()

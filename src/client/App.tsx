@@ -15,8 +15,9 @@ let App: FC = () => {
 
     let [isLogged, setLogged] = useState(false)
     let [username, setUser] = useState<string>('...')
-
     let [syncing, setSyncing] = useState(false)
+    let [connected, setConnected] = useState(true)
+
     let [courses, setCourses] = useState<Course[]>()
 
     useEffect(() => {
@@ -25,16 +26,17 @@ let App: FC = () => {
             setLogged(success)
             if (success) ipcRenderer.send('courses')
         })
-        ipcRenderer.send('get-logged')
+        ipcRenderer.send('get-context')
 
         ipcRenderer.on('username', (e, username: string) => setUser(username))
         ipcRenderer.on('syncing', (e, sync: boolean) => setSyncing(sync))
+        ipcRenderer.on('network_event', (e, conn: boolean) => setConnected(conn))
         ipcRenderer.on('courses-return', (e, courses: Course[]) => setCourses(courses))
         ipcRenderer.send('courses')
     }, [])
 
     return <div className="App">
-        <LoginContext.Provider value={{ isLogged, username, syncing }}>
+        <LoginContext.Provider value={{ isLogged, username, syncing, connected }}>
             <div className="headbar">
                 WeBeep Sync
             </div>

@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { IoSettingsSharp } from 'react-icons/io5'
+import { IoSettingsSharp, IoWarning } from 'react-icons/io5'
 import { LoginContext } from '../LoginContext'
 
 function readableTime(lastSynced?: number): string {
@@ -20,7 +20,8 @@ function readableTime(lastSynced?: number): string {
 }
 
 export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
-    let { isLogged, username, syncing } = useContext(LoginContext)
+    let { isLogged, username, syncing, connected } = useContext(LoginContext)
+
 
     let [elapsedTime, setElapsedTime] = useState('...')
 
@@ -36,7 +37,6 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
 
     return <div className="main-view section">
         <div className="last-synced">
-            {/* <IoTime /> */}
             <span>last synced</span>
             <h1>{elapsedTime}</h1>
         </div>
@@ -51,6 +51,7 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
         </button>
         <div className="user-status">
             <div className="login-info">
+                {connected ? undefined : <IoWarning className="warning" title="not connected" />}
                 {isLogged
                     ? <span>
                         {username}

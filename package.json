@@ -3,6 +3,10 @@
     "productName": "webeep-sync",
     "version": "1.0.0",
     "description": "keep your webeep files synced",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/toto04/webeep-sync.git"
+    },
     "main": ".webpack/main",
     "scripts": {
         "start": "electron-forge start",

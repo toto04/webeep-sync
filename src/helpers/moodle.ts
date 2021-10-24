@@ -52,7 +52,7 @@ export class MoodleClient extends EventEmitter {
     }
 
     async call(wsfunction: string, data?: { [key: string]: any }, catchNetworkError: boolean = true): Promise<any> {
-        if (!this.connected) return
+        if (catchNetworkError && !this.connected) return
         if (!loginManager.isLogged) return
         try {
             // TODO: test network problems

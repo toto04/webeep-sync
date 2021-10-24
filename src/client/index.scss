@@ -266,8 +266,12 @@ svg.warning {
         flex-direction: column;
         align-items: flex-end;
         justify-content: space-between;
-        span {
+        .login-info {
             display: flex;
+            align-items: center;
+        }
+        span {
+            display: inline-flex;
             font-size: 1.1em;
             font-weight: bold;
         }
