@@ -45,6 +45,13 @@ let initialized = false
 export async function initalizeStore() {
     if (!initialized) {
         await store.read()
+        if (!store.data) store.data = {
+            settings: {},
+            persistence: {
+                courses: {},
+                syncedFiles: {},
+            }
+        }
         if (!store.data.settings) store.data.settings = {}
         if (!store.data.persistence) {
             store.data.persistence = {

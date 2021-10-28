@@ -24,6 +24,7 @@ downloadManager.on('sync', () => updateTrayContext())
 downloadManager.on('stop', () => updateTrayContext())
 
 const createWindow = (): void => {
+    app.dock.show()
     // Create the browser window.
     const mainWindow = new BrowserWindow({
         height: 600,
@@ -66,9 +67,10 @@ function focus() {
 
 function setupTray() {
     tray = new Tray(trayPath)
-    tray.setTitle('yourmom')
     tray.setToolTip('Webeep Sync')
-    tray.on('click', () => focus())
+    tray.on('click', () => {
+        process.platform === 'win32' ? focus() : undefined
+    })
 }
 
 async function updateTrayContext() {
@@ -112,6 +114,7 @@ app.on('ready', async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+    app.dock.hide()
     // app.quit()
 })
 
