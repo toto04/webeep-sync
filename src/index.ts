@@ -10,6 +10,7 @@ import { DownloadManager, downloadManager } from './helpers/download'
 // plugin that tells the Electron app where to look for the Webpack-bundled app code (depending on
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
+const __static = path.join(__dirname, 'static')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -17,14 +18,14 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 let tray: Tray = null
-let iconPath = path.join(app.getAppPath(), '/src/client/assets/images/icon.png')
-let trayPath = path.join(app.getAppPath(), '/src/client/assets/images/tray.png')
+let iconImg = nativeImage.createFromPath(path.join(__static, '/icons/icon.png'))
+let trayImg = nativeImage.createFromPath(path.join(__static, '/icons/tray.png'))
 
 downloadManager.on('sync', () => updateTrayContext())
 downloadManager.on('stop', () => updateTrayContext())
 
 const createWindow = (): void => {
-    app.dock.show()
+    app.dock?.show()
     // Create the browser window.
     const mainWindow = new BrowserWindow({
         height: 600,
@@ -38,7 +39,7 @@ const createWindow = (): void => {
             nodeIntegration: true,
             contextIsolation: false
         },
-        icon: iconPath
+        icon: iconImg
     })
 
     const send = (channel: string, ...args: any[]) => {
@@ -66,7 +67,7 @@ function focus() {
 }
 
 function setupTray() {
-    tray = new Tray(trayPath)
+    tray = new Tray(trayImg)
     tray.setToolTip('Webeep Sync')
     tray.on('click', () => {
         process.platform === 'win32' ? focus() : undefined
@@ -89,7 +90,7 @@ async function updateTrayContext() {
         },
         {
             label: 'turn autosync ' + (ae ? 'off' : 'on'),
-            icon: path.join(app.getAppPath(), '/src/client/assets/images/', ae ? 'pause.png' : 'play.png'),
+            icon: path.join(__static, 'icons', ae ? 'pause.png' : 'play.png'),
             click: async () => {
                 await downloadManager.setAutosync(!ae)
                 BrowserWindow.getAllWindows()[0]?.webContents.send('autosync', !ae)
@@ -114,7 +115,7 @@ app.on('ready', async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-    app.dock.hide()
+    app.dock?.hide()
     // app.quit()
 })
 
