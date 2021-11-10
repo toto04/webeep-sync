@@ -8,8 +8,33 @@ module.exports = {
         name: "@electron-forge/maker-squirrel",
         config: { "name": "webeep_sync" }
     }, {
-        name: "@electron-forge/maker-zip",
-        platforms: ["darwin"]
+        name: "@electron-forge/maker-dmg",
+        config: {
+            format: "ULFO",
+            overwrite: true,
+            background: path.resolve(__dirname, "static/dmg/bg@2x.png"),
+            icon: path.resolve(__dirname, "static/dmg/icon.icns"),
+            contents: [
+                {
+                    path: path.resolve(__dirname, 'out/WeBeep Sync-darwin-x64/WeBeep Sync.app'),
+                    type: 'file',
+                    x: 120,
+                    y: 90,
+                },
+                {
+                    path: '/Applications',
+                    type: 'link',
+                    x: 380,
+                    y: 90
+                }
+            ],
+            additionalDMGOptions: {
+                window: {
+                    size: { height: 200, width: 500 }
+                }
+            },
+            platforms: ["darwin"]
+        }
     }, {
         name: "@electron-forge/maker-deb",
         config: {}
