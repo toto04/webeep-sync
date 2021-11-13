@@ -1,4 +1,5 @@
 const path = require('path')
+require('dotenv').config()
 
 module.exports = {
     packagerConfig: {
@@ -6,7 +7,12 @@ module.exports = {
     },
     makers: [{
         name: "@electron-forge/maker-squirrel",
-        config: { "name": "webeep_sync" }
+        config: {
+            name: "webeep-sync",
+            setupIcon: "./static/icons/icon.ico",
+            setupExe: "WeBeep Sync Windows Setup.exe",
+            loadingGif: "./static/icons/load.gif"
+        }
     }, {
         name: "@electron-forge/maker-dmg",
         config: {
@@ -29,9 +35,7 @@ module.exports = {
                 }
             ],
             additionalDMGOptions: {
-                window: {
-                    size: { height: 200, width: 500 }
-                }
+                window: { size: { height: 200, width: 500 } }
             },
             platforms: ["darwin"]
         }
@@ -41,6 +45,17 @@ module.exports = {
     }, {
         name: "@electron-forge/maker-rpm",
         config: {}
+    }],
+    publishers: [{
+        name: '@electron-forge/publisher-github',
+        config: {
+            repository: {
+                name: 'webeep-sync',
+                owner: 'toto04'
+            },
+            draft: true,
+            prerelease: true
+        }
     }],
     plugins: [[
         "@electron-forge/plugin-webpack",

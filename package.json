@@ -1,7 +1,7 @@
 {
     "name": "webeep-sync",
     "productName": "WeBeep Sync",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "keep your webeep files synced",
     "repository": {
         "type": "git",
@@ -16,7 +16,7 @@
         "lint": "eslint --ext .ts,.tsx ."
     },
     "keywords": [],
-    "author": "toto04",
+    "author": "Tommaso Morganti",
     "license": "MIT",
     "config": {
         "forge": "./forge.config.js"
@@ -29,6 +29,7 @@
         "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
         "@electron-forge/maker-zip": "^6.0.0-beta.61",
         "@electron-forge/plugin-webpack": "6.0.0-beta.61",
+        "@electron-forge/publisher-github": "^6.0.0-beta.61",
         "@types/react": "^17.0.26",
         "@types/react-dom": "^17.0.9",
         "@types/tough-cookie": "^4.0.1",
@@ -37,6 +38,7 @@
         "@vercel/webpack-asset-relocator-loader": "1.7.0",
         "copy-webpack-plugin": "^9.0.1",
         "css-loader": "^6.0.0",
+        "dotenv": "^10.0.0",
         "electron": "15.1.0",
         "eslint": "^7.6.0",
         "eslint-plugin-import": "^2.20.0",
