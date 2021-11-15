@@ -1,6 +1,6 @@
 import path from 'path'
 
-import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, protocol, Tray, } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, powerSaveBlocker, Tray, } from 'electron'
 import { loginManager } from './helpers/login'
 import { Course, moodleClient } from './helpers/moodle'
 import { initalizeStore, store } from './helpers/store'
@@ -26,8 +26,16 @@ let tray: Tray = null
 let iconImg = nativeImage.createFromPath(path.join(__static, '/icons/icon.ico'))
 let trayImg = nativeImage.createFromPath(path.join(__static, '/icons/tray.png'))
 
-downloadManager.on('sync', () => updateTrayContext())
-downloadManager.on('stop', () => updateTrayContext())
+let psbID: number
+
+downloadManager.on('sync', () => {
+    psbID = powerSaveBlocker.start('prevent-app-suspension')
+    updateTrayContext()
+})
+downloadManager.on('stop', () => {
+    if (powerSaveBlocker.isStarted(psbID)) powerSaveBlocker.stop(psbID)
+    updateTrayContext()
+})
 
 const createWindow = (): void => {
     app.dock?.show()
