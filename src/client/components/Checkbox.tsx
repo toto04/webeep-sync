@@ -1,6 +1,6 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import { IconType } from 'react-icons'
-import { IoAddCircleOutline, IoRemoveCircle } from 'react-icons/io5'
+import { IoCheckbox, IoSquareOutline } from 'react-icons/io5'
 
 interface CheckboxProps {
     value: boolean
@@ -11,8 +11,8 @@ interface CheckboxProps {
 }
 
 export let Checkbox: FC<CheckboxProps> = (props) => {
-    let PositiveIcon = props.PositiveIcon ?? IoRemoveCircle
-    let NegativeIcon = props.NegativeIcon ?? IoAddCircleOutline
+    let PositiveIcon = props.PositiveIcon ?? IoCheckbox
+    let NegativeIcon = props.NegativeIcon ?? IoSquareOutline
     return <div className="checkbox">
         {props.value
             ? <PositiveIcon className="active" onClick={() => props.onChange(false)} color={props.color} />

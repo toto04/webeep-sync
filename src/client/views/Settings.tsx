@@ -1,12 +1,24 @@
 import React, { FC, useEffect, useState } from 'react'
-import { ipcRenderer, IpcRendererEvent } from 'electron'
+import _Switch from 'react-switch'
+import { ipcRenderer } from 'electron'
 import { Modal } from '../components/Modal'
-import { Checkbox } from '../components/Checkbox'
 
 import { Settings } from '../../helpers/store'
-import { IoBag, IoCheckbox, IoSquareOutline } from 'react-icons/io5'
 
 const hour = 60 * 60 * 1000
+
+let Switch: FC<{ onChange: (v: boolean) => void, checked: boolean }> = props => {
+    return <_Switch
+        onChange={v => props.onChange(v)}
+        onColor={'#40c8e0'}
+        checkedIcon
+        uncheckedIcon
+        handleDiameter={16}
+        height={22}
+        width={40}
+        checked={props.checked}
+    />
+}
 
 export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
     let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath'>>()
@@ -34,11 +46,9 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
             </div>
             <div className="setting">
                 <span>Sync new courses when they are found</span>
-                <Checkbox
+                <Switch
                     onChange={v => { updateSettigns({ ...settings, syncNewCourses: v }) }}
-                    PositiveIcon={IoCheckbox}
-                    NegativeIcon={IoSquareOutline}
-                    value={settings.syncNewCourses}
+                    checked={settings.syncNewCourses}
                 />
             </div>
             <button className="danger-button" onClick={() => {

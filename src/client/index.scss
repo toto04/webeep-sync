@@ -72,13 +72,23 @@ button {
     color: $system-blue;
 }
 
-svg.clickable {
+.clickable {
     border-radius: 15%;
     cursor: pointer;
     padding: 2px;
-    width: 24px;
-    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
     transition: backdrop-filter 0.2s ease-in-out;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+    span {
+        font-size: 10px;
+    }
     &:hover {
         backdrop-filter: brightness(90%);
     }
@@ -121,7 +131,7 @@ svg.warning {
     overflow: hidden;
     width: 100%;
     background-color: white;
-    margin: 6px 0px;
+    margin-bottom: 6px;
     .progress-bar-inside {
         @keyframes progressbar {
             0% {
@@ -278,7 +288,56 @@ svg.warning {
     }
 }
 
-.sync-status {
+.sync-progress {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    margin-top: 0;
+    height: 130px;
+
+    h3 {
+        font-size: 1.1em;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+    }
+
+    .sync-progress-idle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        flex: 1;
+    }
+    .sync-progress-wrap {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 6px;
+        overflow: hidden;
+        .progress-container {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: stretch;
+        }
+        .right {
+            float: right;
+        }
+        h3 {
+            display: inline;
+            font-size: 1em;
+        }
+        .filename {
+            display: block;
+            font-weight: bold;
+        }
+    }
+}
+
+.sync-settings {
     display: flex;
     justify-content: space-between;
     margin-top: 0;
@@ -288,55 +347,27 @@ svg.warning {
         font-family: "Poppins", sans-serif;
         margin: 0;
     }
-    .sync-settings {
-        .autosync {
-            display: flex;
-            align-items: center;
-            span {
-                font-family: "Poppins", sans-serif;
-                font-weight: bold;
-                font-size: 1em;
-                margin-left: 4px;
-            }
+    .autosync {
+        display: flex;
+        align-items: center;
+        span {
+            font-family: "Poppins", sans-serif;
+            font-weight: bold;
+            font-size: 1em;
+            margin-left: 4px;
         }
-        svg {
-            margin-right: 4px;
-        }
-        .download-path {
-            margin-bottom: 8px;
-            span {
-                font-size: 0.8em;
-                display: block;
-                margin-bottom: 4px;
-            }
+        .clickable {
+            margin-left: 4px;
         }
     }
-    .sync-progress {
-        min-width: 300px;
-        max-width: 350px;
-        display: flex;
-        flex-direction: column;
-        .sync-progress-idle {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: $very-light-gray;
-            border-radius: 6px;
-            flex: 1;
+    .download-path {
+        .path {
+            font-size: 0.8em;
+            display: block;
+            margin-bottom: 4px;
         }
-        .sync-progress-wrap {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            justify-content: space-evenly;
-            background-color: $very-light-gray;
-            border-radius: 6px;
-            padding: 8px;
-            .right {
-                float: right;
-            }
+        .clickable {
+            margin-right: 4px;
         }
     }
 }

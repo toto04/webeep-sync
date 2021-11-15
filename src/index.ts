@@ -1,6 +1,6 @@
 import path from 'path'
-
 import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, powerSaveBlocker, Tray, } from 'electron'
+
 import { loginManager } from './helpers/login'
 import { Course, moodleClient } from './helpers/moodle'
 import { initalizeStore, store } from './helpers/store'
@@ -184,7 +184,7 @@ ipcMain.on('set-should-sync', async (e, courseid: number, shouldSync: boolean) =
 ipcMain.on('sync-start', e => downloadManager.sync())
 ipcMain.on('sync-stop', e => downloadManager.stop())
 
-ipcMain.on('sync-status', async e => {
+ipcMain.on('sync-settings', async e => {
     await initalizeStore()
     e.reply('download-path', store.data.settings.downloadPath)
     e.reply('autosync', store.data.settings.autosyncEnabled)

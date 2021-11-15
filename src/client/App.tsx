@@ -5,10 +5,11 @@ import './index.scss'
 
 import { LoginContext } from './LoginContext'
 import { MainView } from './views/MainView'
-import { SyncStatus } from './views/SyncStatus'
+import { SyncSettings } from './views/SyncSettings'
 import { SettingsModal } from './views/Settings'
 import { Course } from '../helpers/moodle'
 import { CourseList } from './views/CourseList'
+import { SyncProgress } from './views/SyncProgress'
 
 let App: FC = () => {
     let [setting, setSetting] = useState(false)
@@ -41,7 +42,8 @@ let App: FC = () => {
                 WeBeep Sync
             </div>
             <MainView onLogin={() => { ipcRenderer.send('request-login') }} onSettings={() => setSetting(true)} />
-            <SyncStatus />
+            <SyncProgress />
+            <SyncSettings />
             {(isLogged && courses) ? <CourseList courses={courses} /> : undefined}
             {setting ? <SettingsModal onClose={() => {
                 setSetting(false)
