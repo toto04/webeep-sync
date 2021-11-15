@@ -23,7 +23,7 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 let tray: Tray = null
-let iconImg = nativeImage.createFromPath(path.join(__static, '/icons/icon.png'))
+let iconImg = nativeImage.createFromPath(path.join(__static, '/icons/icon.ico'))
 let trayImg = nativeImage.createFromPath(path.join(__static, '/icons/tray.png'))
 
 downloadManager.on('sync', () => updateTrayContext())

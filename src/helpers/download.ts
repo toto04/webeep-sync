@@ -1,5 +1,5 @@
 import path from 'path'
-import fs from 'fs'
+import fs from 'fs/promises'
 import { EventEmitter } from 'events'
 import got, { CancelableRequest } from 'got'
 import { FileInfo, moodleClient } from './moodle'
@@ -104,28 +104,10 @@ export class DownloadManager extends EventEmitter {
 
                 totalUntilNow += file.filesize
 
-                console.log('finished download for ' + fullpath)
-                console.log('writing to absolute path: ' + absolutePath)
-                fs.mkdir(path.dirname(absolutePath), { recursive: true }, (err) => {
-                    if (err) {
-                        this.stop()
-                        console.error(err)
-                        return
-                    }
-                    fs.writeFile(absolutePath, res.rawBody, err => {
-                        if (err) {
-                            this.stop()
-                            console.error(err)
-                            return
-                        }
-                        console.log('wrote to disk ' + fullpath)
-                        store.data.persistence.syncedFiles[fullpath] = {
-                            filesize: file.filesize,
-                            timecreated: file.timecreated,
-                            timemodified: file.timemodified
-                        }
-                        store.write()
-                    })
+                fs.mkdir(path.dirname(absolutePath), { recursive: true }).then(async () => {
+                    await fs.writeFile(absolutePath, res.rawBody)
+                    await fs.utimes(absolutePath, new Date(), new Date(file.timemodified * 1000))
+                    console.log('wrote to disk ' + fullpath)
                 })
 
             }
@@ -139,8 +121,10 @@ export class DownloadManager extends EventEmitter {
 
     async getFilesToDownload() {
         let cs = await moodleClient.getCourses()
+
         let filesToDownload: FileInfo[] = []
-        let { courses, syncedFiles } = store.data.persistence
+        let { courses } = store.data.persistence
+        let { downloadPath } = store.data.settings
 
         for (const c of cs) {
             if (!courses[c.id].shouldSync) continue
@@ -148,12 +132,17 @@ export class DownloadManager extends EventEmitter {
             let allfiles = await moodleClient.getFileInfos(c)
             for (const file of allfiles) {
                 const fullpath = path.join(file.filepath, file.filename)
-                const storedfilestate = syncedFiles[fullpath]
-                if (!storedfilestate
-                    || storedfilestate.filesize !== file.filesize
-                    || storedfilestate.timemodified !== file.timemodified
-                )
+                let absolutePath = path.join(downloadPath, fullpath)
+
+                try {
+                    let stats = await fs.stat(absolutePath)
+                    if (stats.mtime.getTime() / 1000 !== file.timemodified
+                        || stats.size !== file.filesize
+                    ) filesToDownload.push(file)
+                } catch (e) {
+                    // if the stats could not be retrieved, the file should be downloaded
                     filesToDownload.push(file)
+                }
             }
         }
         return filesToDownload

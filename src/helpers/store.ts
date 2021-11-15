@@ -15,13 +15,6 @@ export interface Persistence {
             shouldSync: boolean
         }
     }
-    syncedFiles: {
-        [filepath: string]: {
-            filesize: number
-            timecreated: number
-            timemodified: number
-        }
-    }
     lastSynced?: number
 }
 
@@ -33,7 +26,7 @@ export interface Store {
 export const defaultSettings: Required<Settings> = {
     syncNewCourses: true,
     downloadPath: path.join(app.getPath('documents'), '/WeBeep Sync/'),
-    autosyncEnabled: true,
+    autosyncEnabled: false,
     autosyncInterval: 2 * 60 * 60 * 1000,
 }
 
@@ -49,18 +42,15 @@ export async function initalizeStore() {
             settings: {},
             persistence: {
                 courses: {},
-                syncedFiles: {},
             }
         }
         if (!store.data.settings) store.data.settings = {}
         if (!store.data.persistence) {
             store.data.persistence = {
                 courses: {},
-                syncedFiles: {},
             }
         } else {
             if (!store.data.persistence.courses) store.data.persistence.courses = {}
-            if (!store.data.persistence.syncedFiles) store.data.persistence.syncedFiles = {}
         }
 
         let setting: keyof Settings
