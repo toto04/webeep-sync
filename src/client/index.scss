@@ -5,8 +5,8 @@ $system-blue: #0a84ff;
 $positive: #34c759;
 $danger: #ff3b30;
 $danger-less: #cc2f2741;
-$bright: #40c8e0;
-$bright-less: #30b0c741;
+$bright: #30d896;
+$bright-less: #00b89641;
 $warning: #ff9500;
 $almost-white: #f5f5f5;
 $very-light-gray: #e5e5e5;
@@ -143,7 +143,7 @@ svg.warning {
         }
         animation: progressbar 8s linear infinite;
         height: 100%;
-        background-image: linear-gradient(300deg, $bright, $system-blue, $bright);
+        background-image: linear-gradient(300deg, #40c8e0, $system-blue, #40c8e0);
         background-size: 400% 200%;
     }
 }
@@ -209,6 +209,7 @@ svg.warning {
 
 .section {
     margin: 8px;
+    margin-top: 0;
     border-radius: 8px;
     background-color: white;
     padding: 8px;
@@ -292,7 +293,6 @@ svg.warning {
     display: flex;
     overflow: hidden;
     flex-direction: column;
-    margin-top: 0;
     height: 130px;
 
     h3 {
@@ -341,33 +341,61 @@ svg.warning {
     display: flex;
     justify-content: space-between;
     margin-top: 0;
-    margin-bottom: 0;
+    background-color: $almost-white;
+    padding: 0;
+    gap: 8px;
+    div {
+        margin: 0;
+    }
     h3 {
         font-size: 1.1em;
         font-family: "Poppins", sans-serif;
         margin: 0;
     }
-    .autosync {
+    .download-path {
+        flex: 1;
         display: flex;
         align-items: center;
-        span {
-            font-family: "Poppins", sans-serif;
-            font-weight: bold;
-            font-size: 1em;
-            margin-left: 4px;
-        }
-        .clickable {
-            margin-left: 4px;
-        }
-    }
-    .download-path {
         .path {
             font-size: 0.8em;
             display: block;
-            margin-bottom: 4px;
         }
         .clickable {
-            margin-right: 4px;
+            margin-left: 6px;
+        }
+    }
+    .autosync {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        justify-content: center;
+        min-width: 200px;
+        .autosync-row {
+            display: flex;
+            justify-content: space-between;
+            border-radius: 4px;
+            &.disabled {
+                cursor: not-allowed;
+                color: #888;
+            }
+        }
+        select {
+            border: hidden;
+            background-color: $very-light-gray;
+            padding: 2px;
+            border-radius: 4px;
+            margin-left: 4px;
+            &:disabled {
+                cursor: not-allowed;
+            }
+        }
+        span {
+            vertical-align: middle;
+            font-size: 1em;
+        }
+        .clickable {
+            margin-left: 4px;
         }
     }
 }
@@ -445,6 +473,16 @@ svg.warning {
         }
         .checkbox {
             padding: 0;
+        }
+    }
+    .credits {
+        display: block;
+        font-size: 0.8em;
+        margin: 16px;
+        color: #888;
+        text-align: center;
+        a {
+            color: $system-blue;
         }
     }
 }

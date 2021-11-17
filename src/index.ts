@@ -188,6 +188,7 @@ ipcMain.on('sync-settings', async e => {
     await initalizeStore()
     e.reply('download-path', store.data.settings.downloadPath)
     e.reply('autosync', store.data.settings.autosyncEnabled)
+    e.reply('autosync-interval', store.data.settings.autosyncInterval)
 })
 
 ipcMain.on('select-download-path', async e => {
@@ -207,15 +208,22 @@ ipcMain.on('set-autosync', async (e, sync: boolean) => {
     await updateTrayContext()
 })
 
+ipcMain.on('set-autosync-interval', async (e, interval: number) => {
+    store.data.settings.autosyncInterval = interval
+    e.reply('autosync-interval', interval)
+    await store.write()
+})
+
 ipcMain.handle('lastsynced', e => {
     return store.data.persistence.lastSynced
 })
 
 ipcMain.handle('settings', e => {
     let settingsCopy = { ...store.data.settings }
-    // this two settings are not managed in the settings menu
+    // this three settings are not managed in the settings menu
     delete settingsCopy.autosyncEnabled
     delete settingsCopy.downloadPath
+    delete settingsCopy.autosyncInterval
     return settingsCopy
 })
 ipcMain.handle('set-settings', async (e, newSettings) => {

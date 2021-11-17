@@ -42,8 +42,8 @@ let App: FC = () => {
                 WeBeep Sync
             </div>
             <MainView onLogin={() => { ipcRenderer.send('request-login') }} onSettings={() => setSetting(true)} />
-            <SyncProgress />
             <SyncSettings />
+            <SyncProgress />
             {(isLogged && courses) ? <CourseList courses={courses} /> : undefined}
             {setting ? <SettingsModal onClose={() => {
                 setSetting(false)

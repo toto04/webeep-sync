@@ -5,12 +5,16 @@ import { Modal } from '../components/Modal'
 
 import { Settings } from '../../helpers/store'
 
-const hour = 60 * 60 * 1000
-
-let Switch: FC<{ onChange: (v: boolean) => void, checked: boolean }> = props => {
+export let Switch: FC<{
+    onChange: (v: boolean) => void
+    checked: boolean
+    onColor?: string
+    offColor?: string
+}> = props => {
     return <_Switch
         onChange={v => props.onChange(v)}
-        onColor={'#40c8e0'}
+        onColor={props.onColor ?? '#40c8e0'}
+        offColor={props.offColor}
         checkedIcon
         uncheckedIcon
         handleDiameter={16}
@@ -21,7 +25,7 @@ let Switch: FC<{ onChange: (v: boolean) => void, checked: boolean }> = props => 
 }
 
 export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
-    let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath'>>()
+    let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
 
     useEffect(() => {
         ipcRenderer.invoke('settings').then(s => updateSettigns(s))
@@ -30,20 +34,6 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
     return <Modal onClose={() => props.onClose()}>
         {settings ? <div className="settings">
             <h3>settings</h3>
-            <div className="setting">
-                <span>Autosync interval</span>
-                <select defaultValue={settings.autosyncInterval / hour} onChange={e => {
-                    updateSettigns({ ...settings, autosyncInterval: parseInt(e.target.value) * hour })
-                }}>
-                    <option value={1}>1 hour</option>
-                    <option value={2}>2 hours</option>
-                    <option value={8}>8 hours</option>
-                    <option value={12}>12 hours</option>
-                    <option value={24}>1 day</option>
-                    <option value={48}>2 days</option>
-                    <option value={168}>1 week</option>
-                </select>
-            </div>
             <div className="setting">
                 <span>Sync new courses when they are found</span>
                 <Switch
@@ -54,6 +44,14 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
             <button className="danger-button" onClick={() => {
                 ipcRenderer.send('logout')
             }}>log out</button>
+
+            {/* <span className="credits">
+                Developed by Tommaso Morganti • <a href="https://github.com/toto04">GitHub</a>
+                <br />
+                <a href="https://github.com/toto04/webeep-sync">Source code</a> •
+                <a href="https://github.com/toto04/webeep-sync/issues"> Report a Bug</a>
+            </span> */}
+
             <div className="button-line-container">
                 <button className="discard-button" onClick={() => props.onClose()}>annulla</button>
                 <button className="confirm-button" onClick={async () => {
