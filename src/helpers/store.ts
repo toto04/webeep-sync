@@ -1,4 +1,5 @@
 import path from 'path'
+import { EventEmitter } from 'events'
 import { app } from 'electron'
 import { Low, JSONFile } from 'lowdb'
 
@@ -34,9 +35,23 @@ let storePath = path.join(app.getPath('userData'), 'store.json')
 export let store = new Low<Store>(new JSONFile(storePath))
 
 let initialized = false
+let initializing = false
 
-export async function initalizeStore() {
-    if (!initialized) {
+let storeInitializationEE = new EventEmitter()
+
+export async function initalizeStore(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+        if (initialized) {
+            resolve()
+            return
+        }
+        if (initializing) {
+            storeInitializationEE.on('ready', () => resolve())
+            return
+        }
+
+        initializing = true
+
         await store.read()
         if (!store.data) store.data = {
             settings: {},
@@ -59,7 +74,9 @@ export async function initalizeStore() {
                 store.data.settings[setting] = defaultSettings[setting] as never // typescript's a bitch
         }
         await store.write()
+
         initialized = true
-    }
+        storeInitializationEE.emit('ready')
+    })
 }
 initalizeStore()
