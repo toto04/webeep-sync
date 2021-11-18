@@ -1,9 +1,26 @@
 import { ipcRenderer } from 'electron'
-import { FC, useContext, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { PrograssBar } from '../components/ProgressBar'
-import { Progress } from '../../helpers/download'
-import { LoginContext } from '../LoginContext'
 import React from 'react'
+
+import { DownloadState, SyncResult } from '../../util'
+import { NewFilesList, Progress } from '../../helpers/download'
+import { NewFilesModal } from './NewFilesModal'
+
+let statusMessages = [
+    'ready to download',
+    'fetching courses...',
+    'looking for new files to download...',
+    'downloading...'
+]
+
+let resultMessage = [
+    '', '', // the first two results in the enum are not accessible
+    'syncing aborted',
+    'cannot reach the server, check your connection or try again later',
+    'cannot write the file, do you have write permission to the download folder?',
+    'an unknown error has occured, try again later'
+]
 
 export function formatSize(size: number): string {
     let suxs = ['B', 'kB', 'MB', 'GB', 'TB']
@@ -16,19 +33,30 @@ export function formatSize(size: number): string {
 }
 
 export let SyncProgress: FC = props => {
-
-    let { syncing } = useContext(LoginContext)
     let [progress, setProgress] = useState<Progress>()
+    let [downloadState, setDownloadState] = useState<DownloadState>(DownloadState.idle)
+    let [syncResult, setSyncResult] = useState<SyncResult>()
+
+    let [viewingFiles, setViewingFiles] = useState(false)
+    let [newFilesList, setNewFilesList] = useState<NewFilesList>()
 
     useEffect(() => {
         ipcRenderer.on('progress', (e, progress: Progress) => setProgress(progress))
+        ipcRenderer.on('download-state', (e, state: DownloadState) => setDownloadState(state))
+        ipcRenderer.on('sync-result', (e, result: SyncResult) => setSyncResult(result))
+        ipcRenderer.on('new-files', (e, files: NewFilesList) => setNewFilesList(files))
     }, [])
 
     let filePercentage = progress?.fileDownloaded / progress?.fileTotal
     let percentage = progress?.downloaded / progress?.total
 
+    let numfiles = 0
+    for (let course in newFilesList) {
+        numfiles += newFilesList[course].length
+    }
+
     return <div className="sync-progress section">
-        {progress
+        {downloadState === DownloadState.downloading && progress
             ? <div className="sync-progress-wrap">
                 <div className="progress-container">
                     <span className="filename">
@@ -50,8 +78,31 @@ export let SyncProgress: FC = props => {
                 </div>
             </div>
             : <div className="sync-progress-idle">
-                <h3>{syncing ? 'waiting for download' : 'ready to sync'}</h3>
+                {
+                    syncResult === SyncResult.success
+                        ? <div className="new-files">
+                            <h3>{numfiles} new files downloaded</h3>
+                            <button
+                                className="confirm-button"
+                                onClick={() => setViewingFiles(true)}
+                                disabled={numfiles === 0}
+                            >
+                                view files
+                            </button>
+                        </div>
+                        : (downloadState === DownloadState.idle && syncResult
+                            ? <h3 className="error">{resultMessage[syncResult]}</h3>
+                            : <h3>{statusMessages[downloadState]}</h3>
+                        )
+                }
             </div>
         }
-    </div>
+        {viewingFiles
+            ? <NewFilesModal
+                files={newFilesList}
+                onClose={() => setViewingFiles(false)}
+            />
+            : undefined
+        }
+    </div >
 }

@@ -11,6 +11,7 @@ export interface Course {
 }
 
 export interface FileInfo {
+    coursename: string,
     filename: string,
     filepath: string,
     filesize: number,
@@ -140,7 +141,9 @@ export class MoodleClient extends EventEmitter {
 
     async getFileInfos(course: Course): Promise<FileInfo[]> {
         // TODO: course custom folder name
-        let contents: Contents = await this.call('core_course_get_contents', { courseid: course.id })
+        // This function should throw if the call cannot be made, so that the sync operation can halt
+        // when a connection is not avilable
+        let contents: Contents = await this.call('core_course_get_contents', { courseid: course.id }, false)
         let files: FileInfo[] = []
         let mat = contents.find(c => c.name === 'Materiali')
         if (!mat) return []
@@ -152,6 +155,7 @@ export class MoodleClient extends EventEmitter {
                     let { filename, filepath, filesize, fileurl, timecreated, timemodified } = file
                     filepath = path.join(course.name, modulename, filepath)
                     files.push({
+                        coursename: course.name,
                         filename,
                         filepath,
                         filesize,

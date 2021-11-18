@@ -2,7 +2,7 @@ import path from 'path'
 import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, powerSaveBlocker, Tray, } from 'electron'
 
 import { loginManager } from './helpers/login'
-import { Course, moodleClient } from './helpers/moodle'
+import { moodleClient } from './helpers/moodle'
 import { initalizeStore, store } from './helpers/store'
 import { downloadManager } from './helpers/download'
 
@@ -69,8 +69,15 @@ const createWindow = (): void => {
     if (moodleClient.username) send('username', moodleClient.username)
 
     downloadManager.on('sync', () => send('syncing', true))
-    downloadManager.on('stop', () => send('syncing', false))
+    downloadManager.on('stop', result => {
+        send('syncing', false)
+        send('sync-result', result)
+    })
     downloadManager.on('progress', progress => send('progress', progress))
+    downloadManager.on('state', state => send('download-state', state))
+    downloadManager.on('new-files', files => send('new-files', files))
+
+    moodleClient.on('reconnected', async () => send('courses-return', await moodleClient.getCourses()))
 }
 
 function focus() {
@@ -148,8 +155,6 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-let coursesCache: Course[] = []
-
 ipcMain.on('get-context', e => {
     e.reply('is-logged', loginManager.isLogged)
     e.reply('username', moodleClient.username)
@@ -162,13 +167,7 @@ ipcMain.on('logout', async e => {
 })
 
 ipcMain.on('courses', async e => {
-    try {
-        let c = await moodleClient.getCourses()
-        coursesCache = c
-        e.reply('courses-return', c)
-    } catch (err) {
-        e.reply('courses-return', coursesCache)
-    }
+    e.reply('courses-return', await moodleClient.getCourses())
 })
 
 ipcMain.on('request-login', async e => {

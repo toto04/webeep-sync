@@ -308,6 +308,22 @@ svg.warning {
         justify-content: center;
         border-radius: 6px;
         flex: 1;
+        .new-files {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        h3 {
+            max-width: 450px;
+            text-align: center;
+            &.error {
+                padding: 8px;
+                border-radius: 8px;
+                background-color: $very-light-gray;
+                color: $danger;
+            }
+        }
     }
     .sync-progress-wrap {
         flex: 1;
