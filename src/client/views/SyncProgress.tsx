@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react'
 import { PrograssBar } from '../components/ProgressBar'
 import React from 'react'
 
-import { DownloadState, SyncResult } from '../../util'
+import { DownloadState, formatSize, SyncResult } from '../../util'
 import { NewFilesList, Progress } from '../../helpers/download'
 import { NewFilesModal } from './NewFilesModal'
 
@@ -15,22 +15,12 @@ let statusMessages = [
 ]
 
 let resultMessage = [
-    '', '', // the first two results in the enum are not accessible
+    '', '', // the first two results in the enum are not accessible by the message
     'syncing aborted',
     'cannot reach the server, check your connection or try again later',
     'cannot write the file, do you have write permission to the download folder?',
     'an unknown error has occured, try again later'
 ]
-
-export function formatSize(size: number): string {
-    let suxs = ['B', 'kB', 'MB', 'GB', 'TB']
-    let i = 0;
-    while (size > 1000 && i < suxs.length - 1) {
-        size /= 1000
-        i++
-    }
-    return size.toFixed(1) + suxs[i]
-}
 
 export let SyncProgress: FC = props => {
     let [progress, setProgress] = useState<Progress>()
