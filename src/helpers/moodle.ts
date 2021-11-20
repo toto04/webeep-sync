@@ -99,6 +99,7 @@ export class MoodleClient extends EventEmitter {
 
     async getUserID() {
         let res = await this.call('core_webservice_get_site_info')
+        if (!res) throw new Error('Cannot retrieve userID, are you logged in?')
         let { userid, fullname }: { userid: number, fullname: string } = res
         this.username = fullname
         this.emit('username', fullname)
@@ -107,8 +108,8 @@ export class MoodleClient extends EventEmitter {
     }
 
     async getCourses(): Promise<Course[]> {
-        let userid = this.userid ?? await this.getUserID()
         try {
+            let userid = this.userid ?? await this.getUserID()
             await initalizeStore()
 
             // once the store is initialized fetch and parse the courses
