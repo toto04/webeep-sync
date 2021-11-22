@@ -40,7 +40,6 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
             <span>last synced</span>
             <h1>{elapsedTime}</h1>
         </div>
-        <div className="sync-now-border" />
         <button
             className={"sync-now " + (syncing ? 'discard-button' : 'confirm-button')}
             onClick={() => {
