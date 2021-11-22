@@ -18,6 +18,7 @@ export interface FileInfo {
     fileurl: string,
     timecreated: number,
     timemodified: number,
+    updating?: boolean, // set to true if the file is already downloaded, and is being updated
 }
 
 type Contents = {

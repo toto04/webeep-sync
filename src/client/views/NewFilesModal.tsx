@@ -10,30 +10,35 @@ import { shell } from 'electron'
 let NewFilesCourseCollapsable: FC<{ name: string, files: NewFilesList[string] }> = props => {
     let [isOpen, toggle] = useState(true)
     return <div className="course-collapsable">
-        <h4 onClick={() => {
-            toggle(!isOpen)
-        }}> {isOpen ? <IoCaretDown /> : <IoCaretForward />} {props.name} ({props.files.length})</h4>
-        {isOpen ? props.files.map(file => <div className="new-file">
-            <div className="fileinfo">
-                <span className="filename">{file.filename}</span>
-                <span className="filepath">{file.absolutePath.replace(/\\/g, '\\\u200B').replace(/\//g, '/\u200B')}</span>
-            </div>
-            <span className="filesize">
-                {formatSize(file.filesize)}
-            </span>
-            <div className="clickable" onClick={() => {
-                shell.showItemInFolder(file.absolutePath)
-            }}>
-                <IoFolderOpen />
-                <span>reveal</span>
-            </div>
-            <div className="clickable" onClick={() => {
-                shell.openPath(file.absolutePath)
-            }}>
-                <IoOpen />
-                <span>open</span>
-            </div>
-        </div>) : undefined}
+        <h4 onClick={() => toggle(!isOpen)}>
+            {isOpen ? <IoCaretDown /> : <IoCaretForward />} {props.name} ({props.files.length})
+        </h4>
+        {isOpen
+            ? props.files.map(file =>
+                <div className={'new-file' + (file.updated ? ' updated' : '')}>
+                    <div className="fileinfo">
+                        <span className="filename">{file.filename}</span>
+                        <span className="filepath">
+                            {file.absolutePath.replace(/\\/g, '\\\u200B').replace(/\//g, '/\u200B')}
+                        </span>
+                    </div>
+                    <span className="filesize">
+                        {formatSize(file.filesize)}
+                    </span>
+                    <div className="clickable" onClick={() => {
+                        shell.showItemInFolder(file.absolutePath)
+                    }}>
+                        <IoFolderOpen />
+                        <span>reveal</span>
+                    </div>
+                    <div className="clickable" onClick={() => {
+                        shell.openPath(file.absolutePath)
+                    }}>
+                        <IoOpen />
+                        <span>open</span>
+                    </div>
+                </div>)
+            : undefined}
     </div>
 }
 

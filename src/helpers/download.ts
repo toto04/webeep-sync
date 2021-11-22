@@ -21,6 +21,7 @@ export type NewFilesList = {
         filename: string,
         absolutePath: string,
         filesize: number,
+        updated: boolean
     }[]
 }
 
@@ -139,7 +140,8 @@ export class DownloadManager extends EventEmitter {
                     newFilesList[file.coursename].push({
                         filename: file.filename,
                         absolutePath,
-                        filesize: file.filesize
+                        filesize: file.filesize,
+                        updated: file.updating ?? false
                     })
                 } catch (e) {
                     console.error('An error occured while writing a file to disk:')
@@ -185,9 +187,15 @@ export class DownloadManager extends EventEmitter {
 
                 try {
                     let stats = await fs.stat(absolutePath)
-                    if (stats.mtime.getTime() / 1000 !== file.timemodified
+                    if (
+                        stats.mtime.getTime() / 1000 !== file.timemodified
                         || stats.size !== file.filesize
-                    ) filesToDownload.push(file)
+                    ) {
+                        // if the file is there, but does not have the same size and last modified
+                        // time as on webeep, download it again
+                        file.updating = true
+                        filesToDownload.push(file)
+                    }
                 } catch (e) {
                     // if the stats could not be retrieved, the file should be downloaded
                     filesToDownload.push(file)

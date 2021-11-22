@@ -493,6 +493,9 @@ svg.warning {
         &:hover {
             background-color: $almost-white;
         }
+        &.updated {
+            border-color: $warning;
+        }
         .fileinfo {
             flex: 1;
             span {
