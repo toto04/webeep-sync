@@ -2,7 +2,7 @@ import path from 'path'
 import { EventEmitter } from 'events'
 import got from 'got'
 import { loginManager, } from './login'
-import { initalizeStore, store } from './store'
+import { initializeStore, store } from './store'
 
 export interface Course {
     id: number,
@@ -111,7 +111,7 @@ export class MoodleClient extends EventEmitter {
     async getCourses(): Promise<Course[]> {
         try {
             let userid = this.userid ?? await this.getUserID()
-            await initalizeStore()
+            await initializeStore()
 
             // once the store is initialized fetch and parse the courses
             let courses: any[] = await this.call('core_enrol_get_users_courses', { userid }, false)

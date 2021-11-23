@@ -1,4 +1,5 @@
 import path from 'path'
+import { nativeTheme } from 'electron'
 import { EventEmitter } from 'events'
 import { app } from 'electron'
 import { Low, JSONFile } from 'lowdb'
@@ -8,6 +9,7 @@ export interface Settings {
     downloadPath?: string
     autosyncEnabled?: boolean
     autosyncInterval?: number
+    nativeThemeSource?: typeof nativeTheme.themeSource
 }
 
 export interface Persistence {
@@ -29,6 +31,7 @@ export const defaultSettings: Required<Settings> = {
     downloadPath: path.join(app.getPath('documents'), '/WeBeep Sync/'),
     autosyncEnabled: false,
     autosyncInterval: 2 * 60 * 60 * 1000,
+    nativeThemeSource: 'system'
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')
@@ -39,7 +42,7 @@ let initializing = false
 
 let storeInitializationEE = new EventEmitter()
 
-export async function initalizeStore(): Promise<void> {
+export async function initializeStore(): Promise<void> {
     return new Promise(async (resolve, reject) => {
         if (initialized) {
             resolve()
@@ -79,4 +82,4 @@ export async function initalizeStore(): Promise<void> {
         storeInitializationEE.emit('ready')
     })
 }
-initalizeStore()
+initializeStore()
