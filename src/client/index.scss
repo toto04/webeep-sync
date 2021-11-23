@@ -597,9 +597,11 @@ $modal-anim-time: 0.15s;
     }
 }
 
-.dark {
-    color: $very-light-gray;
-    background-color: $very-dark-gray;
+@media (prefers-color-scheme: dark) {
+    body {
+        color: $very-light-gray;
+        background-color: $very-dark-gray;
+    }
     h1,
     h2,
     h3,
@@ -609,13 +611,19 @@ $modal-anim-time: 0.15s;
     .section {
         background-color: $almost-black;
     }
-    .course-row:not(:last-child):before {
-        border-bottom: 1.5px solid $very-dark-gray;
+    .course-row:not(:last-child)::before {
+        border-color: $very-dark-gray !important;
     }
     .clickable:hover {
         backdrop-filter: brightness(400%);
     }
     .settings {
+        background-color: $very-dark-gray;
+        .setting:not(:nth-last-of-type(2))::before {
+            border-color: $almost-black;
+        }
+    }
+    .sync-progress .sync-progress-idle h3.error {
         background-color: $very-dark-gray;
     }
     .new-files-modal {
@@ -633,7 +641,7 @@ $modal-anim-time: 0.15s;
         background-color: $almost-black;
         box-shadow: 0px 0px 10px 6px $very-dark-gray;
         &::before {
-            background-color: $almost-black;
+            background-color: $very-dark-gray !important;
             opacity: 0.85;
         }
     }
