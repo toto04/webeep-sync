@@ -11,6 +11,10 @@ $warning: #ff9500;
 $almost-white: #f5f5f5;
 $very-light-gray: #e5e5e5;
 
+$almost-black: #101010;
+$almost-almost-black: #151515; // cant come up with a good name if my life depends on it
+$very-dark-gray: #1a1a1a;
+
 $headbar-height: 30px;
 
 body {
@@ -21,7 +25,7 @@ body {
 }
 
 button {
-    transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
+    transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89), box-shadow 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
     &:hover {
         filter: brightness(90%);
     }
@@ -169,6 +173,7 @@ svg.warning {
     font-weight: bold;
 }
 
+$modal-anim-time: 0.15s;
 .modal-container {
     @keyframes modal-backdrop {
         0% {
@@ -178,7 +183,6 @@ svg.warning {
             backdrop-filter: blur(3px) brightness(95%);
         }
     }
-    $modal-anim-time: 0.15s;
 
     z-index: 10;
     position: fixed;
@@ -360,7 +364,7 @@ svg.warning {
     display: flex;
     justify-content: space-between;
     margin-top: 0;
-    background-color: $almost-white;
+    background-color: transparent !important;
     padding: 0;
     gap: 8px;
     div {
@@ -519,7 +523,7 @@ svg.warning {
     }
     .close {
         position: absolute;
-        color: #555;
+        color: $very-dark-gray;
         top: 8px;
         right: 8px;
     }
@@ -590,5 +594,67 @@ svg.warning {
     margin-top: 12px;
     button {
         margin: 0;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: $very-light-gray;
+        background-color: $very-dark-gray;
+    }
+    h1,
+    h2,
+    h3,
+    h4 {
+        color: white;
+    }
+    .section {
+        background-color: $almost-black;
+    }
+    .course-row:not(:last-child)::before {
+        border-color: $very-dark-gray !important;
+    }
+    .clickable:hover {
+        backdrop-filter: brightness(400%);
+    }
+    .settings {
+        background-color: $very-dark-gray;
+        .setting:not(:nth-last-of-type(2))::before {
+            border-color: $almost-black;
+        }
+    }
+    .sync-progress .sync-progress-idle h3.error {
+        background-color: $very-dark-gray;
+    }
+    .new-files-modal {
+        background-color: $very-dark-gray;
+        .new-file:hover,
+        h4:hover {
+            background-color: $almost-black;
+        }
+        .close {
+            color: $very-light-gray;
+        }
+    }
+    .sync-now.discard-button {
+        color: white;
+        background-color: $almost-black;
+        box-shadow: 0px 0px 10px 6px $very-dark-gray;
+        &::before {
+            background-color: $very-dark-gray !important;
+            opacity: 0.85;
+        }
+    }
+    .confirm-button {
+        box-shadow: 0px 0px 8px 4px $bright-less;
+        &:hover {
+            box-shadow: 0px 0px 10px 6px $bright-less;
+        }
+    }
+    button:hover {
+        filter: brightness(80%);
+    }
+    .progress-bar {
+        background-color: $very-dark-gray;
     }
 }

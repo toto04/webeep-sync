@@ -5,6 +5,9 @@ import { Modal } from '../components/Modal'
 
 import { Settings } from '../../helpers/store'
 
+const themes = ['light', 'dark', 'system'] as const
+type Theme = typeof themes[number]
+
 export let Switch: FC<{
     onChange: (v: boolean) => void
     checked: boolean
@@ -24,16 +27,35 @@ export let Switch: FC<{
     />
 }
 
+let prevTheme: Theme // the previous theme is stored in case the users cancel the settigns change
 export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
     let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
 
+    let [theme, setTheme] = useState<Theme>('system')
+
     useEffect(() => {
         ipcRenderer.invoke('settings').then(s => updateSettigns(s))
+        ipcRenderer.invoke('get-native-theme').then(t => {
+            setTheme(t)
+            prevTheme = t
+        })
     }, [])
 
     return <Modal onClose={() => props.onClose()}>
         {settings ? <div className="settings">
             <h3>settings</h3>
+            {theme ? <div className="setting">
+                <span>Color theme</span>
+                <select value={theme} onChange={e => {
+                    let theme = e.target.value as Theme
+                    ipcRenderer.send('set-native-theme', theme)
+                    setTheme(theme)
+                }}>
+                    <option value="system">use system</option>
+                    <option value="light">light theme</option>
+                    <option value="dark">dark theme</option>
+                </select>
+            </div> : undefined}
             <div className="setting">
                 <span>Sync new courses when they are found</span>
                 <Switch
@@ -53,7 +75,10 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
             </span> */}
 
             <div className="button-line-container">
-                <button className="discard-button" onClick={() => props.onClose()}>annulla</button>
+                <button className="discard-button" onClick={() => {
+                    if (prevTheme) ipcRenderer.send('set-native-theme', prevTheme)
+                    props.onClose()
+                }}>annulla</button>
                 <button className="confirm-button" onClick={async () => {
                     await ipcRenderer.invoke('set-settings', settings)
                     props.onClose()
