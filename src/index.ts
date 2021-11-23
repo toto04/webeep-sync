@@ -1,5 +1,15 @@
 import path from 'path'
-import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, powerSaveBlocker, Tray, } from 'electron'
+import {
+    app,
+    BrowserWindow,
+    dialog,
+    ipcMain,
+    Menu,
+    nativeImage,
+    nativeTheme,
+    powerSaveBlocker,
+    Tray,
+} from 'electron'
 
 import { loginManager } from './helpers/login'
 import { moodleClient } from './helpers/moodle'
@@ -228,4 +238,11 @@ ipcMain.handle('settings', e => {
 ipcMain.handle('set-settings', async (e, newSettings) => {
     store.data.settings = { ...store.data.settings, ...newSettings }
     await store.write()
+})
+
+ipcMain.handle('get-native-theme', e => {
+    return nativeTheme.themeSource
+})
+ipcMain.on('set-native-theme', (e, theme) => {
+    nativeTheme.themeSource = theme
 })
