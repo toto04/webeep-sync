@@ -57,9 +57,23 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 </select>
             </div> : undefined}
             <div className="setting">
+                <span>Keep the up running in background when all windows are closed</span>
+                <Switch
+                    onChange={v => updateSettigns({ ...settings, keepOpenInBackground: v })}
+                    checked={settings.keepOpenInBackground}
+                />
+            </div>
+            <div className="setting">
+                <span>Show app in tray</span>
+                <Switch
+                    onChange={v => updateSettigns({ ...settings, trayIcon: v })}
+                    checked={settings.trayIcon}
+                />
+            </div>
+            <div className="setting">
                 <span>Sync new courses when they are found</span>
                 <Switch
-                    onChange={v => { updateSettigns({ ...settings, syncNewCourses: v }) }}
+                    onChange={v => updateSettigns({ ...settings, syncNewCourses: v })}
                     checked={settings.syncNewCourses}
                 />
             </div>

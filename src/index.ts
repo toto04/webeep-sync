@@ -151,9 +151,12 @@ app.on('ready', async () => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
     app.dock?.hide()
-    // app.quit()
+    await initializeStore()
+    if (store.data.settings.keepOpenInBackground === false) {
+        app.quit()
+    }
 })
 
 app.on('activate', () => {
@@ -239,6 +242,19 @@ ipcMain.handle('settings', e => {
 })
 ipcMain.handle('set-settings', async (e, newSettings) => {
     store.data.settings = { ...store.data.settings, ...newSettings }
+    if ((
+        !store.data.settings.keepOpenInBackground
+        || !store.data.settings.trayIcon
+    ) && !tray.isDestroyed()) {
+        tray.destroy()
+    } else if (
+        store.data.settings.keepOpenInBackground
+        && store.data.settings.trayIcon
+        && tray.isDestroyed()
+    ) {
+        setupTray()
+        await updateTrayContext()
+    }
     await store.write()
 })
 
