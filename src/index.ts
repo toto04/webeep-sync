@@ -142,10 +142,12 @@ app.on('second-instance', () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
     createWindow()
-    setupTray()
-    await updateTrayContext()
     await initializeStore()
     nativeTheme.themeSource = store.data.settings.nativeThemeSource
+    if (store.data.settings.keepOpenInBackground && store.data.settings.trayIcon) {
+        setupTray()
+        await updateTrayContext()
+    }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -245,12 +247,14 @@ ipcMain.handle('set-settings', async (e, newSettings) => {
     if ((
         !store.data.settings.keepOpenInBackground
         || !store.data.settings.trayIcon
-    ) && !tray.isDestroyed()) {
+    ) && tray !== null) {
+        console.log(tray)
         tray.destroy()
+        tray = null
     } else if (
         store.data.settings.keepOpenInBackground
         && store.data.settings.trayIcon
-        && tray.isDestroyed()
+        && tray === null
     ) {
         setupTray()
         await updateTrayContext()
