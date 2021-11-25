@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import _Switch from 'react-switch'
+import { IoWarning } from 'react-icons/io5'
 import { ipcRenderer } from 'electron'
 import { Modal } from '../components/Modal'
 
@@ -13,8 +14,10 @@ export let Switch: FC<{
     checked: boolean
     onColor?: string
     offColor?: string
+    disabled?: boolean
 }> = props => {
     return <_Switch
+        disabled={props.disabled}
         onChange={v => props.onChange(v)}
         onColor={props.onColor ?? '#40c8e0'}
         offColor={props.offColor}
@@ -43,7 +46,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
 
     return <Modal onClose={() => props.onClose()}>
         {settings ? <div className="settings">
-            <h3>settings</h3>
+            <h3>Settings</h3>
             {theme ? <div className="setting">
                 <span>Color theme</span>
                 <select value={theme} onChange={e => {
@@ -63,13 +66,22 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     checked={settings.keepOpenInBackground}
                 />
             </div>
-            <div className="setting">
+            <div className={`setting ${settings.keepOpenInBackground ? '' : 'disabled'}`}>
                 <span>Show app in tray</span>
                 <Switch
+                    disabled={!settings.keepOpenInBackground}
                     onChange={v => updateSettigns({ ...settings, trayIcon: v })}
-                    checked={settings.trayIcon}
+                    checked={settings.keepOpenInBackground && settings.trayIcon}
                 />
             </div>
+            {settings.keepOpenInBackground && !settings.trayIcon ? <div className="setting-warn">
+                <IoWarning />
+                <span>
+                    With the tray disabled, you wont be able to tell if the app is running.
+                    Once you close the window, you'll need to relaunch the app to open it again.
+                    If you have autosyncs enabled, those will keep going in the background
+                </span>
+            </div> : undefined}
             <div className="setting">
                 <span>Sync new courses when they are found</span>
                 <Switch

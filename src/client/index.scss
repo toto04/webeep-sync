@@ -534,11 +534,26 @@ $modal-anim-time: 0.15s;
     background-color: white;
     display: flex;
     flex-direction: column;
-    min-width: 350px;
+    width: 450px;
     h3 {
         margin: 0;
         margin-bottom: 10px;
         font-family: "Poppins";
+    }
+    .setting-warn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0;
+        svg {
+            color: $warning;
+            min-width: 20px;
+            min-height: 20px;
+        }
+        span {
+            opacity: 0.8;
+            font-size: 0.7em;
+        }
     }
     .setting {
         position: relative;
@@ -546,6 +561,14 @@ $modal-anim-time: 0.15s;
         align-items: center;
         justify-content: space-between;
         margin: 6px 0;
+        &.disabled {
+            .react-switch-bg {
+                cursor: not-allowed !important;
+            }
+            span {
+                opacity: 0.6;
+            }
+        }
         &:not(:nth-last-of-type(2))::before {
             content: "";
             position: absolute;
@@ -559,7 +582,8 @@ $modal-anim-time: 0.15s;
             margin-bottom: 6px;
         }
         span {
-            max-width: 200px;
+            max-width: 300px;
+            transition: opacity 0.1s ease-in-out;
         }
         select,
         input,
