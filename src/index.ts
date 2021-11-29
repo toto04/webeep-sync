@@ -141,13 +141,21 @@ app.on('second-instance', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-    createWindow()
+    if (!app.getLoginItemSettings().wasOpenedAtLogin) createWindow()
+    else app.dock?.hide()
+
     await initializeStore()
     nativeTheme.themeSource = store.data.settings.nativeThemeSource
+
     if (store.data.settings.keepOpenInBackground && store.data.settings.trayIcon) {
         setupTray()
         await updateTrayContext()
     }
+
+    // launch on stratup
+    app.setLoginItemSettings({
+        openAtLogin: store.data.settings.openAtLogin,
+    })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -244,6 +252,8 @@ ipcMain.handle('settings', e => {
 })
 ipcMain.handle('set-settings', async (e, newSettings) => {
     store.data.settings = { ...store.data.settings, ...newSettings }
+
+    // tray 
     if ((
         !store.data.settings.keepOpenInBackground
         || !store.data.settings.trayIcon
@@ -259,6 +269,12 @@ ipcMain.handle('set-settings', async (e, newSettings) => {
         setupTray()
         await updateTrayContext()
     }
+
+    // launch on stratup
+    // TODO: set path and args for autoupdate
+    app.setLoginItemSettings({
+        openAtLogin: store.data.settings.openAtLogin,
+    })
     await store.write()
 })
 

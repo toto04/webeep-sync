@@ -12,6 +12,7 @@ export interface Settings {
     nativeThemeSource?: typeof nativeTheme.themeSource
     keepOpenInBackground?: boolean
     trayIcon?: boolean
+    openAtLogin?: boolean
 }
 
 export interface Persistence {
@@ -36,6 +37,7 @@ export const defaultSettings: Required<Settings> = {
     nativeThemeSource: 'system',
     keepOpenInBackground: true,
     trayIcon: true,
+    openAtLogin: true,
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')

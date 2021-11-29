@@ -83,6 +83,13 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 </span>
             </div> : undefined}
             <div className="setting">
+                <span>Open app at login</span>
+                <Switch
+                    onChange={v => updateSettigns({ ...settings, openAtLogin: v })}
+                    checked={settings.openAtLogin}
+                />
+            </div>
+            <div className="setting">
                 <span>Sync new courses when they are found</span>
                 <Switch
                     onChange={v => updateSettigns({ ...settings, syncNewCourses: v })}
