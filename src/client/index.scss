@@ -102,6 +102,12 @@ button {
     &.positive {
         color: $positive;
     }
+    &.close {
+        position: absolute;
+        color: $very-dark-gray;
+        top: 8px;
+        right: 8px;
+    }
 }
 
 svg.warning {
@@ -521,17 +527,12 @@ $modal-anim-time: 0.15s;
             text-align: right;
         }
     }
-    .close {
-        position: absolute;
-        color: $very-dark-gray;
-        top: 8px;
-        right: 8px;
-    }
 }
 
 .settings {
+    position: relative;
     padding: 10px;
-    background-color: white;
+    background-color: $almost-white;
     display: flex;
     flex-direction: column;
     width: 450px;
@@ -555,12 +556,23 @@ $modal-anim-time: 0.15s;
             font-size: 0.7em;
         }
     }
+    .setting-section {
+        border-radius: 8px;
+        padding: 8px;
+        background-color: white;
+        margin-bottom: 16px;
+    }
     .setting {
         position: relative;
-        display: flex;
+        display: grid;
         align-items: center;
         justify-content: space-between;
-        margin: 6px 0;
+        grid-template:
+            "title interface" auto
+            "desc desc" auto / 300px auto;
+        .switch {
+            justify-self: end;
+        }
         &.disabled {
             .react-switch-bg {
                 cursor: not-allowed !important;
@@ -569,7 +581,7 @@ $modal-anim-time: 0.15s;
                 opacity: 0.6;
             }
         }
-        &:not(:nth-last-of-type(2))::before {
+        &:not(:nth-last-of-type(1))::before {
             content: "";
             position: absolute;
             box-sizing: border-box;
@@ -578,12 +590,22 @@ $modal-anim-time: 0.15s;
             bottom: -7px;
             border-bottom: 1px solid $very-light-gray;
         }
-        &:nth-last-of-type(2) {
-            margin-bottom: 6px;
+        &:not(:last-child) {
+            margin-bottom: 12px;
         }
         span {
-            max-width: 300px;
             transition: opacity 0.1s ease-in-out;
+            &:not(.desc) {
+                max-width: 300px;
+                font-weight: bold;
+                font-family: "Poppins", sans-serif;
+            }
+            &.desc {
+                padding-top: 4px;
+                opacity: 0.8;
+                font-size: 0.9em;
+                grid-area: desc;
+            }
         }
         select,
         input,
@@ -599,12 +621,14 @@ $modal-anim-time: 0.15s;
     }
     .credits {
         display: block;
-        font-size: 0.8em;
+        opacity: 0.8;
+        font-size: 0.75em;
         margin: 16px;
         color: #888;
         text-align: center;
         a {
-            color: $system-blue;
+            cursor: pointer;
+            color: $bright;
         }
     }
 }
@@ -638,13 +662,21 @@ $modal-anim-time: 0.15s;
     .course-row:not(:last-child)::before {
         border-color: $very-dark-gray !important;
     }
-    .clickable:hover {
-        backdrop-filter: brightness(400%);
+    .clickable {
+        &:hover {
+            backdrop-filter: brightness(400%);
+        }
+        &.close {
+            color: $very-light-gray;
+        }
     }
     .settings {
         background-color: $very-dark-gray;
-        .setting:not(:nth-last-of-type(2))::before {
-            border-color: $almost-black;
+        .setting-section {
+            background-color: $almost-black;
+        }
+        .setting:not(:nth-last-of-type(1))::before {
+            border-color: $very-dark-gray;
         }
     }
     .sync-progress .sync-progress-idle h3.error {
@@ -655,9 +687,6 @@ $modal-anim-time: 0.15s;
         .new-file:hover,
         h4:hover {
             background-color: $almost-black;
-        }
-        .close {
-            color: $very-light-gray;
         }
     }
     .sync-now.discard-button {
