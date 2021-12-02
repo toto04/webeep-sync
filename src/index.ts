@@ -21,6 +21,7 @@ import { downloadManager } from './helpers/download'
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 const __static = path.join(__dirname, 'static')
+const DEV = process.argv.includes('--dev')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -46,6 +47,31 @@ downloadManager.on('stop', () => {
     if (powerSaveBlocker.isStarted(psbID)) powerSaveBlocker.stop(psbID)
     updateTrayContext()
 })
+
+const windowsLoginSettings = {
+    // path: path.resolve(path.dirname(process.execPath), '../Update.exe'),
+    args: [
+        '--tray-only'
+    ]
+}
+
+/**
+ * Sets the login item for launching the app at login
+ * 
+ * If the --dev arg is passed to electron, it's a no-op (allows for development without setting
+ * electron as a launch item)
+ * @param openAtLogin whether the app should launch at login or not
+ */
+async function setLoginItem(openAtLogin: boolean) {
+    if (DEV) return
+
+    await app.whenReady()
+    app.setLoginItemSettings({
+        openAtLogin,
+        openAsHidden: true,
+        ...windowsLoginSettings
+    })
+}
 
 const createWindow = (): void => {
     app.dock?.show()
@@ -137,14 +163,20 @@ app.on('second-instance', () => {
     focus()
 })
 
+console.time('yeet')
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-    if (!app.getLoginItemSettings().wasOpenedAtLogin) createWindow()
+    const loginItemSettings = app.getLoginItemSettings(windowsLoginSettings)
+    await initializeStore()
+
+    // if the app was opened at login, do not show the window, only launch it in the tray
+    let trayOnly = loginItemSettings.wasOpenedAtLogin || process.argv.includes('--tray-only')
+    if (!trayOnly || !store.data.settings.keepOpenInBackground) createWindow()
     else app.dock?.hide()
 
-    await initializeStore()
     nativeTheme.themeSource = store.data.settings.nativeThemeSource
 
     if (store.data.settings.keepOpenInBackground && store.data.settings.trayIcon) {
@@ -152,10 +184,16 @@ app.on('ready', async () => {
         await updateTrayContext()
     }
 
-    // launch on stratup
-    app.setLoginItemSettings({
-        openAtLogin: store.data.settings.openAtLogin,
-    })
+    // handle launch item settings 
+    // disabled is true only if there's a launch item present and it is set to false
+    let disable = !loginItemSettings.launchItems.reduce((d, i) => i.enabled && d, true)
+    // if a launch item is already present but the user has disabled it from task manager,
+    // settings.openAtLogin should be set to false
+    if (disable) {
+        store.data.settings.openAtLogin = false
+        await store.write()
+    }
+    await setLoginItem(store.data.settings.openAtLogin)
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -272,9 +310,7 @@ ipcMain.handle('set-settings', async (e, newSettings) => {
 
     // launch on stratup
     // TODO: set path and args for autoupdate
-    app.setLoginItemSettings({
-        openAtLogin: store.data.settings.openAtLogin,
-    })
+    await setLoginItem(store.data.settings.openAtLogin)
     await store.write()
 })
 
