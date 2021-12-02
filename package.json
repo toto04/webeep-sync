@@ -1,7 +1,7 @@
 {
     "name": "webeep-sync",
     "productName": "WeBeep Sync",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "keep your webeep files synced",
     "repository": {
         "type": "git",
@@ -9,7 +9,7 @@
     },
     "main": ".webpack/main",
     "scripts": {
-        "start": "electron-forge start",
+        "start": "electron-forge start -- --dev",
         "package": "electron-forge package",
         "make": "electron-forge make",
         "publish": "electron-forge publish",

@@ -10,6 +10,9 @@ export interface Settings {
     autosyncEnabled?: boolean
     autosyncInterval?: number
     nativeThemeSource?: typeof nativeTheme.themeSource
+    keepOpenInBackground?: boolean
+    trayIcon?: boolean
+    openAtLogin?: boolean
 }
 
 export interface Persistence {
@@ -31,7 +34,10 @@ export const defaultSettings: Required<Settings> = {
     downloadPath: path.join(app.getPath('documents'), '/WeBeep Sync/'),
     autosyncEnabled: false,
     autosyncInterval: 2 * 60 * 60 * 1000,
-    nativeThemeSource: 'system'
+    nativeThemeSource: 'system',
+    keepOpenInBackground: true,
+    trayIcon: true,
+    openAtLogin: true,
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')
