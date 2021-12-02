@@ -156,6 +156,8 @@ export class MoodleClient extends EventEmitter {
                 if (file.type === 'file') {
                     let { filename, filepath, filesize, fileurl, timecreated, timemodified } = file
                     filepath = path.join(course.name, modulename, filepath)
+                    // TODO: find a better way to handle illegal characters
+                    filepath = filepath.replace(/[:*?"<>|]/g, '_')
                     files.push({
                         coursename: course.name,
                         filename,
