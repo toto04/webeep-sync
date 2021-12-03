@@ -22,7 +22,7 @@ module.exports = {
             icon: path.resolve(__dirname, "static/dmg/icon.icns"),
             contents: [
                 {
-                    path: path.resolve(__dirname, 'out/WeBeep Sync-darwin-x64/WeBeep Sync.app'),
+                    path: path.resolve(__dirname, `out/WeBeep Sync-darwin-${process.arch}/WeBeep Sync.app`),
                     type: 'file',
                     x: 120,
                     y: 90,
