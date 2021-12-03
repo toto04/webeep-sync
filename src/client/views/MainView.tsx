@@ -43,10 +43,16 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
         <button
             className={"sync-now " + (syncing ? 'discard-button' : 'confirm-button')}
             onClick={() => {
-                ipcRenderer.send(syncing ? 'sync-stop' : 'sync-start')
+                if (isLogged) ipcRenderer.send(syncing ? 'sync-stop' : 'sync-start')
+                else props.onLogin()
             }}
         >
-            <span>{syncing ? 'stop' : 'sync now'}</span>
+            <span>
+                {syncing
+                    ? 'stop'
+                    : (isLogged ? 'sync now' : 'login to sync')
+                }
+            </span>
         </button>
         <div className="user-status">
             <div className="login-info">
