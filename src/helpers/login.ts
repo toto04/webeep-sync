@@ -61,7 +61,10 @@ class LoginManager extends EventEmitter {
         this.token = undefined
         this.isLogged = false
         this.emit('logout')
-        await fs.unlink(tokenPath)
+        try {
+            // if the file does not exist, just ignore the error when trying to unlink it
+            await fs.unlink(tokenPath)
+        } catch (e) { }
     }
 
     /**
