@@ -11,7 +11,8 @@ import { DownloadState, SyncResult } from '../util'
 export interface Progress {
     downloaded: number
     total: number
-    fileName: string
+    filename: string
+    absolutePath: string
     fileDownloaded: number
     fileTotal: number
 }
@@ -119,7 +120,8 @@ export class DownloadManager extends EventEmitter {
                 this.currentRequest = request
                 request.on('downloadProgress', ({ transferred }) => {
                     this.emit('progress', {
-                        fileName: fullpath,
+                        filename: file.filename,
+                        absolutePath,
                         downloaded: totalUntilNow + transferred,
                         total,
                         fileDownloaded: transferred,

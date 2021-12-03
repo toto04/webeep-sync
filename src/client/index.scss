@@ -348,9 +348,12 @@ $modal-anim-time: 0.15s;
         .progress-container {
             display: flex;
             flex: 1;
-            flex-direction: column;
             justify-content: space-between;
-            align-items: stretch;
+            margin-bottom: 6px;
+            min-height: 52px;
+            .right {
+                align-self: flex-end;
+            }
         }
         .right {
             float: right;
@@ -359,9 +362,24 @@ $modal-anim-time: 0.15s;
             display: inline;
             font-size: 1em;
         }
-        .filename {
+
+        .fileinfo {
+            max-width: 80%;
+            display: inline;
+        }
+    }
+
+    .fileinfo {
+        flex: 1;
+        span {
             display: block;
+        }
+        .filename {
+            font-family: "Poppins", sans-serif;
             font-weight: bold;
+        }
+        .filepath {
+            font-size: 11px;
         }
     }
 }
@@ -505,19 +523,6 @@ $modal-anim-time: 0.15s;
         }
         &.updated {
             border-color: $warning;
-        }
-        .fileinfo {
-            flex: 1;
-            span {
-                display: block;
-            }
-            .filename {
-                font-family: "Poppins", sans-serif;
-                font-weight: bold;
-            }
-            .filepath {
-                font-size: 11px;
-            }
         }
         .filesize {
             font-family: "Poppins", sans-serif;
