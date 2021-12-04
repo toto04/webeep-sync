@@ -1,7 +1,7 @@
 {
     "name": "webeep-sync",
     "productName": "WeBeep Sync",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "keep your webeep files synced",
     "repository": {
         "type": "git",
