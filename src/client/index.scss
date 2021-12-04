@@ -186,7 +186,8 @@ svg.warning {
     display: flex;
     -webkit-app-region: no-drag;
 
-    button.windows {
+    .windows {
+        transition: background-color 0.1s ease-in-out;
         height: 32px;
         width: 46px;
         display: flex;
@@ -195,7 +196,26 @@ svg.warning {
         border: none;
         background-color: transparent;
         &:hover {
-            background-color: #7f7f7f7f;
+            background-color: #7f7f7f2d;
+        }
+        &:active {
+            background-color: #7f7f7f40;
+        }
+        &.close {
+            svg {
+                width: 20px;
+            }
+            &:hover {
+                background-color: #e81123;
+                color: white;
+            }
+            &:active {
+                background-color: #b81522;
+                color: white;
+            }
+        }
+        svg {
+            height: auto;
         }
     }
 }
@@ -730,5 +750,17 @@ $modal-anim-time: 0.15s;
     }
     .progress-bar {
         background-color: $very-dark-gray;
+    }
+    .windows-control-buttons {
+        .windows {
+            svg {
+                color: $almost-white;
+            }
+            &:hover {
+                svg {
+                    color: white;
+                }
+            }
+        }
     }
 }

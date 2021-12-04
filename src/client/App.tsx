@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { ipcRenderer } from 'electron'
-import { IoClose, IoRemove, IoSquareOutline } from 'react-icons/io5'
+import { IoCloseOutline, IoRemoveOutline, IoSquareOutline } from 'react-icons/io5'
 import './index.scss'
 
 import { LoginContext } from './LoginContext'
@@ -42,21 +42,21 @@ let App: FC = () => {
             <div className="headbar">
                 WeBeep Sync
                 <div className="windows-control-buttons">
-                    <button className="windows minimize" onClick={() => {
+                    <div className="windows minimize" onClick={() => {
                         ipcRenderer.invoke('window-control', 'min')
                     }}>
-                        <IoRemove />
-                    </button>
-                    <button className="windows maximize" onClick={() => {
+                        <IoRemoveOutline style={{ width: 20 }} />
+                    </div>
+                    <div className="windows maximize" onClick={() => {
                         ipcRenderer.invoke('window-control', 'max')
                     }}>
                         <IoSquareOutline />
-                    </button>
-                    <button className="windows close" onClick={() => {
+                    </div>
+                    <div className="windows close" onClick={() => {
                         ipcRenderer.invoke('window-control', 'close')
                     }}>
-                        <IoClose />
-                    </button>
+                        <IoCloseOutline />
+                    </div>
                 </div>
             </div>
 
