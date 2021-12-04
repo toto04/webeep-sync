@@ -81,7 +81,6 @@ const createWindow = (): void => {
         width: 800,
         autoHideMenuBar: true,
         titleBarStyle: 'hidden',
-        titleBarOverlay: true,
         minHeight: 400,
         minWidth: 600,
         webPreferences: {
@@ -217,6 +216,21 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+ipcMain.handle('window-control', (e, command: string) => {
+    const win = BrowserWindow.getFocusedWindow()
+    switch (command) {
+        case 'min':
+            win.minimize()
+            break
+        case 'max':
+            win.isMaximized() ? win.unmaximize() : win.maximize()
+            break
+        case 'close':
+            win.close()
+            break
+    }
+})
 
 ipcMain.on('get-context', e => {
     e.reply('is-logged', loginManager.isLogged)

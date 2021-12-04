@@ -166,7 +166,6 @@ svg.warning {
 }
 
 .headbar {
-    z-index: 1000;
     font-family: "Poppins", sans-serif;
     padding: 6px;
     height: $headbar-height;
@@ -177,6 +176,28 @@ svg.warning {
     vertical-align: middle;
     font-size: 0.9em;
     font-weight: bold;
+}
+
+.windows-control-buttons {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 138px;
+    display: flex;
+    -webkit-app-region: no-drag;
+
+    button.windows {
+        height: 32px;
+        width: 46px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background-color: transparent;
+        &:hover {
+            background-color: #7f7f7f7f;
+        }
+    }
 }
 
 $modal-anim-time: 0.15s;

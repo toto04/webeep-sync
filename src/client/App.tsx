@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { ipcRenderer } from 'electron'
+import { IoClose, IoRemove, IoSquareOutline } from 'react-icons/io5'
 import './index.scss'
 
 import { LoginContext } from './LoginContext'
@@ -40,7 +41,25 @@ let App: FC = () => {
         <LoginContext.Provider value={{ isLogged, username, syncing, connected }}>
             <div className="headbar">
                 WeBeep Sync
+                <div className="windows-control-buttons">
+                    <button className="windows minimize" onClick={() => {
+                        ipcRenderer.invoke('window-control', 'min')
+                    }}>
+                        <IoRemove />
+                    </button>
+                    <button className="windows maximize" onClick={() => {
+                        ipcRenderer.invoke('window-control', 'max')
+                    }}>
+                        <IoSquareOutline />
+                    </button>
+                    <button className="windows close" onClick={() => {
+                        ipcRenderer.invoke('window-control', 'close')
+                    }}>
+                        <IoClose />
+                    </button>
+                </div>
             </div>
+
             <MainView onLogin={() => { ipcRenderer.send('request-login') }} onSettings={() => setSetting(true)} />
             <SyncSettings />
             <SyncProgress />
