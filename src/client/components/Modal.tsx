@@ -1,7 +1,13 @@
-import React, { FC, useEffect, useState } from 'react'
-import { ipcRenderer } from 'electron'
+import React, { FC, useState } from 'react'
+import { IoClose } from 'react-icons/io5'
 
-export let Modal: FC<{ onClose: () => void }> = (props) => {
+export let Modal: FC<{
+    onClose: () => void
+    title: string
+    style?: React.CSSProperties
+}> = (props) => {
+    let [shadow, setShadow] = useState(false)
+
     return <div
         className="modal-container"
         onClick={e => {
@@ -14,8 +20,17 @@ export let Modal: FC<{ onClose: () => void }> = (props) => {
             }
         }}
     >
-        <div className="modal">
-            {props.children}
+        <div className="modal" style={props.style}>
+            <div className={`modal-header ${shadow ? 'shadow' : undefined}`}>
+                <h3>{props.title}</h3>
+            </div>
+            <IoClose className="close clickable" onClick={() => { props.onClose() }} />
+            <div className="modal-content" onScroll={e => {
+                if (e.currentTarget.scrollTop > 5 && !shadow) setShadow(true)
+                else if (e.currentTarget.scrollTop <= 5 && shadow) setShadow(false)
+            }}>
+                {props.children}
+            </div>
         </div>
     </div >
 }

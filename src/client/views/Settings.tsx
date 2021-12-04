@@ -54,10 +54,8 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
         })
     }, [])
 
-    return <Modal onClose={() => props.onClose()}>
+    return <Modal title="Settings" onClose={() => props.onClose()}>
         {settings ? <div className="settings">
-            <h3>Settings</h3>
-            <IoClose className="close clickable" onClick={() => { props.onClose() }} />
             <div className="setting-section">
                 {theme ? <div className="setting">
                     <span>Color theme</span>
