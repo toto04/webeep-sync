@@ -166,7 +166,6 @@ svg.warning {
 }
 
 .headbar {
-    z-index: 1000;
     font-family: "Poppins", sans-serif;
     padding: 6px;
     height: $headbar-height;
@@ -177,6 +176,48 @@ svg.warning {
     vertical-align: middle;
     font-size: 0.9em;
     font-weight: bold;
+}
+
+.windows-control-buttons {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 138px;
+    display: flex;
+    -webkit-app-region: no-drag;
+
+    .windows {
+        transition: background-color 0.1s ease-in-out;
+        height: 32px;
+        width: 46px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background-color: transparent;
+        &:hover {
+            background-color: #7f7f7f2d;
+        }
+        &:active {
+            background-color: #7f7f7f40;
+        }
+        &.close {
+            svg {
+                width: 20px;
+            }
+            &:hover {
+                background-color: #e81123;
+                color: white;
+            }
+            &:active {
+                background-color: #b81522;
+                color: white;
+            }
+        }
+        svg {
+            height: auto;
+        }
+    }
 }
 
 $modal-anim-time: 0.15s;
@@ -714,5 +755,17 @@ $modal-anim-time: 0.15s;
     }
     .progress-bar {
         background-color: $very-dark-gray;
+    }
+    .windows-control-buttons {
+        .windows {
+            svg {
+                color: $almost-white;
+            }
+            &:hover {
+                svg {
+                    color: white;
+                }
+            }
+        }
     }
 }
