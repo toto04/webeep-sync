@@ -15,7 +15,7 @@ let NewFilesCourseCollapsable: FC<{ name: string, files: NewFilesList[string] }>
         </h4>
         {isOpen
             ? props.files.map(file =>
-                <div className={'new-file' + (file.updated ? ' updated' : '')}>
+                <div className={'new-file' + (file.updated ? ' updated' : '')} key={props.name + file.absolutePath} >
                     <div className="fileinfo">
                         <span className="filename">{file.filename}</span>
                         <span className="filepath">
@@ -47,10 +47,8 @@ export let NewFilesModal: FC<{ onClose: () => void, files: NewFilesList }> = (pr
     for (let course in props.files) {
         numfiles += props.files[course].length
     }
-    return <Modal onClose={() => props.onClose()}>
+    return <Modal title={`${numfiles} new files downloaded`} onClose={() => props.onClose()}>
         <div className="new-files-modal">
-            <IoClose className="close clickable" onClick={() => { props.onClose() }} />
-            <h3>{numfiles} new files downloaded</h3>
             {Object.entries(props.files).map(([course, files]) => <NewFilesCourseCollapsable
                 key={'collaps' + course}
                 name={course}

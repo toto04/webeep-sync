@@ -24,6 +24,22 @@ body {
     user-select: none;
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+    border: 12px solid transparent;
+}
+
+::-webkit-scrollbar-track {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 8px;
+    background-color: #7777;
+}
+
 button {
     transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89), box-shadow 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
     &:hover {
@@ -105,8 +121,8 @@ button {
     &.close {
         position: absolute;
         color: $very-dark-gray;
-        top: 8px;
-        right: 8px;
+        top: 10px;
+        right: 10px;
     }
 }
 
@@ -251,12 +267,38 @@ $modal-anim-time: 0.15s;
                 opacity: 1;
             }
         }
+        position: relative;
+        background-color: $almost-white;
         animation: modal-opacity $modal-anim-time cubic-bezier(0.5, 0.5, 0, 1);
         border-radius: 12px;
         box-shadow: 0px 0px 10px 5px #0002;
-        overflow: auto;
+        overflow: hidden;
         max-height: 90vh;
         margin: 32px;
+        .close {
+            z-index: 1;
+        }
+        .modal-header {
+            position: absolute;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1;
+            transition: box-shadow 0.2s ease-in-out;
+            &.shadow {
+                box-shadow: 0px 0px 8px 5px #0001;
+            }
+            h3 {
+                margin: 0;
+                font-family: "Poppins";
+            }
+        }
+        .modal-content {
+            margin-top: 50px;
+            max-height: calc(90vh - 50px - 8px);
+            margin-bottom: 8px;
+            overflow: auto;
+        }
     }
 }
 
@@ -423,6 +465,9 @@ $modal-anim-time: 0.15s;
             font-size: 11px;
         }
     }
+    .modal {
+        background-color: white;
+    }
 }
 
 .sync-settings {
@@ -522,6 +567,7 @@ $modal-anim-time: 0.15s;
 .new-files-modal {
     position: relative;
     padding: 10px;
+    padding-top: 0px;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -576,12 +622,13 @@ $modal-anim-time: 0.15s;
 }
 
 .settings {
-    position: relative;
     padding: 10px;
+    padding-top: 0px;
     background-color: $almost-white;
     display: flex;
     flex-direction: column;
     width: 450px;
+    padding-bottom: 30px;
     h3 {
         margin: 0;
         margin-bottom: 10px;
@@ -686,6 +733,9 @@ $modal-anim-time: 0.15s;
     align-items: flex-end;
     gap: 8px;
     margin-top: 12px;
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
     button {
         margin: 0;
     }
@@ -701,6 +751,14 @@ $modal-anim-time: 0.15s;
     h3,
     h4 {
         color: white;
+    }
+    .modal-container {
+        .modal {
+            background-color: $very-dark-gray;
+            .modal-header.shadow {
+                box-shadow: 0px 0px 8px 5px #0002;
+            }
+        }
     }
     .section {
         background-color: $almost-black;
