@@ -3,6 +3,8 @@
 
 [![donate](https://shields.io/badge/donate-paypal-blue)](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
 
+* vuoi solo scaricare l'app? vai ai [download](#Download)
+
 WeBeep Sync è una semplice app che serve per tenere sincronizzati tutti i tuoi file di WeBeep.
 
 Sto sviluppando quest'app come strumento ad uso personale, ma ho pensato potesse essere utile ad 
@@ -39,11 +41,24 @@ Puoi usare i seguenti link per scaricare direttamente la versione più adatta a 
 #### [dmg arm64 (M1 o superiore)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync-0.3.2-arm64.dmg)
 #### [dmg x64 (Intel)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync-0.3.2-x64.dmg)
 
-per colpa del fatto che non ho un account da sviluppatore con cui firmare un certificato perché
-costa troppo, 
+#### "WeBeep Sync" è danneggiato e non può essere aperto. Come risolvere?
+
+Per colpa del fatto che non ho un account da sviluppatore con cui firmare un certificato perché
+costa troppo, macOS considera il file come proveniente da uno sviluppatore non indentificato e
+blocca l'avvio.
+
+Per ovviare a questa lieve inconvenienza, bisogna manualmente dare i permessi di esecuzioni all'app.
+Per fare ciò, _una volta spostato WeBeep Sync nella cartella Applicazioni_, apri il terminale e
+incolla queto comando
+```sh
+sudo xattr -rd com.apple.quarantine /Applications/WeBeep\ Sync.app
+```
+e dovrebbe tutto funzionare senza problemi
+
+### Linux
 
 Per quanto riguarda linux, sto sviluppando l'app da solo e non uso un granché Linux desktop, quindi
-non ho (ancora) provato a fare un packaging, anche perché molte delle funzioni di Electron sono OS
+non ho (ancora) provato a fare un packaging, anche perché alcune delle funzioni di Electron sono OS
 specific, e non sarebbero supportate, ma il funzionamento core dell'app dovrebbe funzionare seguendo
 l'installazione manuale
 
