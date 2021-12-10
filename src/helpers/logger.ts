@@ -18,7 +18,7 @@ enum LogLevel {
 }
 
 const logArg = process.argv.find(s => s.startsWith('--log='))?.substring(6) as keyof typeof LogLevel
-const logLevel: LogLevel = LogLevel[logArg] ?? LogLevel.DEBUG
+const logLevel: LogLevel = LogLevel[logArg] ?? LogLevel.INFO
 
 if (!DEV) {
     fs.mkdirSync(logFolderPath, { recursive: true })
