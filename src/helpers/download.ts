@@ -2,11 +2,15 @@ import path from 'path'
 import fs from 'fs/promises'
 import { EventEmitter } from 'events'
 import got, { CancelableRequest } from 'got'
+
+import { createLogger } from './logger'
 import { FileInfo, moodleClient } from './moodle'
 import { initializeStore, store } from './store'
 import { loginManager } from './login'
 
 import { DownloadState, SyncResult } from '../util'
+
+let { log, error } = createLogger('DownloadManager')
 
 export interface Progress {
     downloaded: number
@@ -47,8 +51,10 @@ export class DownloadManager extends EventEmitter {
                 let autosync = () => {
                     if (!store.data.settings.autosyncEnabled) return
                     let dt = Date.now() - (store.data.persistence.lastSynced ?? 0)
-                    if (dt > store.data.settings.autosyncInterval && !this.syncing)
+                    if (dt > store.data.settings.autosyncInterval && !this.syncing) {
+                        log('Scheduled autosync beginning!')
                         this.sync()
+                    }
                 }
                 setInterval(() => autosync(), 60000) // try autosync every minute
                 autosync()
@@ -58,7 +64,7 @@ export class DownloadManager extends EventEmitter {
 
     private updateState(newState: DownloadState) {
         this.emit('state', newState)
-        console.log('the state was updated! ' + DownloadState[newState])
+        log('new state: ' + DownloadState[newState])
         this.currentState = newState
     }
 
@@ -71,12 +77,12 @@ export class DownloadManager extends EventEmitter {
 
     async sync(): Promise<boolean> {
         if (this.syncing) return false
-        console.log('started syncing')
+        log('started syncing')
         this.syncing = true
         this.emit('sync')
 
         let result = await this._sync()
-        console.log('finished syncing, res: ' + SyncResult[result])
+        log(`finished syncing with result:  ${SyncResult[result]}\n`)
 
         if (result === SyncResult.success) {
             store.data.persistence.lastSynced = Date.now()
@@ -146,8 +152,8 @@ export class DownloadManager extends EventEmitter {
                         updated: file.updating ?? false
                     })
                 } catch (e) {
-                    console.error('An error occured while writing a file to disk:')
-                    console.error(e)
+                    error('An error occured while writing a file to disk:')
+                    error(e)
                     return SyncResult.fsError
                 }
             }
@@ -162,8 +168,8 @@ export class DownloadManager extends EventEmitter {
                     return SyncResult.networkError
 
                 default:
-                    console.error('An unkown error occured on a sync attempt:')
-                    console.error(e)
+                    error('An unkown error occured on a sync attempt:')
+                    error(e)
                     return SyncResult.unknownError
             }
         }

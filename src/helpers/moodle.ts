@@ -1,8 +1,11 @@
 import path from 'path'
 import { EventEmitter } from 'events'
 import got from 'got'
+import { createLogger } from './logger'
 import { loginManager, } from './login'
 import { initializeStore, store } from './store'
+
+const { error, debug } = createLogger('MoodleClient')
 
 export interface Course {
     id: number,
@@ -54,8 +57,16 @@ export class MoodleClient extends EventEmitter {
     }
 
     async call(wsfunction: string, data?: { [key: string]: any }, catchNetworkError: boolean = true): Promise<any> {
-        if (catchNetworkError && !this.connected) return
-        if (!loginManager.isLogged) return
+        debug(`API call to function: ${wsfunction}`)
+        if (data) debug(`    data: ${JSON.stringify(data)}`)
+        if (catchNetworkError && !this.connected) {
+            debug('aborting call: connection error')
+            return
+        }
+        if (!loginManager.isLogged) {
+            debug('aborting call: logged out')
+            return
+        }
         try {
             // TODO: test network problems
             let res = await got.post('https://webeep.polimi.it/webservice/rest/server.php', {
@@ -70,12 +81,18 @@ export class MoodleClient extends EventEmitter {
             })
             let parsed = JSON.parse(res.body)
             if (parsed.errorcode === 'invalidtoken') {
+                debug('Invalid token, requesting new token')
                 let logged = await loginManager.createLoginWindow()
-                if (logged) return await this.call(wsfunction, data)
-            } else return parsed
+                if (logged) return await this.call(wsfunction, data, catchNetworkError)
+            } else {
+                debug('API call success')
+                return parsed
+            }
         } catch (e) {
-            delete e.timings
-            console.error(e)
+            delete e.timings    // useless info to log
+            error(e)
+            debug(`Network error, catching: ${catchNetworkError}`)
+            debug(e)
             if (catchNetworkError) {
                 this.connected = false
                 this.emit('disconnected')
@@ -84,7 +101,9 @@ export class MoodleClient extends EventEmitter {
                 return await new Promise((resolve, reject) => {
                     let tryConnection = async () => {
                         try {
+                            debug('retring API call...')
                             resolve(await this.call(wsfunction, data, false))
+                            debug('retry successful, reconnected')
                             this.connected = true
                             this.emit('reconnected')
                             this.emit('network_event', true)
@@ -109,6 +128,7 @@ export class MoodleClient extends EventEmitter {
     }
 
     async getCourses(): Promise<Course[]> {
+        debug('Getting Courses')
         try {
             let userid = this.userid ?? await this.getUserID()
             await initializeStore()
@@ -137,6 +157,7 @@ export class MoodleClient extends EventEmitter {
             this.cachedCourses = c
             return c
         } catch (e) {
+            debug('Returning cached courses')
             return this.cachedCourses
         }
     }
