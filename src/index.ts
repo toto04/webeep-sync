@@ -192,7 +192,7 @@ app.on('ready', async () => {
 
     // handle launch item settings 
     // disabled is true only if there's a launch item present and it is set to false
-    let disable = !loginItemSettings.launchItems?.reduce((d, i) => i.enabled && d, true) ?? false
+    let disable = !(loginItemSettings.launchItems?.reduce((d, i) => i.enabled && d, true) ?? true)
     // if a launch item is already present but the user has disabled it from task manager,
     // settings.openAtLogin should be set to false
     if (disable) {
