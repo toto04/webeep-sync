@@ -4,6 +4,9 @@ import { EventEmitter } from 'events'
 import { app } from 'electron'
 import { Low, JSONFile } from 'lowdb'
 
+import { createLogger } from './logger'
+const { debug, log } = createLogger('Store')
+
 export interface Settings {
     syncNewCourses?: boolean
     downloadPath?: string
@@ -79,13 +82,16 @@ export async function initializeStore(): Promise<void> {
 
         let setting: keyof Settings
         for (setting in defaultSettings) {
-            if (store.data.settings[setting] === undefined)
+            if (store.data.settings[setting] === undefined) {
+                debug('initializing to default value settings field: ' + setting)
                 store.data.settings[setting] = defaultSettings[setting] as never // typescript's a bitch
+            }
         }
         await store.write()
 
         initialized = true
         storeInitializationEE.emit('ready')
+        log('Store initialized!')
     })
 }
 initializeStore()
