@@ -5,7 +5,7 @@ import { createLogger } from './logger'
 import { loginManager, } from './login'
 import { initializeStore, store } from './store'
 
-const { error, debug } = createLogger('MoodleClient')
+const { log, debug } = createLogger('MoodleClient')
 
 export interface Course {
     id: number,
@@ -59,8 +59,9 @@ export class MoodleClient extends EventEmitter {
     async call(wsfunction: string, data?: { [key: string]: any }, catchNetworkError: boolean = true): Promise<any> {
         debug(`API call to function: ${wsfunction}`)
         if (data) debug(`    data: ${JSON.stringify(data)}`)
+
         if (catchNetworkError && !this.connected) {
-            debug('aborting call: connection error')
+            debug('aborting call: not connected')
             return
         }
         if (!loginManager.isLogged) {
@@ -70,6 +71,7 @@ export class MoodleClient extends EventEmitter {
         try {
             // TODO: test network problems
             let res = await got.post('https://webeep.polimi.it/webservice/rest/server.php', {
+                timeout: { request: 10000 },
                 form: {
                     wstoken: loginManager.token,
                     wsfunction,
@@ -90,10 +92,10 @@ export class MoodleClient extends EventEmitter {
             }
         } catch (e) {
             delete e.timings    // useless info to log
-            error(e)
             debug(`Network error, catching: ${catchNetworkError}`)
             debug(e)
             if (catchNetworkError) {
+                log('disconnected!')
                 this.connected = false
                 this.emit('disconnected')
                 this.emit('network_event', false)
@@ -103,7 +105,7 @@ export class MoodleClient extends EventEmitter {
                         try {
                             debug('retring API call...')
                             resolve(await this.call(wsfunction, data, false))
-                            debug('retry successful, reconnected')
+                            log('retry successful, reconnected')
                             this.connected = true
                             this.emit('reconnected')
                             this.emit('network_event', true)
