@@ -3,6 +3,9 @@ import { EventEmitter } from 'events'
 import fs from 'fs/promises'
 import { app, BrowserWindow, protocol, session, safeStorage } from 'electron'
 
+import { createLogger } from './logger'
+const { log, debug } = createLogger('LoginManager')
+
 /** @file the path to the token file which stores the encrypted token */
 let tokenPath = path.join(app.getPath('userData'), 'token')
 
@@ -27,11 +30,11 @@ class LoginManager extends EventEmitter {
         // reads the token file, if the file exists, decrypts the content and sets the token
         fs.readFile(tokenPath)
             .then(enc => {
-                console.log('previous token found!')
+                log('previous token found!')
                 this.token = safeStorage.decryptString(enc)
                 this.isLogged = true
             })
-            .catch(() => console.log('token not found'))
+            .catch(() => log('token not found'))
             .finally(() => this.emit('ready'))
 
         app.once('ready', () => {
@@ -39,11 +42,13 @@ class LoginManager extends EventEmitter {
                 urls: ['https://webeep.polimi.it/my/']
             }, async (res, cb) => {
                 // when the /my/ page is reached, login is completed, redirect to obtain token
+                debug('Reached /my/ page, redirecting to moodle mobile token')
                 cb({ redirectURL: 'https://webeep.polimi.it/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=12345' })
             })
 
             // the moodlemobile:// protocol gets intercepted and the token is extracted from the response
             protocol.registerHttpProtocol('moodlemobile', (req, cb) => {
+                debug('Intercepted call to moodlemobile protocol')
                 let b64token = req.url.split('token=')[1]
                 let token = Buffer.from(b64token, 'base64').toString().split(':::')[1]
                 this.isLogged = true
@@ -87,6 +92,7 @@ class LoginManager extends EventEmitter {
     createLoginWindow(): Promise<boolean> {
         return new Promise((resolve, reject) => {
             if (!this.loginWindow) {
+                debug('Creating Login Window...')
                 // create the window if it doesn't exist
                 this.loginWindow = new BrowserWindow({
                     height: 600,
@@ -107,12 +113,14 @@ class LoginManager extends EventEmitter {
 
             // called when the window gets closed before the token is retrieved
             let onclose = async () => {
+                log('Login process aborted!')
                 await this.logout()
                 resolve(false)
             }
             this.loginWindow.once('close', onclose)
             this.once('token', token => {
                 // when the token is retrieved, remove the logout listener and resolve the promise
+                log('Login process completed!')
                 resolve(true)
                 this.loginWindow.removeListener('close', onclose)
                 fs.writeFile(tokenPath, safeStorage.encryptString(token)) // writes the token to file
