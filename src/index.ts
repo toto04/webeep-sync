@@ -10,6 +10,8 @@ import {
     powerSaveBlocker,
     Tray,
 } from 'electron'
+import i18next from 'i18next'
+import I18Backend from 'i18next-fs-backend'
 
 import { createLogger } from './helpers/logger'
 import { loginManager } from './helpers/login'
@@ -137,19 +139,21 @@ function setupTray() {
 async function updateTrayContext() {
     if (!tray) return
     await initializeStore()
+    const t = i18next.getFixedT(null, 'tray', null)
+
     const s = downloadManager.syncing
     const ae = store.data.settings.autosyncEnabled
     tray.setContextMenu(Menu.buildFromTemplate([
         // { label: 'WebeepSync', type: 'submenu' },
-        { label: 'Open', click: () => focus() },
+        { label: t('open'), click: () => focus() },
         { type: 'separator' },
         {
-            label: s ? 'stop syncing' : 'sync now',
-            sublabel: s ? 'syncing in progress...' : undefined,
+            label: s ? t('stopSyncing') : t('syncNow'),
+            sublabel: s ? t('syncInProgress') : undefined,
             click: () => s ? downloadManager.stop() : downloadManager.sync()
         },
         {
-            label: 'turn autosync ' + (ae ? 'off' : 'on'),
+            label: t('toggleAutosync', { toggle: ae ? t('toggle.off') : t('toggle.on') }),
             icon: path.join(__static, 'icons', ae ? 'pause.png' : 'play.png'),
             click: async () => {
                 await downloadManager.setAutosync(!ae)
@@ -158,7 +162,7 @@ async function updateTrayContext() {
             }
         },
         { type: 'separator' },
-        { label: 'Quit', role: 'quit' }
+        { label: t('quit'), role: 'quit' }
     ]))
 }
 
@@ -174,6 +178,19 @@ app.on('ready', async () => {
     log('App ready!')
     const loginItemSettings = app.getLoginItemSettings(windowsLoginSettings)
     await initializeStore()
+
+    // setup internationalization, await for the json to load
+    await i18next.use(I18Backend).init({
+        ns: ['common', 'tray'],
+        lng: store.data.settings.language,
+        defaultNS: 'common',
+        fallbackLng: 'en',
+        saveMissing: true,
+        backend: {
+            loadPath: path.join(__static, '/locales/{{lng}}/{{ns}}.json'),
+            addPath: path.join(__static, '/locales/{{lng}}/{{ns}}.missing.json')
+        }
+    })
 
     // if the app was opened at login, do not show the window, only launch it in the tray
     let trayOnly = loginItemSettings.wasOpenedAtLogin || process.argv.includes('--tray-only')
@@ -310,6 +327,8 @@ ipcMain.handle('settings', e => {
     delete settingsCopy.autosyncInterval
     return settingsCopy
 })
+
+// this event handles the settings update, has side effects
 ipcMain.handle('set-settings', async (e, newSettings) => {
     store.data.settings = { ...store.data.settings, ...newSettings }
 
@@ -327,6 +346,14 @@ ipcMain.handle('set-settings', async (e, newSettings) => {
     ) {
         setupTray()
         await updateTrayContext()
+    }
+
+    // language
+    if (store.data.settings.language !== i18next.language) {
+        const lang = store.data.settings.language
+        debug(`language changed to: ${lang}`)
+        await i18next.changeLanguage(lang)
+        await updateTrayContext()   // updates the tray with the new language
     }
 
     // launch on stratup

@@ -71,7 +71,10 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 </div> : undefined}
                 <div className="setting">
                     <span>Language</span>
-                    <select>
+                    <select value={settings.language} onChange={e => {
+                        let language = e.target.value as 'it' | 'en'
+                        updateSettigns({ ...settings, language })
+                    }}>
                         <option value="it">Italiano</option>
                         <option value="en">English</option>
                     </select>
