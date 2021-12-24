@@ -7,6 +7,8 @@ import { Low, JSONFile } from 'lowdb'
 import { createLogger } from './logger'
 const { debug, log } = createLogger('Store')
 
+export const __static = path.join(__dirname, 'static')
+
 export interface Settings {
     syncNewCourses?: boolean
     downloadPath?: string

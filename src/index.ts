@@ -10,14 +10,14 @@ import {
     powerSaveBlocker,
     Tray,
 } from 'electron'
-import i18next from 'i18next'
-import I18Backend from 'i18next-fs-backend'
 
 import { createLogger } from './helpers/logger'
 import { loginManager } from './helpers/login'
 import { moodleClient } from './helpers/moodle'
-import { initializeStore, store } from './helpers/store'
+import { initializeStore, store, __static } from './helpers/store'
 import { downloadManager } from './helpers/download'
+
+import { i18nInit, i18n } from './helpers/i18next'
 
 const { debug, log } = createLogger('APP')
 
@@ -25,7 +25,6 @@ const { debug, log } = createLogger('APP')
 // plugin that tells the Electron app where to look for the Webpack-bundled app code (depending on
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
-const __static = path.join(__dirname, 'static')
 const DEV = process.argv.includes('--dev')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -139,7 +138,7 @@ function setupTray() {
 async function updateTrayContext() {
     if (!tray) return
     await initializeStore()
-    const t = i18next.getFixedT(null, 'tray', null)
+    const t = i18n.getFixedT(null, 'tray', null)
 
     const s = downloadManager.syncing
     const ae = store.data.settings.autosyncEnabled
@@ -179,18 +178,8 @@ app.on('ready', async () => {
     const loginItemSettings = app.getLoginItemSettings(windowsLoginSettings)
     await initializeStore()
 
-    // setup internationalization, await for the json to load
-    await i18next.use(I18Backend).init({
-        ns: ['common', 'tray'],
-        lng: store.data.settings.language,
-        defaultNS: 'common',
-        fallbackLng: 'en',
-        saveMissing: true,
-        backend: {
-            loadPath: path.join(__static, '/locales/{{lng}}/{{ns}}.json'),
-            addPath: path.join(__static, '/locales/{{lng}}/{{ns}}.missing.json')
-        }
-    })
+    // setup internationalization
+    await i18nInit()
 
     // if the app was opened at login, do not show the window, only launch it in the tray
     let trayOnly = loginItemSettings.wasOpenedAtLogin || process.argv.includes('--tray-only')
@@ -349,10 +338,10 @@ ipcMain.handle('set-settings', async (e, newSettings) => {
     }
 
     // language
-    if (store.data.settings.language !== i18next.language) {
+    if (store.data.settings.language !== i18n.language) {
         const lang = store.data.settings.language
         debug(`language changed to: ${lang}`)
-        await i18next.changeLanguage(lang)
+        await i18n.changeLanguage(lang)
         await updateTrayContext()   // updates the tray with the new language
     }
 
