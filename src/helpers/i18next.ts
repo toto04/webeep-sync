@@ -1,7 +1,8 @@
 import path from 'path'
 import i18n from 'i18next'
 import I18Backend from 'i18next-fs-backend'
-import { __static, store, initializeStore } from './store'
+
+import { __static } from '../util'
 
 let initializing = false
 let initialized = false
@@ -19,10 +20,8 @@ export function i18nInit(): Promise<void> {
             })
         } else {
             initializing = true
-            await initializeStore()
             await i18n.use(I18Backend).init({
-                ns: ['common', 'tray'],
-                lng: store.data.settings.language,
+                ns: ['common', 'tray', 'client'],
                 defaultNS: 'common',
                 fallbackLng: 'en',
                 saveMissing: true,

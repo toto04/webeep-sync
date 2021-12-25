@@ -1,3 +1,7 @@
+import path from 'path'
+
+export const __static = path.join(__dirname, 'static')
+
 export enum DownloadState {
     idle,
     fetchingCourses,

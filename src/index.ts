@@ -11,10 +11,12 @@ import {
     Tray,
 } from 'electron'
 
+import { __static } from './util'
+
 import { createLogger } from './helpers/logger'
 import { loginManager } from './helpers/login'
 import { moodleClient } from './helpers/moodle'
-import { initializeStore, store, __static } from './helpers/store'
+import { initializeStore, store, } from './helpers/store'
 import { downloadManager } from './helpers/download'
 
 import { i18nInit, i18n } from './helpers/i18next'
@@ -119,6 +121,11 @@ const createWindow = (): void => {
     downloadManager.on('new-files', files => send('new-files', files))
 
     moodleClient.on('reconnected', async () => send('courses-return', await moodleClient.getCourses()))
+
+    i18n.on('languageChanged', lng => send('language', {
+        lng,
+        bundle: i18n.getResourceBundle(lng, 'client')
+    }))
 }
 
 function focus() {
@@ -180,6 +187,7 @@ app.on('ready', async () => {
 
     // setup internationalization
     await i18nInit()
+    await i18n.changeLanguage(store.data.settings.language)
 
     // if the app was opened at login, do not show the window, only launch it in the tray
     let trayOnly = loginItemSettings.wasOpenedAtLogin || process.argv.includes('--tray-only')
@@ -251,6 +259,11 @@ ipcMain.on('get-context', e => {
     e.reply('username', moodleClient.username)
     e.reply('syncing', downloadManager.syncing)
     e.reply('network_event', moodleClient.connected)
+    let lng = store.data.settings.language
+    e.reply('language', {
+        lng,
+        bundle: i18n.getResourceBundle(lng, 'client')
+    })
 })
 
 ipcMain.on('logout', async e => {

@@ -1,0 +1,20 @@
+{
+    "mainView": {
+        "lastSynced": "Sincronizzato l'ultima volta",
+        "readableTime": {
+            "never": "Mai",
+            "now": "Ora",
+            "minute_one": "Un minuto fa",
+            "minute_other": "{{count}} minuti fa",
+            "hour_one": "Un'ora fa",
+            "hour_other": "{{count}} ore fa",
+            "day_one": "Ieri",
+            "day_other": "{{count}} giorni fa",
+            "months": "Mesi fa +"
+        },
+        "stop": "stop",
+        "sync": "avvia sync",
+        "loginToSync": "fai il login",
+        "login": "Accedi..."
+    }
+}
