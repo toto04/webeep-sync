@@ -7,28 +7,15 @@ import { DownloadState, formatSize, SyncResult } from '../../util'
 import { NewFilesList, Progress } from '../../helpers/download'
 import { NewFilesModal } from './NewFilesModal'
 import { LoginContext } from '../LoginContext'
-
-let statusMessages = [
-    'Ready to download',
-    'Fetching courses...',
-    'Looking for new files to download...',
-    'Downloading...'
-]
-
-let resultMessage = [
-    'Everything is up to date!',
-    '', // the "alreadySyncing" result cannot actually be reached by the user 
-    'Syncing aborted',
-    'Cannot reach the server, check your connection or try again later',
-    'Cannot write the file, do you have write permission to the download folder?',
-    'An unknown error has occured, try again later'
-]
+import { useTranslation } from 'react-i18next'
 
 /**
  * This component is what is shown while there is a download in progress.
  * Shows progress bars with download percentage and path of the files being downloaded
  */
 let SyncProgressWrap: FC<{ progress: Progress }> = props => {
+    let { t } = useTranslation('client', { keyPrefix: 'syncProgress' })
+
     let { progress } = props
 
     let filePercentage = progress?.fileDownloaded / progress?.fileTotal
@@ -51,7 +38,7 @@ let SyncProgressWrap: FC<{ progress: Progress }> = props => {
         </div>
 
         <div>
-            <h3>total</h3>
+            <h3>{t('total')}</h3>
             <span className="right">
                 {`${formatSize(progress.downloaded)} / ${formatSize(progress.total)} (${Math.floor(percentage * 100)}%)`}
             </span>
@@ -68,6 +55,8 @@ let SyncProgressWrap: FC<{ progress: Progress }> = props => {
  */
 export let SyncProgress: FC = props => {
     let { connected, isLogged } = useContext(LoginContext)
+
+    let { t } = useTranslation('client', { keyPrefix: 'syncProgress' })
 
     let [progress, setProgress] = useState<Progress>()
     let [downloadState, setDownloadState] = useState<DownloadState>(DownloadState.idle)
@@ -100,28 +89,28 @@ export let SyncProgress: FC = props => {
                 elem = <div className="sync-progress-idle">{
                     (syncResult === SyncResult.success && numfiles !== 0)
                         ? <div className="new-files">
-                            <h3>{numfiles} new files downloaded</h3>
+                            <h3>{t('newFiles', { count: numfiles })}</h3>
                             <button
                                 className="confirm-button"
                                 onClick={() => setViewingFiles(true)}
                                 disabled={numfiles === 0}
                             >
-                                view files
+                                {t('viewFiles')}
                             </button>
                         </div>
                         : <h3 className={syncResult ? "error" : undefined}>
-                            {resultMessage[syncResult]}
+                            {t(`resultMessage.${SyncResult[syncResult]}`)}
                         </h3>
                 }</div>
                 break;
             } else if (!connected) {
                 elem = <div className="sync-progress-idle">
-                    <h3>Waiting for connection</h3>
+                    <h3>{t('noConnection')}</h3>
                 </div>
                 break;
             } else if (!isLogged) {
                 elem = <div className="sync-progress-idle">
-                    <h3>Login to start syncing!</h3>
+                    <h3>{t('noLogin')}</h3>
                 </div>
                 break;
             }
@@ -135,7 +124,7 @@ export let SyncProgress: FC = props => {
         default:
             // in every other cases, just show the correct status message
             elem = <div className="sync-progress-idle">
-                <h3>{statusMessages[downloadState]}</h3>
+                <h3>{t(`statusMessage.${DownloadState[downloadState]}`)}</h3>
             </div>
     }
 

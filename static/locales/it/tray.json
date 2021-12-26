@@ -1,0 +1,12 @@
+{
+    "open": "Apri",
+    "syncNow": "Sincronizza",
+    "stopSyncing": "Ferma il sync",
+    "syncInProgress": "Sync in corso...",
+    "toggleAutosync": "{{toggle}} gli autosync",
+    "quit": "Chiudi",
+    "toggle": {
+        "on": "Accendi",
+        "off": "Spegni"
+    }
+}

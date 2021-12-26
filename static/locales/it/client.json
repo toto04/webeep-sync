@@ -1,0 +1,80 @@
+{
+    "mainView": {
+        "lastSynced": "Sincronizzato l'ultima volta",
+        "readableTime": {
+            "never": "Mai",
+            "now": "Ora",
+            "minute_one": "Un minuto fa",
+            "minute_other": "{{count}} minuti fa",
+            "hour_one": "Un'ora fa",
+            "hour_other": "{{count}} ore fa",
+            "day_one": "Ieri",
+            "day_other": "{{count}} giorni fa",
+            "months": "Mesi fa +"
+        },
+        "stop": "stop",
+        "sync": "avvia sync",
+        "loginToSync": "fai il login",
+        "login": "Accedi..."
+    },
+    "syncSettings": {
+        "downloadFolder": "Cartella dei download",
+        "open": "apri",
+        "edit": "cambia",
+        "syncEvery": "Sync ogni",
+        "ai": {
+            "hour_one": "1 ora",
+            "hour_other": "{{count}} ore",
+            "day_one": "1 giorno",
+            "day_other": "{{count}} giorni",
+            "week": "1 settimana"
+        }
+    },
+    "syncProgress": {
+        "total": "Totale",
+        "noConnection": "Aspetto connessione...",
+        "noLogin": "Fai il login per incominciare a sincronizzare!",
+        "newFiles_one": "{{count}} nuovo file scaricato",
+        "newFiles_other": "{{count}} nuovi file scaricati",
+        "viewFiles": "Mostra i file",
+        "resultMessage": {
+            "success": "Tutto sincronizzato!",
+            "stopped": "Sincronizzazione annullata",
+            "networkError": "Impossibile raggiungere il server, controlla la tua connessione o prova più tardi",
+            "fsError": "Impossibile salvare il file su disco, hai i permessi di scrittura nella cartella dei download?",
+            "unknownError": "C'è stato un errore sconosciuto, riprova più tardi"
+        },
+        "statusMessage": {
+            "idle": "Pronto per sincronizzare!",
+            "fetchingCourses": "Recupero corsi...",
+            "fetchingFiles": "Cerco nuovi file da scaricare...",
+            "downloading": "Scarico..."
+        }
+    },
+    "newFiles": {
+        "newFiles_one": "{{count}} nuovo file scaricato",
+        "newFiles_other": "{{count}} nuovi file scaricati",
+        "reveal": "mostra",
+        "open": "apri"
+    },
+    "settings": {
+        "settings": "Impostazioni",
+        "colorTheme": "Tema dei colori",
+        "theme": {
+            "system": "usa sistema",
+            "light": "tema chiaro",
+            "dark": "tema scuro"
+        },
+        "language": "Lingua",
+        "openAtLogin": "Apri l'app al login",
+        "keepOpenInBackground": "Lascia aperta in background",
+        "keepOpenInBackground_desc": "Lascia l'app aperta in backround quando tutte le finestre sono chiuse. Se gli autosync sono abilitati, anche questi avverranno in background",
+        "showInTray": "Mostra l'app nel tray",
+        "trayWarning": "Con il tray disabilitato, non potrai vedere se l'app è aperta. Quando chiudi la finestra, dovrai rilanciare l'app per aprirla di nuovo. Se hai gli autosync abilitati, quelli continueranno in background.",
+        "newCourses": "Sincronizza nuovi corsi",
+        "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
+        "logout": "log out",
+        "cancel": "annulla",
+        "ok": "ok"
+    }
+}

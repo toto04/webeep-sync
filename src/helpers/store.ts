@@ -16,6 +16,7 @@ export interface Settings {
     keepOpenInBackground?: boolean
     trayIcon?: boolean
     openAtLogin?: boolean
+    language?: 'it' | 'en'
 }
 
 export interface Persistence {
@@ -36,11 +37,12 @@ export const defaultSettings: Required<Settings> = {
     syncNewCourses: true,
     downloadPath: path.join(app.getPath('documents'), '/WeBeep Sync/'),
     autosyncEnabled: false,
-    autosyncInterval: 2 * 60 * 60 * 1000,
+    autosyncInterval: 2 * 60 * 60 * 1000,   // 2 hours
     nativeThemeSource: 'system',
     keepOpenInBackground: true,
     trayIcon: true,
     openAtLogin: true,
+    language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')

@@ -1,43 +1,51 @@
 import { ipcRenderer } from 'electron'
+import { i18n } from 'i18next'
 import React, { FC, useContext, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { IoSettingsSharp, IoWarning } from 'react-icons/io5'
 import { LoginContext } from '../LoginContext'
 
+let _i18n: i18n
+
 function readableTime(lastSynced?: number): string {
-    if (!lastSynced) return 'never'
+    let t = _i18n.getFixedT(null, 'client', 'mainView.readableTime')
+    if (!lastSynced) return t('never')
     let dt = (Date.now() - lastSynced) / 1000
-    if (dt < 60) return 'right now'
+    if (dt < 60) return t('now')
     dt = Math.floor(dt / 60)
     if (dt < 60)
-        return `${dt} ${dt === 1 ? 'minute' : 'minutes'} ago`
+        return t('minute', { count: dt })
     dt = Math.floor(dt / 60)
     if (dt < 24)
-        return `${dt} ${dt === 1 ? 'hour' : 'hours'} ago`
+        return t('hour', { count: dt })
     dt = Math.floor(dt / 24)
     if (dt < 31)
-        return dt === 1 ? 'yesterday' : (dt + ' days ago')
-    return 'months ago +'
+        return t('day', { count: dt })
+    return t('months')
 }
 
 export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
     let { isLogged, username, syncing, connected } = useContext(LoginContext)
 
+    let { t, i18n } = useTranslation('client', { keyPrefix: 'mainView' })
 
     let [elapsedTime, setElapsedTime] = useState('...')
 
     useEffect(() => {
+        _i18n = i18n
         let updateTime = async () => {
             let ls = await ipcRenderer.invoke('lastsynced')
             setElapsedTime(readableTime(ls))
         }
         setInterval(() => updateTime(), 60000)
+        i18n.on('languageChanged', () => updateTime())
         ipcRenderer.on('syncing', () => updateTime())
         updateTime()
     }, [])
 
     return <div className="main-view section">
         <div className="last-synced">
-            <span>last synced</span>
+            <span>{t('lastSynced')}</span>
             <h1>{elapsedTime}</h1>
         </div>
         <button
@@ -49,8 +57,8 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
         >
             <span>
                 {syncing
-                    ? 'stop'
-                    : (isLogged ? 'sync now' : 'login to sync')
+                    ? t('stop')
+                    : (isLogged ? t('sync') : t('loginToSync'))
                 }
             </span>
         </button>
@@ -62,7 +70,7 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
                         {username}
                     </span>
                     : <a className="text-button" onClick={() => props.onLogin()}>
-                        Accedi...
+                        {t('login')}
                     </a>
                 }
             </div>

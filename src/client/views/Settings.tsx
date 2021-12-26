@@ -5,6 +5,7 @@ import { ipcRenderer, shell } from 'electron'
 import { Modal } from '../components/Modal'
 
 import { Settings } from '../../helpers/store'
+import { useTranslation } from 'react-i18next'
 
 const themes = ['light', 'dark', 'system'] as const
 type Theme = typeof themes[number]
@@ -42,8 +43,9 @@ let Link: FC<{ href: string }> = props => {
 
 let prevTheme: Theme // the previous theme is stored in case the users cancel the settigns change
 export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
-    let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
+    let { t } = useTranslation('client', { keyPrefix: 'settings' })
 
+    let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
     let [theme, setTheme] = useState<Theme>('system')
 
     useEffect(() => {
@@ -54,11 +56,11 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
         })
     }, [])
 
-    return <Modal title="Settings" onClose={() => props.onClose()}>
+    return <Modal title={t('settings')} onClose={() => props.onClose()}>
         {settings ? <div className="settings">
             <div className="setting-section">
                 {theme ? <div className="setting">
-                    <span>Color theme</span>
+                    <span>{t('colorTheme')}</span>
                     <select value={theme} onChange={e => {
                         let theme = e.target.value as Theme
                         ipcRenderer.send('set-native-theme', theme)
@@ -70,8 +72,11 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     </select>
                 </div> : undefined}
                 <div className="setting">
-                    <span>Language</span>
-                    <select>
+                    <span>{t('language')}</span>
+                    <select value={settings.language} onChange={e => {
+                        let language = e.target.value as 'it' | 'en'
+                        updateSettigns({ ...settings, language })
+                    }}>
                         <option value="it">Italiano</option>
                         <option value="en">English</option>
                     </select>
@@ -79,25 +84,22 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
             </div>
             <div className="setting-section">
                 <div className="setting">
-                    <span>Open app at login</span>
+                    <span>{t('openAtLogin')}</span>
                     <Switch
                         onChange={v => updateSettigns({ ...settings, openAtLogin: v })}
                         checked={settings.openAtLogin}
                     />
                 </div>
                 <div className="setting">
-                    <span>Keep open in background</span>
+                    <span>{t('keepOpenInBackground')}</span>
                     <Switch
                         onChange={v => updateSettigns({ ...settings, keepOpenInBackground: v })}
                         checked={settings.keepOpenInBackground}
                     />
-                    <span className="desc">
-                        keep the app running in background while all windows are closed, if autosync is
-                        enabled, they will happen in background too
-                    </span>
+                    <span className="desc">{t('keepOpenInBackground_desc')}</span>
                 </div>
                 <div className={`setting ${settings.keepOpenInBackground ? '' : 'disabled'}`}>
-                    <span>Show app in tray</span>
+                    <span>{t('showInTray')}</span>
                     <Switch
                         disabled={!settings.keepOpenInBackground}
                         onChange={v => updateSettigns({ ...settings, trayIcon: v })}
@@ -106,29 +108,22 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 </div>
                 {settings.keepOpenInBackground && !settings.trayIcon ? <div className="setting-warn">
                     <IoWarning />
-                    <span>
-                        With the tray disabled, you wont be able to tell if the app is running.
-                        Once you close the window, you'll need to relaunch the app to open it again.
-                        If you have autosyncs enabled, those will keep going in the background
-                    </span>
+                    <span>{t('trayWarning')}</span>
                 </div> : undefined}
             </div>
             <div className="setting-section">
                 <div className="setting">
-                    <span>Sync new courses</span>
+                    <span>{t('newCourses')}</span>
                     <Switch
                         onChange={v => updateSettigns({ ...settings, syncNewCourses: v })}
                         checked={settings.syncNewCourses}
                     />
-                    <span className="desc">
-                        When new courses are found, automatically add them to the courses that will
-                        be synced
-                    </span>
+                    <span className="desc">{t('newCourses_desc')}</span>
                 </div>
             </div>
             <button className="danger-button" onClick={() => {
                 ipcRenderer.send('logout')
-            }}>log out</button>
+            }}>{t('logout')}</button>
 
             <span className="credits">
                 Developed by Tommaso Morganti • <Link href="https://github.com/toto04">GitHub</Link>
@@ -141,11 +136,11 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 <button className="discard-button" onClick={() => {
                     if (prevTheme) ipcRenderer.send('set-native-theme', prevTheme)
                     props.onClose()
-                }}>annulla</button>
+                }}>{t('cancel')}</button>
                 <button className="confirm-button" onClick={async () => {
                     await ipcRenderer.invoke('set-settings', settings)
                     props.onClose()
-                }} >ok</button>
+                }}>{t('ok')}</button>
             </div>
         </div> : undefined}
     </Modal>
