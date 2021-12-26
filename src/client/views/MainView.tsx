@@ -27,7 +27,7 @@ function readableTime(lastSynced?: number): string {
 export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
     let { isLogged, username, syncing, connected } = useContext(LoginContext)
 
-    let [t, i18n] = useTranslation('client', { keyPrefix: 'mainView' })
+    let { t, i18n } = useTranslation('client', { keyPrefix: 'mainView' })
 
     let [elapsedTime, setElapsedTime] = useState('...')
 

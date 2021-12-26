@@ -16,5 +16,18 @@
         "sync": "sync now",
         "loginToSync": "login to sync",
         "login": "Log in..."
+    },
+    "syncSettings": {
+        "downloadFolder": "Download folder",
+        "open": "open",
+        "edit": "edit",
+        "syncEvery": "Sync every",
+        "ai": {
+            "hour_one": "1 hour",
+            "hour_other": "{{count}} hours",
+            "day_one": "1 day",
+            "day_other": "{{count}} days",
+            "week": "1 week"
+        }
     }
 }

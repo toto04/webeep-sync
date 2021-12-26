@@ -16,5 +16,18 @@
         "sync": "avvia sync",
         "loginToSync": "fai il login",
         "login": "Accedi..."
+    },
+    "syncSettings": {
+        "downloadFolder": "Cartella dei download",
+        "open": "apri",
+        "edit": "cambia",
+        "syncEvery": "Sync ogni",
+        "ai": {
+            "hour_one": "1 ora",
+            "hour_other": "{{count}} ore",
+            "day_one": "1 giorno",
+            "day_other": "{{count}} giorni",
+            "week": "1 settimana"
+        }
     }
 }
