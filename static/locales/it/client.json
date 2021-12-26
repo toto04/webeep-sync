@@ -56,5 +56,25 @@
         "newFiles_other": "{{count}} nuovi file scaricati",
         "reveal": "mostra",
         "open": "apri"
+    },
+    "settings": {
+        "settings": "Impostazioni",
+        "colorTheme": "Tema dei colori",
+        "theme": {
+            "system": "usa sistema",
+            "light": "tema chiaro",
+            "dark": "tema scuro"
+        },
+        "language": "Lingua",
+        "openAtLogin": "Apri l'app al login",
+        "keepOpenInBackground": "Lascia aperta in background",
+        "keepOpenInBackground_desc": "Lascia l'app aperta in backround quando tutte le finestre sono chiuse. Se gli autosync sono abilitati, anche questi avverranno in background",
+        "showInTray": "Mostra l'app nel tray",
+        "trayWarning": "Con il tray disabilitato, non potrai vedere se l'app è aperta. Quando chiudi la finestra, dovrai rilanciare l'app per aprirla di nuovo. Se hai gli autosync abilitati, quelli continueranno in background.",
+        "newCourses": "Sincronizza nuovi corsi",
+        "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
+        "logout": "log out",
+        "cancel": "annulla",
+        "ok": "ok"
     }
 }

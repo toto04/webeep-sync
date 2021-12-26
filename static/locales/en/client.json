@@ -56,5 +56,25 @@
         "newFiles_other": "{{count}} new files downloaded",
         "reveal": "reveal",
         "open": "open"
+    },
+    "settings": {
+        "settings": "Settings",
+        "colorTheme": "Color theme",
+        "theme": {
+            "system": "use system",
+            "light": "light theme",
+            "dark": "dark theme"
+        },
+        "language": "Language",
+        "openAtLogin": "Open app at login",
+        "keepOpenInBackground": "Keep open in background",
+        "keepOpenInBackground_desc": "Keep the app running in background while all windows are closed. If autosync is enabled, they will happen in background too",
+        "showInTray": "Show app in tray",
+        "trayWarning": "With the tray disabled, you wont be able to tell if the app is running. Once you close the window, you'll need to relaunch the app to open it again. If you have autosyncs enabled, those will keep going in the background.",
+        "newCourses": "Sync new courses",
+        "newCourses_desc": "When new courses are found, automatically add them to the courses that will be synced",
+        "logout": "log out",
+        "cancel": "cancel",
+        "ok": "ok"
     }
 }
