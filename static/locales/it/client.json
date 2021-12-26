@@ -50,5 +50,11 @@
             "fetchingFiles": "Cerco nuovi file da scaricare...",
             "downloading": "Scarico..."
         }
+    },
+    "newFiles": {
+        "newFiles_one": "{{count}} nuovo file scaricato",
+        "newFiles_other": "{{count}} nuovi file scaricati",
+        "reveal": "mostra",
+        "open": "apri"
     }
 }

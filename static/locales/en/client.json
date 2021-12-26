@@ -50,5 +50,11 @@
             "fetchingFiles": "Looking for new files to download...",
             "downloading": "Downloading..."
         }
+    },
+    "newFiles": {
+        "newFiles_one": "{{count}} new file downloaded",
+        "newFiles_other": "{{count}} new files downloaded",
+        "reveal": "reveal",
+        "open": "open"
     }
 }
