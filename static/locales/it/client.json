@@ -29,5 +29,26 @@
             "day_other": "{{count}} giorni",
             "week": "1 settimana"
         }
+    },
+    "syncProgress": {
+        "total": "Totale",
+        "noConnection": "Aspetto connessione...",
+        "noLogin": "Fai il login per incominciare a sincronizzare!",
+        "newFiles_one": "{{count}} nuovo file scaricato",
+        "newFiles_other": "{{count}} nuovi file scaricati",
+        "viewFiles": "Mostra i file",
+        "resultMessage": {
+            "success": "Tutto sincronizzato!",
+            "stopped": "Sincronizzazione annullata",
+            "networkError": "Impossibile raggiungere il server, controlla la tua connessione o prova più tardi",
+            "fsError": "Impossibile salvare il file su disco, hai i permessi di scrittura nella cartella dei download?",
+            "unknownError": "C'è stato un errore sconosciuto, riprova più tardi"
+        },
+        "statusMessage": {
+            "idle": "Pronto per sincronizzare!",
+            "fetchingCourses": "Recupero corsi...",
+            "fetchingFiles": "Cerco nuovi file da scaricare...",
+            "downloading": "Scarico..."
+        }
     }
 }
