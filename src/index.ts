@@ -89,6 +89,7 @@ const createWindow = (): void => {
         width: 800,
         autoHideMenuBar: true,
         titleBarStyle: 'hidden',
+        trafficLightPosition: { x: 9, y: 9 },
         minHeight: 400,
         minWidth: 600,
         webPreferences: {
