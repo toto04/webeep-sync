@@ -330,6 +330,8 @@ ipcMain.handle('settings', e => {
     return settingsCopy
 })
 
+ipcMain.handle('version', () => app.getVersion())
+
 // this event handles the settings update, has side effects
 ipcMain.handle('set-settings', async (e, newSettings) => {
     store.data.settings = { ...store.data.settings, ...newSettings }

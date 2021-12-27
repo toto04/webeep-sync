@@ -1,11 +1,12 @@
-import React, { FC, useEffect, useState } from 'react'
-import _Switch from 'react-switch'
-import { IoClose, IoWarning } from 'react-icons/io5'
 import { ipcRenderer, shell } from 'electron'
+import { platform } from 'os'
+import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { IoWarning } from 'react-icons/io5'
+import _Switch from 'react-switch'
+import { Settings } from '../../helpers/store'
 import { Modal } from '../components/Modal'
 
-import { Settings } from '../../helpers/store'
-import { useTranslation } from 'react-i18next'
 
 const themes = ['light', 'dark', 'system'] as const
 type Theme = typeof themes[number]
@@ -47,6 +48,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
 
     let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
     let [theme, setTheme] = useState<Theme>('system')
+    let [version, setVersion] = useState('')
 
     useEffect(() => {
         ipcRenderer.invoke('settings').then(s => updateSettigns(s))
@@ -54,6 +56,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
             setTheme(t)
             prevTheme = t
         })
+        ipcRenderer.invoke('version').then(v => setVersion(v))
     }, [])
 
     return <Modal title={t('settings')} onClose={() => props.onClose()}>
@@ -126,6 +129,8 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
             }}>{t('logout')}</button>
 
             <span className="credits">
+                <span>v{version}</span>
+                <br />
                 Developed by Tommaso Morganti • <Link href="https://github.com/toto04">GitHub</Link>
                 <br />
                 <Link href="https://github.com/toto04/webeep-sync">Source code</Link> •&nbsp;
