@@ -15,29 +15,32 @@ module.exports = {
         }
     }, {
         name: "@electron-forge/maker-dmg",
-        config: {
-            format: "ULFO",
-            overwrite: true,
-            background: path.resolve(__dirname, "static/dmg/bg@2x.png"),
-            icon: path.resolve(__dirname, "static/dmg/icon.icns"),
-            contents: [
-                {
-                    path: path.resolve(__dirname, `out/WeBeep Sync-darwin-${process.arch}/WeBeep Sync.app`),
-                    type: 'file',
-                    x: 120,
-                    y: 90,
+        config: arch => {
+            return {
+                name: `WeBeep Sync macOS-${arch}`,
+                format: "ULFO",
+                overwrite: true,
+                background: path.resolve(__dirname, "static/dmg/bg@2x.png"),
+                icon: path.resolve(__dirname, "static/dmg/icon.icns"),
+                contents: [
+                    {
+                        path: path.resolve(__dirname, `out/WeBeep Sync-darwin-${arch}/WeBeep Sync.app`),
+                        type: 'file',
+                        x: 120,
+                        y: 90,
+                    },
+                    {
+                        path: '/Applications',
+                        type: 'link',
+                        x: 380,
+                        y: 90
+                    }
+                ],
+                additionalDMGOptions: {
+                    window: { size: { height: 200, width: 500 } }
                 },
-                {
-                    path: '/Applications',
-                    type: 'link',
-                    x: 380,
-                    y: 90
-                }
-            ],
-            additionalDMGOptions: {
-                window: { size: { height: 200, width: 500 } }
-            },
-            platforms: ["darwin"]
+                platforms: ["darwin"]
+            }
         }
     }, {
         name: "@electron-forge/maker-deb",

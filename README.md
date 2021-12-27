@@ -38,8 +38,8 @@ Puoi usare i seguenti link per scaricare direttamente la versione più adatta a 
 #### [Installer x64](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.Windows.Setup.zip)
 
 ### macOS
-#### [dmg arm64 (M1 o superiore)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync-0.3.2-arm64.dmg)
-#### [dmg x64 (Intel)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync-0.3.2-x64.dmg)
+#### [dmg arm64 (M1 o superiore)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-arm64.dmg)
+#### [dmg x64 (Intel)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-x64.dmg)
 
 #### "WeBeep Sync" è danneggiato e non può essere aperto. Come risolvere?
 
