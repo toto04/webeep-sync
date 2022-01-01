@@ -34,20 +34,18 @@ let App: FC = () => {
         ipcRenderer.on('is-logged', (e, success: boolean, username?: string, exp?: boolean) => {
             setSetting(false)
             setLogged(success)
-            if (success) ipcRenderer.send('courses')
         })
         ipcRenderer.send('get-context')
 
         ipcRenderer.on('username', (e, username: string) => setUser(username))
         ipcRenderer.on('syncing', (e, sync: boolean) => setSyncing(sync))
         ipcRenderer.on('network_event', (e, conn: boolean) => setConnected(conn))
-        ipcRenderer.on('courses-return', (e, courses: Course[]) => setCourses(courses))
+        ipcRenderer.on('courses', (e, courses: Course[]) => setCourses(courses))
         ipcRenderer.on('language', async (e, p: { lng: string, bundle: any }) => {
             if (!i18next.hasResourceBundle(p.lng, 'client'))
                 i18next.addResourceBundle(p.lng, 'client', p.bundle)
             await i18next.changeLanguage(p.lng)
         })
-        ipcRenderer.send('courses')
     }, [])
 
     return <Suspense fallback={<div>

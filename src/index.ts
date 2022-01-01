@@ -106,7 +106,10 @@ const createWindow = (): void => {
 
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-    loginManager.on('token', () => send('is-logged', true))
+    loginManager.on('token', async () => {
+        send('is-logged', true)
+        send('courses', await moodleClient.getCoursesWithoutCache())
+    })
     loginManager.on('logout', () => send('is-logged', false))
     moodleClient.on('network_event', conn => send('network_event', conn))
     moodleClient.on('username', username => send('username', username))
@@ -121,7 +124,7 @@ const createWindow = (): void => {
     downloadManager.on('state', state => send('download-state', state))
     downloadManager.on('new-files', files => send('new-files', files))
 
-    moodleClient.on('reconnected', async () => send('courses-return', await moodleClient.getCourses()))
+    moodleClient.on('courses', async c => send('courses', c))
 
     i18n.on('languageChanged', lng => send('language', {
         lng,
@@ -255,6 +258,7 @@ ipcMain.handle('window-control', (e, command: string) => {
     }
 })
 
+// a catch all event to send everything needed right when the frontend loads
 ipcMain.on('get-context', e => {
     e.reply('is-logged', loginManager.isLogged)
     e.reply('username', moodleClient.username)
@@ -265,14 +269,11 @@ ipcMain.on('get-context', e => {
         lng,
         bundle: i18n.getResourceBundle(lng, 'client')
     })
+    e.reply('courses', moodleClient.getCourses())
 })
 
 ipcMain.on('logout', async e => {
     await loginManager.logout()
-})
-
-ipcMain.on('courses', async e => {
-    e.reply('courses-return', await moodleClient.getCourses())
 })
 
 ipcMain.on('request-login', async e => {

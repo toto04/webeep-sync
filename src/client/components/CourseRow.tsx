@@ -34,7 +34,7 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
             }}
         />
         <div className="course-folder-info">
-            <span>{props.course.name}</span>
+            <span>{props.course.fullname}</span>
             <input
                 ref={i => input = i}
                 className={editing ? 'editing' : undefined}
