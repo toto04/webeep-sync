@@ -18,8 +18,21 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
         input.blur()
     }
 
-    let confirmEditing = () => {
-        console.log('Not implemented')
+    let confirmEditing = async () => {
+        // check input validity
+        if (input.value.length < 1)
+            input.setCustomValidity('value cannot be empty')
+        else if (input.value.length >= 255)
+            input.setCustomValidity('too long!')
+        else if (!/^[^:*?"<>|]*$/.test(input.value))
+            input.setCustomValidity('you cannot use these charactes: :*?"<>|')
+        else input.setCustomValidity('')
+
+        if (input.validity.valid) {
+            await ipcRenderer.invoke('rename-course', props.course.id, folder)
+            setEditing(false)
+            input.blur()
+        } else { input.reportValidity() }
     }
 
     return <div className="course-row">

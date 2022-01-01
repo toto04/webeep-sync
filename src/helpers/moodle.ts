@@ -167,28 +167,25 @@ export class MoodleClient extends EventEmitter {
         let courses: any[] = await this.call('core_enrol_get_users_courses', { userid }, catchNetworkError)
         let c: Course[] = courses.map(c => {
             let { id, fullname } = c
-            let name = fullname
-            let m = name.match(/\d+ - (.+) \(.+\)/)
-            if (m) name = m[1]
+
+            if (!store.data.persistence.courses[id]) {
+                let name = fullname
+                let m = name.match(/\d+ - (.+) \(.+\)/)
+                if (m) name = m[1]
+                store.data.persistence.courses[id] = {
+                    name,
+                    shouldSync: store.data.settings.syncNewCourses
+                }
+            }
+
             return {
                 id,
                 fullname,
-                name,
-                shouldSync: store.data.settings.syncNewCourses
+                ...store.data.persistence.courses[id]
             }
         })
 
-        // initialize storage for new courses 
-        c.forEach(course => {
-            if (!store.data.persistence.courses[course.id]) {
-                let { shouldSync } = course
-                store.data.persistence.courses[course.id] = { shouldSync }
-            } else {
-                course.shouldSync = store.data.persistence.courses[course.id].shouldSync
-            }
-        })
         store.write()
-
         this.emit('courses', c)
         this.cachedCourses = c
         return c

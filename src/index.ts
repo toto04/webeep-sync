@@ -1,4 +1,5 @@
 import path from 'path'
+import fs from 'fs/promises'
 import {
     app,
     BrowserWindow,
@@ -375,4 +376,18 @@ ipcMain.on('set-native-theme', async (e, theme) => {
     nativeTheme.themeSource = theme
     store.data.settings.nativeThemeSource = theme
     await store.write()
+})
+
+ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
+    try {
+        // try to rename the folder, if the folder doesn't exist just ignore it
+        let oldPath = path.resolve(store.data.settings.downloadPath, store.data.persistence.courses[id].name)
+        let newPath = path.resolve(store.data.settings.downloadPath, newName)
+        await fs.rename(oldPath, newPath)
+        // update the cache for the UI
+        moodleClient.cachedCourses.find(c => c.id === id).name = newName
+    } catch (e) { }
+    store.data.persistence.courses[id].name = newName
+    await store.write()
+    e.sender.send('courses', moodleClient.getCourses())
 })

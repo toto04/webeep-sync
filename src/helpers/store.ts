@@ -22,6 +22,7 @@ export interface Settings {
 export interface Persistence {
     courses: {
         [courseid: number]: {
+            name: string
             shouldSync: boolean
         }
     }
@@ -36,12 +37,12 @@ export interface Store {
 export const defaultSettings: Required<Settings> = {
     syncNewCourses: true,
     downloadPath: path.join(app.getPath('documents'), '/WeBeep Sync/'),
-    autosyncEnabled: false,
+    autosyncEnabled: true,
     autosyncInterval: 2 * 60 * 60 * 1000,   // 2 hours
     nativeThemeSource: 'system',
     keepOpenInBackground: true,
     trayIcon: true,
-    openAtLogin: true,
+    openAtLogin: false,
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
 }
 
@@ -73,22 +74,22 @@ export async function initializeStore(): Promise<void> {
                 courses: {},
             }
         }
-        if (!store.data.settings) store.data.settings = {}
         if (!store.data.persistence) {
             store.data.persistence = {
                 courses: {},
             }
         } else {
             if (!store.data.persistence.courses) store.data.persistence.courses = {}
-        }
-
-        let setting: keyof Settings
-        for (setting in defaultSettings) {
-            if (store.data.settings[setting] === undefined) {
-                debug('initializing to default value settings field: ' + setting)
-                store.data.settings[setting] = defaultSettings[setting] as never // typescript's a bitch
+            for (let id in store.data.persistence.courses) {
+                // for retrocompatibility, if the shape is not right reset the whole object
+                if (!store.data.persistence.courses[id].name || store.data.persistence.courses[id].shouldSync) {
+                    store.data.persistence.courses = {}
+                    break
+                }
             }
         }
+
+        store.data.settings = Object.assign({}, defaultSettings, store.data.settings)
         await store.write()
 
         initialized = true
