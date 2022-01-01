@@ -4,13 +4,25 @@ import { Course } from '../../helpers/moodle'
 import { ipcRenderer } from 'electron'
 import { IoClose, IoAddCircleOutline, IoCheckmarkCircle } from 'react-icons/io5'
 import { HiCheck } from 'react-icons/hi'
-
-let input: HTMLInputElement
+import { useTranslation } from 'react-i18next'
 
 export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
+    let [input, setInput] = useState<HTMLInputElement>()
     let [checked, setChecked] = useState(props.course.shouldSync)
     let [folder, setFolder] = useState(props.course.name)
     let [editing, setEditing] = useState(false)
+
+    let { t } = useTranslation('client', { keyPrefix: 'courseList.row' })
+
+    let checkInputValidity = () => {
+        if (input.value.length < 1)
+            input.setCustomValidity(t('tooShort'))
+        else if (input.value.length >= 255)
+            input.setCustomValidity(t('tooLong'))
+        else if (!/^[^:*?"<>|]*$/.test(input.value))
+            input.setCustomValidity(t('invalidCharacters') + ':*?"<>|')
+        else input.setCustomValidity('')
+    }
 
     let cancelEditing = () => {
         setFolder(props.course.name)
@@ -19,15 +31,7 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
     }
 
     let confirmEditing = async () => {
-        // check input validity
-        if (input.value.length < 1)
-            input.setCustomValidity('value cannot be empty')
-        else if (input.value.length >= 255)
-            input.setCustomValidity('too long!')
-        else if (!/^[^:*?"<>|]*$/.test(input.value))
-            input.setCustomValidity('you cannot use these charactes: :*?"<>|')
-        else input.setCustomValidity('')
-
+        checkInputValidity()
         if (input.validity.valid) {
             await ipcRenderer.invoke('rename-course', props.course.id, folder)
             setEditing(false)
@@ -49,7 +53,7 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
         <div className="course-folder-info">
             <span>{props.course.fullname}</span>
             <input
-                ref={i => input = i}
+                ref={i => setInput(i)}
                 className={editing ? 'editing' : undefined}
                 type="text"
                 value={folder}
@@ -64,7 +68,10 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
                         confirmEditing()
                     }
                 }}
-                onChange={e => setFolder(e.target.value)}
+                onChange={e => {
+                    checkInputValidity()
+                    setFolder(e.target.value)
+                }}
                 onFocus={() => setEditing(true)}
                 onBlur={() => {
                     if (props.course.name === folder) setEditing(false)
