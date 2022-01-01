@@ -82,7 +82,9 @@ export async function initializeStore(): Promise<void> {
             if (!store.data.persistence.courses) store.data.persistence.courses = {}
             for (let id in store.data.persistence.courses) {
                 // for retrocompatibility, if the shape is not right reset the whole object
-                if (!store.data.persistence.courses[id].name || store.data.persistence.courses[id].shouldSync) {
+                if (store.data.persistence.courses[id].name === undefined
+                    || store.data.persistence.courses[id].shouldSync === undefined
+                ) {
                     store.data.persistence.courses = {}
                     break
                 }
