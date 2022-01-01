@@ -1,4 +1,5 @@
 import path from 'path'
+import fs from 'fs/promises'
 import {
     app,
     BrowserWindow,
@@ -90,7 +91,7 @@ const createWindow = (): void => {
         autoHideMenuBar: true,
         titleBarStyle: 'hidden',
         trafficLightPosition: { x: 9, y: 9 },
-        minHeight: 400,
+        minHeight: 460,
         minWidth: 600,
         webPreferences: {
             nodeIntegration: true,
@@ -106,7 +107,10 @@ const createWindow = (): void => {
 
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-    loginManager.on('token', () => send('is-logged', true))
+    loginManager.on('token', async () => {
+        send('is-logged', true)
+        send('courses', await moodleClient.getCoursesWithoutCache())
+    })
     loginManager.on('logout', () => send('is-logged', false))
     moodleClient.on('network_event', conn => send('network_event', conn))
     moodleClient.on('username', username => send('username', username))
@@ -121,7 +125,7 @@ const createWindow = (): void => {
     downloadManager.on('state', state => send('download-state', state))
     downloadManager.on('new-files', files => send('new-files', files))
 
-    moodleClient.on('reconnected', async () => send('courses-return', await moodleClient.getCourses()))
+    moodleClient.on('courses', async c => send('courses', c))
 
     i18n.on('languageChanged', lng => send('language', {
         lng,
@@ -255,6 +259,7 @@ ipcMain.handle('window-control', (e, command: string) => {
     }
 })
 
+// a catch all event to send everything needed right when the frontend loads
 ipcMain.on('get-context', e => {
     e.reply('is-logged', loginManager.isLogged)
     e.reply('username', moodleClient.username)
@@ -265,14 +270,11 @@ ipcMain.on('get-context', e => {
         lng,
         bundle: i18n.getResourceBundle(lng, 'client')
     })
+    e.reply('courses', moodleClient.getCourses())
 })
 
 ipcMain.on('logout', async e => {
     await loginManager.logout()
-})
-
-ipcMain.on('courses', async e => {
-    e.reply('courses-return', await moodleClient.getCourses())
 })
 
 ipcMain.on('request-login', async e => {
@@ -374,4 +376,18 @@ ipcMain.on('set-native-theme', async (e, theme) => {
     nativeTheme.themeSource = theme
     store.data.settings.nativeThemeSource = theme
     await store.write()
+})
+
+ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
+    try {
+        // try to rename the folder, if the folder doesn't exist just ignore it
+        let oldPath = path.resolve(store.data.settings.downloadPath, store.data.persistence.courses[id].name)
+        let newPath = path.resolve(store.data.settings.downloadPath, newName)
+        await fs.rename(oldPath, newPath)
+        // update the cache for the UI
+        moodleClient.cachedCourses.find(c => c.id === id).name = newName
+    } catch (e) { }
+    store.data.persistence.courses[id].name = newName
+    await store.write()
+    e.sender.send('courses', moodleClient.getCourses())
 })

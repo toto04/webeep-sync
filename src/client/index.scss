@@ -40,6 +40,12 @@ body {
     background-color: #7777;
 }
 
+h3 {
+    font-size: 1.1em;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+}
+
 button {
     transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89), box-shadow 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
     &:hover {
@@ -289,8 +295,7 @@ $modal-anim-time: 0.15s;
                 box-shadow: 0px 0px 8px 5px #0001;
             }
             h3 {
-                margin: 0;
-                font-family: "Poppins";
+                font-size: 1.17em;
             }
         }
         .modal-content {
@@ -390,12 +395,6 @@ $modal-anim-time: 0.15s;
     flex-direction: column;
     height: 130px;
 
-    h3 {
-        font-size: 1.1em;
-        font-family: "Poppins", sans-serif;
-        margin: 0;
-    }
-
     .sync-progress-idle {
         display: flex;
         flex-direction: column;
@@ -480,11 +479,6 @@ $modal-anim-time: 0.15s;
     div {
         margin: 0;
     }
-    h3 {
-        font-size: 1.1em;
-        font-family: "Poppins", sans-serif;
-        margin: 0;
-    }
     .download-path {
         flex: 1;
         display: flex;
@@ -533,33 +527,97 @@ $modal-anim-time: 0.15s;
     }
 }
 
-.course-container {
+.course-list {
     flex: 1;
+    overflow: hidden;
     padding: 0;
-    overflow: auto;
+    .course-header {
+        height: 45px;
+        padding: 8px;
+        transition: box-shadow 0.2s ease-in-out;
+        &.shadow {
+            box-shadow: 0px 0px 8px 5px #0001;
+        }
+    }
+    .course-container {
+        padding: 8px 4px;
+        padding-top: 0px;
+        box-sizing: border-box;
+        max-height: calc(100% - 45px - 16px);
+        overflow: auto;
+    }
     .course-row {
         display: flex;
         position: relative;
         align-items: center;
         box-sizing: border-box;
-        padding: 4px 8px;
-        margin-bottom: 1px;
+        margin: 4px;
+        border-radius: 6px;
+        overflow: hidden;
+        .checkbox {
+            height: auto;
+            align-self: stretch;
+            padding: 1px;
+            svg {
+                color: white;
+                width: 20px;
+            }
+        }
         &:not(:last-child)::before {
-            $bar-offset-left: 36px;
+            $bar-offset-left: 30px;
             content: "";
             position: absolute;
             box-sizing: border-box;
             left: $bar-offset-left;
             width: calc(98% - $bar-offset-left);
-            bottom: -1px;
+            bottom: 0px;
             border-bottom: 1px solid $very-light-gray;
         }
         .checkbox svg:not(.active) {
             filter: brightness(90%) saturate(80%);
         }
-        span {
-            margin-left: 6px;
-            vertical-align: middle;
+        .course-folder-info {
+            flex: 1;
+            margin-left: 4px;
+            padding: 2px 0px;
+            span {
+                display: block;
+                font-size: 11px;
+                padding-left: 3px; // compensate input padding
+            }
+            input {
+                font-size: 1.1em;
+                font-family: "Poppins", sans-serif;
+                font-weight: bold;
+                box-sizing: border-box;
+                border: none;
+                margin: 0;
+                padding: 0 2px;
+                width: 100%;
+                background-color: transparent;
+                color: inherit;
+                border-radius: 4px;
+                border: 1px solid transparent;
+                transition: all 0.1s ease-in-out;
+                &:focus-visible {
+                    outline: none;
+                    border-color: $bright;
+                }
+                &.editing {
+                    background-color: $very-light-gray;
+                }
+            }
+        }
+        .editing-icons {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            align-self: flex-end;
+            margin-bottom: 2px;
+            .clickable {
+                height: 100%;
+                margin-left: 4px;
+            }
         }
     }
 }
@@ -630,9 +688,8 @@ $modal-anim-time: 0.15s;
     width: 450px;
     padding-bottom: 30px;
     h3 {
-        margin: 0;
+        font-size: 1.17em;
         margin-bottom: 10px;
-        font-family: "Poppins";
     }
     .setting-warn {
         display: flex;
@@ -763,8 +820,18 @@ $modal-anim-time: 0.15s;
     .section {
         background-color: $almost-black;
     }
-    .course-row:not(:last-child)::before {
-        border-color: $very-dark-gray !important;
+    .course-list {
+        .course-header.shadow {
+            box-shadow: 0px 0px 8px 5px #0002;
+        }
+        .course-row {
+            input.editing {
+                background-color: $very-dark-gray !important;
+            }
+            &:not(:last-child)::before {
+                border-color: $very-dark-gray !important;
+            }
+        }
     }
     .clickable {
         &:hover {

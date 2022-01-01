@@ -76,5 +76,14 @@
         "logout": "log out",
         "cancel": "annulla",
         "ok": "ok"
+    },
+    "courseList": {
+        "courses": "Corsi",
+        "courses_desc": "Seleziona quali corsi vuoi tenere sincronizzati e rinomina le cartelle",
+        "row": {
+            "tooShort": "Il nome non può essere vuoto",
+            "tooLong": "Massimo 255 caratteri!",
+            "invalidCharacters": "Questi caratteri non possono essere usati: "
+        }
     }
 }

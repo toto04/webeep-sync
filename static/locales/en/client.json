@@ -76,5 +76,14 @@
         "logout": "log out",
         "cancel": "cancel",
         "ok": "ok"
+    },
+    "courseList": {
+        "courses": "Courses",
+        "courses_desc": "Select which courses you want to keep synced and rename the folders",
+        "row": {
+            "tooShort": "The name cannot be empty",
+            "tooLong": "Max 255 characters!",
+            "invalidCharacters": "These characters cannot be used: "
+        }
     }
 }

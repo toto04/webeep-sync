@@ -177,7 +177,7 @@ export class DownloadManager extends EventEmitter {
 
     async getFilesToDownload() {
         this.updateState(DownloadState.fetchingCourses)
-        let cs = await moodleClient.getCourses()
+        let cs = await moodleClient.getCoursesWithoutCache()
 
         let filesToDownload: FileInfo[] = []
         let { courses } = store.data.persistence
