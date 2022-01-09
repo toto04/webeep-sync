@@ -1,5 +1,6 @@
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
+import { EventEmitter } from 'events'
 import { app } from 'electron'
 
 const DEV = process.argv.includes('--dev')
@@ -9,7 +10,6 @@ function timeStamp() {
     return new Date().toISOString().substring(0, 19)
 }
 
-let logFile: fs.WriteStream | undefined = undefined
 enum LogLevel {
     NONE,
     WARN,
@@ -17,53 +17,91 @@ enum LogLevel {
     DEBUG,
 }
 
-const logArg = process.argv.find(s => s.startsWith('--log='))?.substring(6) as keyof typeof LogLevel
-const logLevel: LogLevel = LogLevel[logArg] ?? LogLevel.INFO
+class Logger extends EventEmitter {
+    logFile: fs.FileHandle | undefined = undefined
+    ready = false
+    isWriting = false
+    logLevel: LogLevel
 
-if (!DEV) {
-    fs.mkdirSync(logFolderPath, { recursive: true })
-    let logPath = path.join(logFolderPath, `${timeStamp()}.log`)
-    logFile = fs.createWriteStream(logPath, { flags: 'a' })
-    logFile.write('\n-- LOG BEGIN --\n')
-    logFile.write(`Log Level: ${LogLevel[logLevel]}\n\n`)
+    constructor() {
+        super()
 
-    process.on('exit', () => {
-        log('closing stream!')
-        logFile.end()
-    })
-}
+        // parse arguments for log flag (e.g --log=WARN)
+        const logArg = process.argv.find(s => s.startsWith('--log='))?.substring(6) as keyof typeof LogLevel
+        this.logLevel = LogLevel[logArg] ?? LogLevel.INFO
 
-export function error(message: any, _module?: string) {
-    if (logLevel < LogLevel.WARN) return
-    let mstr = _module ? ` [${_module}]` : ''
-    if (DEV) console.error(message)
-    else try {
-        logFile.write(`[${timeStamp()}]${mstr} <WARN> ${String(message)}\n`)
-    } catch (e) { }
-}
+        if (!DEV) {
+            fs.mkdir(logFolderPath, { recursive: true }).then(async () => {
+                let logPath = path.join(logFolderPath, `${timeStamp()}.log`.replace(/:/g, '.'))
+                this.logFile = await fs.open(logPath, 'w')
+                this.writeToFile(`-- WeBeep Sync LOG BEGIN --\nLog Level: ${LogLevel[this.logLevel]}\n\n`)
 
-export function log(message: any, _module?: string) {
-    if (logLevel < LogLevel.INFO) return
-    let mstr = _module ? ` [${_module}]` : ''
-    if (DEV) console.log(message)
-    else try {
-        logFile.write(`[${timeStamp()}]${mstr} <INFO> ${String(message)}\n`)
-    } catch (e) { }
-}
+                this.ready = true
+                this.emit('ready')
+            })
+        }
+    }
 
-export function debug(message: any, _module?: string) {
-    if (logLevel < LogLevel.DEBUG) return
-    let mstr = _module ? ` [${_module}]` : ''
-    if (DEV) console.log(message)
-    else try {
-        logFile.write(`[${timeStamp()}]${mstr} <DBUG> ${String(message)}\n`)
-    } catch (e) { }
-}
+    /**
+     * this functions is to be called internally to append safely new log lines to the log file, it
+     * insures that no writing operations occour simultaneously and that the file is opened
+     * @param str the string to be appended to the log file
+     */
+    async writeToFile(str: string) {
+        if (!this.ready) this.once('ready', () => this.writeToFile(str))
+        if (this.isWriting) this.once('finished_writing', () => this.writeToFile(str))
+        else {
+            this.isWriting = true
+            await this.logFile.write(str)
+            this.isWriting = false
+            this.emit('finished_writing')
+        }
+    }
 
-export function createLogger(_module: string) {
-    return {
-        error: (message: any) => error(message, _module),
-        log: (message: any) => log(message, _module),
-        debug: (message: any) => debug(message, _module),
+    error(message: any, _module?: string) {
+        if (this.logLevel < LogLevel.WARN) return
+        try {
+            let mstr = _module ? ` [${_module}]` : ''
+            let msg = `[${timeStamp()}]${mstr} <WARN> ${String(message)}\n`
+            if (!this.logFile) console.error(msg)
+            else this.writeToFile(msg)
+        } catch (e) { }
+    }
+
+    log(message: any, _module?: string) {
+        if (this.logLevel < LogLevel.INFO) return
+        try {
+            let mstr = _module ? ` [${_module}]` : ''
+            let msg = `[${timeStamp()}]${mstr} <INFO> ${String(message)}\n`
+            if (!this.logFile) console.log(msg)
+            else this.writeToFile(msg)
+        } catch (e) { }
+    }
+
+    debug(message: any, _module?: string) {
+        if (this.logLevel < LogLevel.DEBUG) return
+        try {
+            let mstr = _module ? ` [${_module}]` : ''
+            let msg = `[${timeStamp()}]${mstr} <DBUG> ${String(message)}\n`
+            if (!this.logFile) console.log(msg)
+            else this.writeToFile(msg)
+        } catch (e) { }
+    }
+
+    /**
+     * this function is used to create an object with three loggers for various level of logging,
+     * each will display the correct name of the module for better log clarity
+     * @param moduleName the name of the module to be displayed when logging
+     * @returns an object with the three loggers
+     */
+    createLogger(moduleName: string) {
+        return {
+            error: (message: any) => this.error(message, moduleName),
+            log: (message: any) => this.log(message, moduleName),
+            debug: (message: any) => this.debug(message, moduleName),
+        }
     }
 }
+let logger = new Logger()
+export default logger
+export let createLogger = (moduleName: string) => logger.createLogger(moduleName)
