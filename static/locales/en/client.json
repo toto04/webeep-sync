@@ -41,7 +41,7 @@
             "success": "Everything is up to date!",
             "stopped": "Sync aborted",
             "networkError": "Cannot reach the server, check your connection or try again later",
-            "fsError": "Cannot write the file, do you have write permission to the download folder?",
+            "fsError": "Cannot write the file: that could be either you don't have write permission to the download folder or there's a file that need overwrite open in another program",
             "unknownError": "An unknown error has occured, try again later"
         },
         "statusMessage": {

@@ -41,7 +41,7 @@
             "success": "Tutto sincronizzato!",
             "stopped": "Sincronizzazione annullata",
             "networkError": "Impossibile raggiungere il server, controlla la tua connessione o prova più tardi",
-            "fsError": "Impossibile salvare il file su disco, hai i permessi di scrittura nella cartella dei download?",
+            "fsError": "Impossibile salvare il file su disco: c'è qualche file aperto che va sovrascritto oppure non hai i permessi di scrittura nella cartella dei download",
             "unknownError": "C'è stato un errore sconosciuto, riprova più tardi"
         },
         "statusMessage": {
