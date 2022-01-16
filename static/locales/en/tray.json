@@ -1,5 +1,6 @@
 {
-    "open": "Open",
+    "open": "Open app",
+    "openFolder": "Open download folder",
     "syncNow": "Sync now",
     "stopSyncing": "Stop syncing",
     "syncInProgress": "Sync in progress...",

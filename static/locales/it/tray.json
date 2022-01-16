@@ -1,5 +1,6 @@
 {
-    "open": "Apri",
+    "open": "Apri app",
+    "openFolder": "Apri cartella download",
     "syncNow": "Sincronizza",
     "stopSyncing": "Ferma il sync",
     "syncInProgress": "Sync in corso...",

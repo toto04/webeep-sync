@@ -9,6 +9,7 @@ import {
     nativeImage,
     nativeTheme,
     powerSaveBlocker,
+    shell,
     Tray,
 } from 'electron'
 
@@ -157,6 +158,7 @@ async function updateTrayContext() {
     tray.setContextMenu(Menu.buildFromTemplate([
         // { label: 'WebeepSync', type: 'submenu' },
         { label: t('open'), click: () => focus() },
+        { label: t('openFolder'), click: () => shell.openPath(store.data.settings.downloadPath) },
         { type: 'separator' },
         {
             label: s ? t('stopSyncing') : t('syncNow'),
