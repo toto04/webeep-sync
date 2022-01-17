@@ -13,7 +13,7 @@ module.exports = {
             name: "webeep-sync",
             setupIcon: "./static/icons/icon.ico",
             setupExe: "WeBeep Sync Windows Setup.exe",
-            loadingGif: "./static/icons/load.gif"
+            // TODO: loading gif
         }
     }, {
         name: "@electron-forge/maker-dmg",
