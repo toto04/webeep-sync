@@ -68,6 +68,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                         let theme = e.target.value as Theme
                         ipcRenderer.send('set-native-theme', theme)
                         setTheme(theme)
+                        updateSettigns({ ...settings, nativeThemeSource: theme })
                     }}>
                         <option value="system">{t('theme.system')}</option>
                         <option value="light">{t('theme.light')}</option>
