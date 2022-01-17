@@ -47,12 +47,12 @@ class Logger extends EventEmitter {
      * insures that no writing operations occour simultaneously and that the file is opened
      * @param str the string to be appended to the log file
      */
-    async writeToFile(str: string) {
+    private async writeToFile(str: string) {
         if (!this.ready) this.once('ready', () => this.writeToFile(str))
         if (this.isWriting) this.once('finished_writing', () => this.writeToFile(str))
         else {
             this.isWriting = true
-            await this.logFile.write(str)
+            await this.logFile.write(str + '\n')
             this.isWriting = false
             this.emit('finished_writing')
         }
@@ -62,7 +62,7 @@ class Logger extends EventEmitter {
         if (this.logLevel < LogLevel.WARN) return
         try {
             let mstr = _module ? ` [${_module}]` : ''
-            let msg = `[${timeStamp()}]${mstr} <WARN> ${String(message)}\n`
+            let msg = `[${timeStamp()}]${mstr} <WARN> ${String(message)}`
             if (!this.logFile) console.error(msg)
             else this.writeToFile(msg)
         } catch (e) { }
@@ -72,7 +72,7 @@ class Logger extends EventEmitter {
         if (this.logLevel < LogLevel.INFO) return
         try {
             let mstr = _module ? ` [${_module}]` : ''
-            let msg = `[${timeStamp()}]${mstr} <INFO> ${String(message)}\n`
+            let msg = `[${timeStamp()}]${mstr} <INFO> ${String(message)}`
             if (!this.logFile) console.log(msg)
             else this.writeToFile(msg)
         } catch (e) { }
@@ -82,7 +82,7 @@ class Logger extends EventEmitter {
         if (this.logLevel < LogLevel.DEBUG) return
         try {
             let mstr = _module ? ` [${_module}]` : ''
-            let msg = `[${timeStamp()}]${mstr} <DBUG> ${String(message)}\n`
+            let msg = `[${timeStamp()}]${mstr} <DBUG> ${String(message)}`
             if (!this.logFile) console.log(msg)
             else this.writeToFile(msg)
         } catch (e) { }
