@@ -83,7 +83,8 @@
         "row": {
             "tooShort": "The name cannot be empty",
             "tooLong": "Max 255 characters!",
-            "invalidCharacters": "These characters cannot be used: "
+            "invalidCharacters": "These characters cannot be used: ",
+            "errPerm": "Cannot rename the folder, you might have a file open inside of it"
         }
     }
 }

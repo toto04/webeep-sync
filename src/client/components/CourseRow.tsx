@@ -33,9 +33,14 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
     let confirmEditing = async () => {
         checkInputValidity()
         if (input.validity.valid) {
-            await ipcRenderer.invoke('rename-course', props.course.id, folder)
-            setEditing(false)
-            input.blur()
+            let success = await ipcRenderer.invoke('rename-course', props.course.id, folder)
+            if (success) {
+                setEditing(false)
+                input.blur()
+            } else {
+                input.setCustomValidity(t('errPerm'))
+                input.reportValidity()
+            }
         } else { input.reportValidity() }
     }
 

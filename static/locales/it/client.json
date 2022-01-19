@@ -83,7 +83,8 @@
         "row": {
             "tooShort": "Il nome non può essere vuoto",
             "tooLong": "Massimo 255 caratteri!",
-            "invalidCharacters": "Questi caratteri non possono essere usati: "
+            "invalidCharacters": "Questi caratteri non possono essere usati: ",
+            "errPerm": "Impossibile rinominare la cartella, potresti aver aperto dei file al suo interno"
         }
     }
 }
