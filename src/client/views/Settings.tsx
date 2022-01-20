@@ -4,7 +4,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IoWarning } from 'react-icons/io5'
 import _Switch from 'react-switch'
-import { Settings } from '../../helpers/store'
+import { Settings } from '../../modules/store'
 import { Modal } from '../components/Modal'
 
 

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Course } from '../../helpers/moodle'
+import { Course } from '../../modules/moodle'
 import { CourseRow } from '../components/CourseRow'
 
 export let CourseList: FC<{ courses: Course[] }> = (props) => {

@@ -15,13 +15,13 @@ import {
 
 import { __static } from './util'
 
-import { createLogger } from './helpers/logger'
-import { loginManager } from './helpers/login'
-import { moodleClient } from './helpers/moodle'
-import { initializeStore, store, } from './helpers/store'
-import { downloadManager } from './helpers/download'
+import { createLogger } from './modules/logger'
+import { loginManager } from './modules/login'
+import { moodleClient } from './modules/moodle'
+import { initializeStore, store, } from './modules/store'
+import { downloadManager } from './modules/download'
 
-import { i18nInit, i18n } from './helpers/i18next'
+import { i18nInit, i18n } from './modules/i18next'
 
 const { debug, log, error } = createLogger('APP')
 

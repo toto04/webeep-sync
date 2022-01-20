@@ -12,7 +12,7 @@ import { LoginContext } from './LoginContext'
 import { MainView } from './views/MainView'
 import { SyncSettings } from './views/SyncSettings'
 import { SettingsModal } from './views/Settings'
-import { Course } from '../helpers/moodle'
+import { Course } from '../modules/moodle'
 import { CourseList } from './views/CourseList'
 import { SyncProgress } from './views/SyncProgress'
 

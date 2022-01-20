@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Checkbox } from './Checkbox'
-import { Course } from '../../helpers/moodle'
+import { Course } from '../../modules/moodle'
 import { ipcRenderer } from 'electron'
 import { IoClose, IoAddCircleOutline, IoCheckmarkCircle } from 'react-icons/io5'
 import { HiCheck } from 'react-icons/hi'
