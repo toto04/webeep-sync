@@ -17,6 +17,7 @@ export interface Settings {
     trayIcon?: boolean
     openAtLogin?: boolean
     language?: 'it' | 'en'
+    checkForUpdates?: boolean
 }
 
 export interface Persistence {
@@ -44,6 +45,7 @@ export const defaultSettings: Required<Settings> = {
     trayIcon: true,
     openAtLogin: false,
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
+    checkForUpdates: true,
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')

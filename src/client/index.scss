@@ -387,6 +387,20 @@ $modal-anim-time: 0.15s;
             font-weight: bold;
         }
     }
+    .clickable.update {
+        position: relative;
+        &::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: $danger;
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            box-shadow: 0 2px 5px 2px #0002;
+        }
+    }
 }
 
 .sync-progress {
@@ -691,6 +705,23 @@ $modal-anim-time: 0.15s;
         font-size: 1.17em;
         margin-bottom: 10px;
     }
+    .update {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        h3 {
+            margin: 0;
+        }
+        .confirm-button {
+            margin-top: 6px;
+            margin-bottom: 8px;
+            color: white;
+        }
+        .ignore {
+            opacity: 0.8;
+        }
+    }
     .setting-warn {
         display: flex;
         align-items: center;
@@ -776,10 +807,10 @@ $modal-anim-time: 0.15s;
         margin: 16px;
         color: #888;
         text-align: center;
-        a {
-            cursor: pointer;
-            color: $bright;
-        }
+    }
+    a {
+        cursor: pointer;
+        color: $bright;
     }
 }
 

@@ -33,11 +33,11 @@ export let Switch: FC<{
     />
 }
 
-let Link: FC<{ href: string }> = props => {
+let Link: FC<{ href: string, className?: string }> = props => {
     return <a onClick={e => {
         e.preventDefault()
         shell.openExternal(props.href)
-    }}>
+    }} className={props.className}>
         {props.children}
     </a>
 }
@@ -49,6 +49,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
     let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
     let [theme, setTheme] = useState<Theme>('system')
     let [version, setVersion] = useState('')
+    let [newUpdate, setNewUpdate] = useState<string | null>(null)
 
     useEffect(() => {
         ipcRenderer.invoke('settings').then(s => updateSettigns(s))
@@ -57,10 +58,17 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
             prevTheme = t
         })
         ipcRenderer.invoke('version').then(v => setVersion(v))
+        ipcRenderer.invoke('get-available-update').then(update => setNewUpdate(update))
     }, [])
 
     return <Modal title={t('settings')} onClose={() => props.onClose()}>
         {settings ? <div className="settings">
+            {newUpdate !== null ? <div className="setting-section update">
+                <h3>There's a new update available 🎉</h3>
+                <span>v{newUpdate} • <Link href='https://github.com/toto04/webeep-sync/releases/latest'>changelog</Link></span>
+                <Link className="confirm-button" href=''>download</Link>
+                <a className='ignore'>ignore this version</a>
+            </div> : undefined}
             <div className="setting-section">
                 {theme ? <div className="setting">
                     <span>{t('colorTheme')}</span>

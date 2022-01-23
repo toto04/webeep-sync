@@ -30,6 +30,7 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
     let { t, i18n } = useTranslation('client', { keyPrefix: 'mainView' })
 
     let [elapsedTime, setElapsedTime] = useState('...')
+    let [updateAvailable, setUpdateAvailable] = useState(false)
 
     useEffect(() => {
         _i18n = i18n
@@ -41,6 +42,9 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
         i18n.on('languageChanged', () => updateTime())
         ipcRenderer.on('syncing', () => updateTime())
         updateTime()
+
+        ipcRenderer.on('new-update', (e, update) => setUpdateAvailable(update))
+        ipcRenderer.invoke('get-available-update').then(update => setUpdateAvailable(!!update))
     }, [])
 
     return <div className="main-view section">
@@ -74,7 +78,11 @@ export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (prop
                     </a>
                 }
             </div>
-            <IoSettingsSharp className="clickable" onClick={() => props.onSettings()} />
+            <div className={"clickable" + (updateAvailable ? ' update' : '')}>
+                <IoSettingsSharp onClick={() => {
+                    props.onSettings()
+                }} />
+            </div>
         </div>
     </div>
 }
