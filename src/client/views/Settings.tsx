@@ -1,5 +1,5 @@
 import { ipcRenderer, shell } from 'electron'
-import { platform } from 'os'
+import { platform, arch } from 'os'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IoWarning } from 'react-icons/io5'
@@ -7,6 +7,18 @@ import _Switch from 'react-switch'
 import { Settings } from '../../modules/store'
 import { Modal } from '../components/Modal'
 
+let downloadLink = ''
+switch (platform()) {
+    case 'win32':
+        downloadLink = 'downlhttps://github.com/toto04/webeep-sync/releases/latest/downloadoad/WeBeep.Sync.Windows.Setup.zip'
+        break;
+    case 'darwin':
+        downloadLink = `https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-${arch()}.dmg`
+        break;
+    default:
+        downloadLink = 'https://github.com/toto04/webeep-sync/releases/latest/'
+        break;
+}
 
 const themes = ['light', 'dark', 'system'] as const
 type Theme = typeof themes[number]
@@ -64,10 +76,10 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
     return <Modal title={t('settings')} onClose={() => props.onClose()}>
         {settings ? <div className="settings">
             {newUpdate !== null ? <div className="setting-section update">
-                <h3>There's a new update available 🎉</h3>
+                <h3>{t('newUpdateAvailable')}</h3>
                 <span>v{newUpdate} • <Link href='https://github.com/toto04/webeep-sync/releases/latest'>changelog</Link></span>
-                <Link className="confirm-button" href=''>download</Link>
-                <a className='ignore'>ignore this version</a>
+                <Link className="confirm-button" href={downloadLink}>download</Link>
+                <a className='ignore'>{t('ignoreUpdate')}</a>
             </div> : undefined}
             <div className="setting-section">
                 {theme ? <div className="setting">
@@ -95,6 +107,14 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 </div>
             </div>
             <div className="setting-section">
+                <div className="setting">
+                    <span>{t('notifyUpdate')}</span>
+                    <Switch
+                        onChange={v => updateSettigns({ ...settings, checkForUpdates: v })}
+                        checked={settings.checkForUpdates}
+                    />
+                    <span className="desc">{t('notifyUpdate_desc')}</span>
+                </div>
                 <div className="setting">
                     <span>{t('openAtLogin')}</span>
                     <Switch
