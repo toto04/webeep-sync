@@ -28,6 +28,7 @@ export interface Persistence {
         }
     }
     lastSynced?: number
+    ignoredUpdates: string[]
 }
 
 export interface Store {
@@ -74,14 +75,18 @@ export async function initializeStore(): Promise<void> {
             settings: {},
             persistence: {
                 courses: {},
+                ignoredUpdates: [],
             }
         }
         if (!store.data.persistence) {
             store.data.persistence = {
                 courses: {},
+                ignoredUpdates: [],
             }
         } else {
             if (!store.data.persistence.courses) store.data.persistence.courses = {}
+            if (!store.data.persistence.ignoredUpdates) store.data.persistence.ignoredUpdates = []
+
             for (let id in store.data.persistence.courses) {
                 // for retrocompatibility, if the shape is not right reset the whole object
                 if (store.data.persistence.courses[id].name === undefined

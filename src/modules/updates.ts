@@ -35,12 +35,18 @@ export class UpdateManager extends EventEmitter {
         let versionRE = /(\d+)\.(\d+)\.(\d+)/ // regexp parsing version
         try {
             debug('checking for new version')
+            await initializeStore()
             let res = await got.get('https://api.github.com/repos/toto04/webeep-sync/releases/latest', {
                 headers: {
                     "Accept": 'application/vnd.github.v3+json'
                 }
             })
             let latestVersion: string = JSON.parse(res.body).tag_name.substring(1)
+            if (store.data.persistence.ignoredUpdates.includes(latestVersion)) {
+                debug('latest update is set to be ignored')
+                return null
+            }
+
             let latestMatch = latestVersion.match(versionRE)
             let oldMatch = app.getVersion().match(versionRE)
             // remove the first element to get just the matching groups

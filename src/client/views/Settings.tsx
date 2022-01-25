@@ -79,7 +79,10 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 <h3>{t('newUpdateAvailable')}</h3>
                 <span>v{newUpdate} • <Link href='https://github.com/toto04/webeep-sync/releases/latest'>changelog</Link></span>
                 <Link className="confirm-button" href={downloadLink}>download</Link>
-                <a className='ignore'>{t('ignoreUpdate')}</a>
+                <a className='ignore' onClick={async () => {
+                    await ipcRenderer.invoke('ignore-update', newUpdate)
+                    setNewUpdate(await ipcRenderer.invoke('get-available-update'))
+                }}>{t('ignoreUpdate')}</a>
             </div> : undefined}
             <div className="setting-section">
                 {theme ? <div className="setting">

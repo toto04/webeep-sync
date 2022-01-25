@@ -411,3 +411,10 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
 ipcMain.handle('get-available-update', () => {
     return updates.availableUpdate
 })
+
+ipcMain.handle('ignore-update', async (e, update: string) => {
+    await initializeStore()
+    store.data.persistence.ignoredUpdates.push(update)
+    await updates.checkUpdate()
+    await store.write()
+})
