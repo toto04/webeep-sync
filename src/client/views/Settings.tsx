@@ -1,12 +1,24 @@
 import { ipcRenderer, shell } from 'electron'
-import { platform } from 'os'
+import { platform, arch } from 'os'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IoWarning } from 'react-icons/io5'
 import _Switch from 'react-switch'
-import { Settings } from '../../helpers/store'
+import { Settings } from '../../modules/store'
 import { Modal } from '../components/Modal'
 
+let downloadLink = ''
+switch (platform()) {
+    case 'win32':
+        downloadLink = 'downlhttps://github.com/toto04/webeep-sync/releases/latest/downloadoad/WeBeep.Sync.Windows.Setup.zip'
+        break;
+    case 'darwin':
+        downloadLink = `https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-${arch()}.dmg`
+        break;
+    default:
+        downloadLink = 'https://github.com/toto04/webeep-sync/releases/latest/'
+        break;
+}
 
 const themes = ['light', 'dark', 'system'] as const
 type Theme = typeof themes[number]
@@ -33,11 +45,11 @@ export let Switch: FC<{
     />
 }
 
-let Link: FC<{ href: string }> = props => {
+let Link: FC<{ href: string, className?: string }> = props => {
     return <a onClick={e => {
         e.preventDefault()
         shell.openExternal(props.href)
-    }}>
+    }} className={props.className}>
         {props.children}
     </a>
 }
@@ -49,6 +61,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
     let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
     let [theme, setTheme] = useState<Theme>('system')
     let [version, setVersion] = useState('')
+    let [newUpdate, setNewUpdate] = useState<string | null>(null)
 
     useEffect(() => {
         ipcRenderer.invoke('settings').then(s => updateSettigns(s))
@@ -57,10 +70,20 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
             prevTheme = t
         })
         ipcRenderer.invoke('version').then(v => setVersion(v))
+        ipcRenderer.invoke('get-available-update').then(update => setNewUpdate(update))
     }, [])
 
     return <Modal title={t('settings')} onClose={() => props.onClose()}>
         {settings ? <div className="settings">
+            {newUpdate !== null ? <div className="setting-section update">
+                <h3>{t('newUpdateAvailable')}</h3>
+                <span>v{newUpdate} • <Link href='https://github.com/toto04/webeep-sync/releases/latest'>changelog</Link></span>
+                <Link className="confirm-button" href={downloadLink}>download</Link>
+                <a className='ignore' onClick={async () => {
+                    await ipcRenderer.invoke('ignore-update', newUpdate)
+                    setNewUpdate(await ipcRenderer.invoke('get-available-update'))
+                }}>{t('ignoreUpdate')}</a>
+            </div> : undefined}
             <div className="setting-section">
                 {theme ? <div className="setting">
                     <span>{t('colorTheme')}</span>
@@ -87,6 +110,14 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 </div>
             </div>
             <div className="setting-section">
+                <div className="setting">
+                    <span>{t('notifyUpdate')}</span>
+                    <Switch
+                        onChange={v => updateSettigns({ ...settings, checkForUpdates: v })}
+                        checked={settings.checkForUpdates}
+                    />
+                    <span className="desc">{t('notifyUpdate_desc')}</span>
+                </div>
                 <div className="setting">
                     <span>{t('openAtLogin')}</span>
                     <Switch

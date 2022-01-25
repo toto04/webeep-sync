@@ -4,7 +4,7 @@ import { PrograssBar } from '../components/ProgressBar'
 import React from 'react'
 
 import { DownloadState, formatSize, SyncResult } from '../../util'
-import { NewFilesList, Progress } from '../../helpers/download'
+import { NewFilesList, Progress } from '../../modules/download'
 import { NewFilesModal } from './NewFilesModal'
 import { LoginContext } from '../LoginContext'
 import { useTranslation } from 'react-i18next'

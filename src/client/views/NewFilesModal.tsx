@@ -4,7 +4,7 @@ import { IoCaretForward, IoCaretDown, IoFolderOpen, IoOpen, IoClose } from 'reac
 
 import { Modal } from '../components/Modal'
 import { formatSize } from '../../util'
-import { NewFilesList } from '../../helpers/download'
+import { NewFilesList } from '../../modules/download'
 import { shell } from 'electron'
 import { useTranslation } from 'react-i18next'
 

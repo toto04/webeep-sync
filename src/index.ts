@@ -15,13 +15,14 @@ import {
 
 import { __static } from './util'
 
-import { createLogger } from './helpers/logger'
-import { loginManager } from './helpers/login'
-import { moodleClient } from './helpers/moodle'
-import { initializeStore, store, } from './helpers/store'
-import { downloadManager } from './helpers/download'
+import { createLogger } from './modules/logger'
+import { loginManager } from './modules/login'
+import { moodleClient } from './modules/moodle'
+import { initializeStore, store, } from './modules/store'
+import { downloadManager } from './modules/download'
+import { updates } from './modules/updates'
 
-import { i18nInit, i18n } from './helpers/i18next'
+import { i18nInit, i18n } from './modules/i18next'
 
 const { debug, log, error } = createLogger('APP')
 
@@ -127,6 +128,8 @@ const createWindow = (): void => {
     downloadManager.on('new-files', files => send('new-files', files))
 
     moodleClient.on('courses', async c => send('courses', c))
+
+    updates.on('new_update', update => send('new-update', update))
 
     i18n.on('languageChanged', lng => send('language', {
         lng,
@@ -403,4 +406,15 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
     } finally {
         return success
     }
+})
+
+ipcMain.handle('get-available-update', () => {
+    return updates.availableUpdate
+})
+
+ipcMain.handle('ignore-update', async (e, update: string) => {
+    await initializeStore()
+    store.data.persistence.ignoredUpdates.push(update)
+    await updates.checkUpdate()
+    await store.write()
 })
