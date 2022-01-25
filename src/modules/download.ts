@@ -164,6 +164,7 @@ export class DownloadManager extends EventEmitter {
                     return SyncResult.stopped
 
                 case 'RequestError':
+                case 'HTTPError':
                     return SyncResult.networkError
 
                 default:
