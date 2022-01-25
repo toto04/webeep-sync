@@ -95,7 +95,6 @@ export class DownloadManager extends EventEmitter {
     }
 
     private async _sync(): Promise<SyncResult> {
-        if (!moodleClient.connected) return SyncResult.networkError
         await initializeStore() // just to be sure that the settings are initialized
         let { downloadPath } = store.data.settings
         this.stopped = false
@@ -165,6 +164,7 @@ export class DownloadManager extends EventEmitter {
                     return SyncResult.stopped
 
                 case 'RequestError':
+                case 'HTTPError':
                     return SyncResult.networkError
 
                 default:
