@@ -10,7 +10,7 @@ import { Modal } from '../components/Modal'
 let downloadLink = ''
 switch (platform()) {
     case 'win32':
-        downloadLink = 'downlhttps://github.com/toto04/webeep-sync/releases/latest/downloadoad/WeBeep.Sync.Windows.Setup.zip'
+        downloadLink = 'https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.Windows.Setup.zip'
         break;
     case 'darwin':
         downloadLink = `https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-${arch()}.dmg`
