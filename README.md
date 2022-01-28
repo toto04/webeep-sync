@@ -126,3 +126,130 @@ ti piace idk, non pesa nemmeno poi molto dai
 Ok ma cosa si scrive in fondo a un README? Cioè qualcuno legge anche fino in fondo?
 Ecco video di gattini come ricompensa per essere arrivato fin quaggiù:
 ***[link](https://youtu.be/dQw4w9WgXcQ)***
+
+# English Version:
+[![donate](https://shields.io/badge/donate-paypal-blue)](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
+
+### Just want to download the app? Go to [Download](#Download) ⏬
+
+WeBeep Sync is a simple app that is used to keep all your WeBeep files synchronized,
+User-Friendly and uncompromising.
+
+I'm developing this app as a tool for personal use, but I thought it might be useful to 
+other students, so it's completely opensource and free under [GPLv3](LICENSE) license. 
+
+### What exactly is it?
+WeBeep Sync was intended as a replacement for [PoliBeepSync](https://github.com/Jacotsu/polibeepsync/) 
+since support for WeBeep would not be added.
+It aims to be a more user-firendly, complete and definitive solution than 
+[Moodle Downloader 2](https://github.com/C0D3D3V/Moodle-Downloader-2), my goal was to have
+something you can download and forget about, being sure that all the WeBeep files will be
+always up to date.
+
+### What is it for?
+Just like PoliBeepSync, it serves to keep your WeBeep files synchronized in a local folder on your
+folder on your PC. If you want a worry-free experience, you can let the app open in the
+background and you can choose how often the synchronizations will take place, so you will always have all your
+files up to date. Or you can turn off autosync and download all your files at once
+when you like.
+
+<img src="https://i.imgur.com/ywvOwSY.png" />
+
+## Downloading
+In the Github releases you can find the app already packaged and ready to use for Windows and macOS
+(both x64 and M1)
+### [Latest Release](https://github.com/toto04/webeep-sync/releases/latest)
+
+You can use the following links to directly download the version that suits you best
+
+### Windows
+#### [Installer x64](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.Windows.Setup.zip)
+
+### macOS
+#### [dmg arm64 (M1 or higher)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-arm64.dmg)
+#### [dmg x64 (Intel)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-x64.dmg)
+
+#### "WeBeep Sync" is corrupted and cannot be opened. How to solve it?
+
+Due to the fact that I don't have a developer account with which to sign a certificate because it
+cost too much, macOS considers the file as coming from an unidentified developer and
+blocks the startup.
+
+To get around this minor inconvenience, you have to manually give the app execution permissions.
+To do this, _once you've moved WeBeep Sync to the Applications folder_, open the Terminal and
+paste this command
+```sh
+sudo xattr -rd com.apple.quarantine /Applications/WeBeep\ Sync.app
+```
+and everything should work without problems
+
+### Linux
+
+As for linux, I'm developing the app by myself and I don't use much desktop Linux, so
+I haven't (yet) tried packaging it, also because some of Electron's features are OS
+specific, and would not be supported, but the core functionality of the app should work following
+manual installation
+
+### Manual installation
+Prerequisites:
+* [git](https://git-scm.com)
+* [NodeJS](https://nodejs.org) (v16, strongly recommended to install via
+[nvm](https://github.com/nvm-sh/nvm))
+* [Yarn](https://yarnpkg.com/getting-started/install)
+
+First clone the repository
+```sh
+git clone https://github.com/toto04/webeep-sync && cd webeep-sync
+```
+then install the dependencies
+```sh
+yarn
+```
+and finally the app can be started with
+```sh
+yarn start
+```
+or you can create a ready to install package with
+```sh
+yarn make
+```
+
+For more information, have a look at the scripts in ``package.json`` and the documentation of the 
+CLI documentation for [Electron Forge](https://www.electronforge.io/cli)
+
+## About the app
+The app is based on [Electron](https://www.electronjs.org), written using 
+[Typescript](https://www.typescriptlang.org) and [React](https://it.reactjs.org).
+It was created using [Electron Forge](https://www.electronforge.io/) and is licensed under the
+GPLv3 license.
+
+If you want to help the development of the app by proposing bug-fixes or new features, you can open an 
+[issue](https://github.com/toto04/webeep-sync/issues/new).
+
+For any other information, I hope the comments I left around are clear enough, otherwise
+clear enough, otherwise idk write me an email I guess.
+
+Or if you find the app particularly useful, you can buy me a coffee and give me some change on
+PayPal (which maybe then who knows I might even get to afford a developer account
+Apple 🤷♂️)
+
+[<img src="https://imgur.com/XurCPDg.png" width=200 />](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
+
+Thank you very much 🥺❤️
+
+## Features
+* download all the files from WeBeep with a single click in the folder you prefer
+* you can rename the folders of individual courses
+* you can select which of your courses to synchronize
+* you can configure the app to stay open in the background, and set how often to do an autosync
+* you can choose to start the app when you login, silently to make sure you always have the latest files
+updated
+* you can select between light 🌞 and dark 🌚 theme
+* available in both Italian 🇮🇹 and English 🇬🇧.
+* I mean it's an app to download files I don't know how many functions it could possibly have.
+* I don't know what to come up with as "features" anymore, i.e. download it and see, at most delete it if you don't 
+you don't like idk, it doesn't even weigh that much.
+
+Ok but what is written at the bottom of a README? I mean does anyone read all the way to the bottom?
+Here is a video of kittens as a reward for getting down here:
+***[link](https://youtu.be/dQw4w9WgXcQ)***
