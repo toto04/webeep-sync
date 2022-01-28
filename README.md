@@ -3,6 +3,8 @@
 
 [![donate](https://shields.io/badge/donate-paypal-blue)](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
 
+### [English version here](https://github.com/toto04/webeep-sync#english-version)
+
 ### Vuoi solo scaricare l'app? Vai ai [Download](#Download) ⏬
 
 WeBeep Sync è una semplice app che serve per tenere sincronizzati tutti i tuoi file di WeBeep,
