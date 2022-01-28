@@ -37,6 +37,11 @@ type Contents = {
     }[],
 }[]
 
+function getDefaultName(fullname: string) {
+    let m = fullname.match(/\d+ - (.+) \(.+\)/)
+    return m ? m[1] : fullname
+}
+
 export declare interface MoodleClient {
     on(event: 'disconnected', listener: () => void): this,
     on(event: 'reconnected', listener: () => void): this,
@@ -165,15 +170,22 @@ export class MoodleClient extends EventEmitter {
 
         // once the store is initialized fetch and parse the courses
         let courses: any[] = await this.call('core_enrol_get_users_courses', { userid }, catchNetworkError)
-        let c: Course[] = courses.map(c => {
+        let defaultNames = courses.map(c => getDefaultName(c.fullname))
+        let c: Course[] = courses.map((c, i) => {
             let { id, fullname } = c
 
+
+
             if (!store.data.persistence.courses[id]) {
-                let name = fullname
-                let m = name.match(/\d+ - (.+) \(.+\)/)
-                if (m) name = m[1]
+                // check if there are multiple courses that would be shortened to the same folder
+                let allInstances = defaultNames.reduce((arr, el, j) => {
+                    if (el === defaultNames[i]) { arr.push(j) }
+                    return arr
+                }, [])
+
                 store.data.persistence.courses[id] = {
-                    name,
+                    // if multiple courses share the same name, just use the fullname instead
+                    name: (allInstances.length > 1) ? fullname : defaultNames[i],
                     shouldSync: store.data.settings.syncNewCourses
                 }
             }
