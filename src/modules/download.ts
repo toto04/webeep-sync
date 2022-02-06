@@ -10,7 +10,7 @@ import { loginManager } from './login'
 
 import { DownloadState, SyncResult } from '../util'
 
-let { log, error } = createLogger('DownloadManager')
+let { log, error, debug } = createLogger('DownloadManager')
 
 export interface Progress {
     downloaded: number
@@ -64,7 +64,7 @@ export class DownloadManager extends EventEmitter {
 
     private updateState(newState: DownloadState) {
         this.emit('state', newState)
-        log('new state: ' + DownloadState[newState])
+        debug('new state: ' + DownloadState[newState])
         this.currentState = newState
     }
 
@@ -82,7 +82,7 @@ export class DownloadManager extends EventEmitter {
         this.emit('sync')
 
         let result = await this._sync()
-        log(`finished syncing with result:  ${SyncResult[result]}\n`)
+        log(`finished syncing with result:  ${SyncResult[result]}`)
 
         if (result === SyncResult.success) {
             store.data.persistence.lastSynced = Date.now()
@@ -152,6 +152,7 @@ export class DownloadManager extends EventEmitter {
                     })
                 } catch (e) {
                     error('An error occured while writing a file to disk:')
+                    error(`Current state: ${DownloadState[this.currentState]}`)
                     error(e)
                     return SyncResult.fsError
                 }
@@ -169,6 +170,7 @@ export class DownloadManager extends EventEmitter {
 
                 default:
                     error('An unkown error occured on a sync attempt:')
+                    error(`Current state: ${DownloadState[this.currentState]}`)
                     error(e)
                     return SyncResult.unknownError
             }
