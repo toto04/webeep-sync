@@ -3,7 +3,7 @@
 
 [![donate](https://shields.io/badge/donate-paypal-blue)](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
 
-### [English version here](https://github.com/toto04/webeep-sync#english-version)
+### [🇬🇧 click here for English version](https://github.com/toto04/webeep-sync#english-version)
 
 ### Vuoi solo scaricare l'app? Vai ai [Download](#Download) ⏬
 
@@ -11,7 +11,7 @@ WeBeep Sync è una semplice app che serve per tenere sincronizzati tutti i tuoi 
 User-Friendly e senza compromessi.
 
 Sto sviluppando quest'app come strumento ad uso personale, ma ho pensato potesse essere utile ad 
-altri studenti, perciò è completamente opensource e gratuita sotto licenza [GPLv3](LICENSE). 
+altri studenti, perciò è completamente opensource e gratuita sotto [licenza GPLv3](LICENSE). 
 
 ### Cos'è esattamente?
 WeBeep Sync stata pensata come un sostituto a [PoliBeepSync](https://github.com/Jacotsu/polibeepsync/) 
@@ -41,8 +41,8 @@ Puoi usare i seguenti link per scaricare direttamente la versione più adatta a 
 #### [Installer x64](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.Windows.Setup.zip)
 
 ### macOS
-#### [dmg arm64 (M1 o superiore)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-arm64.dmg)
 #### [dmg x64 (Intel)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-x64.dmg)
+#### [dmg arm64 (M1 o superiore)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-arm64.dmg)
 
 #### "WeBeep Sync" è danneggiato e non può essere aperto. Come risolvere?
 
@@ -65,32 +65,33 @@ non ho (ancora) provato a fare un packaging, anche perché alcune delle funzioni
 specific, e non sarebbero supportate, ma il funzionamento core dell'app dovrebbe funzionare seguendo
 l'installazione manuale
 
-### Installazione manuale
+### Installazione manuale (istruzioni di compilazione)
 Prerequisiti:
 * [git](https://git-scm.com)
 * [NodeJS](https://nodejs.org) (v16, consigliata fortemente l'installazione via
 [nvm](https://github.com/nvm-sh/nvm))
 * [Yarn](https://yarnpkg.com/getting-started/install)
 
-Per prima cosa clona la repository
+Per prima cosa scarica l'app
 ```sh
+# clona la repository
 git clone https://github.com/toto04/webeep-sync && cd webeep-sync
-```
-poi installa le dependencies
-```sh
+# installa le dependencies
 yarn
 ```
-e infine l'app può essere avviata con
+e questo è tutto, l'app può essere avviata via linea di comando con
 ```sh
 yarn start
 ```
-oppure puoi creare un package pronto all'installazione con
+oppure puoi creare un package per installarla con
 ```sh
 yarn make
 ```
 
 Per maggiori informazioni, dai un'occhiata agli script in ```package.json``` e alla documentazione 
-della CLI di [Electron Forge](https://www.electronforge.io/cli)
+della CLI di [Electron Forge](https://www.electronforge.io/cli), dove puoi trovare istruzioni su
+come modificare il file ```forge.config.js``` a tuo gradimento per creare un package che fa al caso
+tuo
 
 ## Informazioni sull'app
 L'app è basata su [Electron](https://www.electronjs.org), scritta usando 
@@ -129,18 +130,20 @@ Ok ma cosa si scrive in fondo a un README? Cioè qualcuno legge anche fino in fo
 Ecco video di gattini come ricompensa per essere arrivato fin quaggiù:
 ***[link](https://youtu.be/dQw4w9WgXcQ)***
 
+---
+
 # English Version:
 [![donate](https://shields.io/badge/donate-paypal-blue)](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
 
-### Just want to download the app? Go to [Download](#Download) ⏬
+### Just want to download the app? Go to the [Downloads](#Downloads) ⏬
 
 WeBeep Sync is a simple app that is used to keep all your WeBeep files synchronized,
 User-Friendly and uncompromising.
 
 I'm developing this app as a tool for personal use, but I thought it might be useful to 
-other students, so it's completely opensource and free under [GPLv3](LICENSE) license. 
+other students, so it's completely opensource and free under [GPLv3 license](LICENSE). 
 
-### What exactly is it?
+### What is it exactly?
 WeBeep Sync was intended as a replacement for [PoliBeepSync](https://github.com/Jacotsu/polibeepsync/) 
 since support for WeBeep would not be added.
 It aims to be a more user-firendly, complete and definitive solution than 
@@ -157,7 +160,7 @@ when you like.
 
 <img src="https://i.imgur.com/ywvOwSY.png" />
 
-## Downloading
+## Downloads
 In the Github releases you can find the app already packaged and ready to use for Windows and macOS
 (both x64 and M1)
 ### [Latest Release](https://github.com/toto04/webeep-sync/releases/latest)
@@ -168,10 +171,10 @@ You can use the following links to directly download the version that suits you 
 #### [Installer x64](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.Windows.Setup.zip)
 
 ### macOS
-#### [dmg arm64 (M1 or higher)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-arm64.dmg)
 #### [dmg x64 (Intel)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-x64.dmg)
+#### [dmg arm64 (M1 or higher)](https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-arm64.dmg)
 
-#### "WeBeep Sync" is corrupted and cannot be opened. How to solve it?
+#### "WeBeep Sync" is damaged and can't be opened. How to solve it?
 
 Due to the fact that I don't have a developer account with which to sign a certificate because it
 cost too much, macOS considers the file as coming from an unidentified developer and
@@ -192,32 +195,33 @@ I haven't (yet) tried packaging it, also because some of Electron's features are
 specific, and would not be supported, but the core functionality of the app should work following
 manual installation
 
-### Manual installation
+### Manual installation (compile instructions)
 Prerequisites:
 * [git](https://git-scm.com)
-* [NodeJS](https://nodejs.org) (v16, strongly recommended to install via
+* [NodeJS](https://nodejs.org) (v16, I strongly recommend to install it via
 [nvm](https://github.com/nvm-sh/nvm))
 * [Yarn](https://yarnpkg.com/getting-started/install)
 
-First clone the repository
+First of all, download the app
 ```sh
+# clone the repository
 git clone https://github.com/toto04/webeep-sync && cd webeep-sync
-```
-then install the dependencies
-```sh
+# install dependencies
 yarn
 ```
-and finally the app can be started with
+and that's it, the app can be launched from command line using
 ```sh
 yarn start
 ```
-or you can create a ready to install package with
+or if you prefer, you can create a package for installation with
 ```sh
 yarn make
 ```
 
-For more information, have a look at the scripts in ``package.json`` and the documentation of the 
-CLI documentation for [Electron Forge](https://www.electronforge.io/cli)
+For more information, have a look at the scripts in ```package.json``` and the documentation of the 
+CLI documentation for [Electron Forge](https://www.electronforge.io/cli), where you can find 
+instructions on how to modify the file ```forge.config.js``` to your liking to create a package
+that suits your needs
 
 ## About the app
 The app is based on [Electron](https://www.electronjs.org), written using 
@@ -228,12 +232,11 @@ GPLv3 license.
 If you want to help the development of the app by proposing bug-fixes or new features, you can open an 
 [issue](https://github.com/toto04/webeep-sync/issues/new).
 
-For any other information, I hope the comments I left around are clear enough, otherwise
-clear enough, otherwise idk write me an email I guess.
+For any other information, I hope the comments I left around are clear enough, otherwise idk write 
+me an email I guess.
 
 Or if you find the app particularly useful, you can buy me a coffee and give me some change on
-PayPal (which maybe then who knows I might even get to afford a developer account
-Apple 🤷♂️)
+PayPal (which maybe then who knows I might even get to afford an Apple developer account 🤷‍♂️)
 
 [<img src="https://imgur.com/XurCPDg.png" width=200 />](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
 
@@ -253,5 +256,5 @@ updated
 you don't like idk, it doesn't even weigh that much.
 
 Ok but what is written at the bottom of a README? I mean does anyone read all the way to the bottom?
-Here is a video of kittens as a reward for getting down here:
+Here is a video of kittens as a reward for getting this far:
 ***[link](https://youtu.be/dQw4w9WgXcQ)***
