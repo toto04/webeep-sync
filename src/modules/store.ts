@@ -7,6 +7,12 @@ import { Low, JSONFile } from 'lowdb'
 import { createLogger } from './logger'
 const { debug, log } = createLogger('Store')
 
+/**
+ * store.json manifest version, to be increased when breaking changes are made so that a correct 
+ * fixes for the change can be implemented in the {@link updateManifestVersion} function
+ */
+const CURRENT_MANIFEST_VERSION = 1
+
 export interface Settings {
     syncNewCourses?: boolean
     downloadPath?: string
@@ -32,6 +38,7 @@ export interface Persistence {
 }
 
 export interface Store {
+    manifestVersion?: number
     settings: Settings
     persistence: Persistence
 }
@@ -57,6 +64,56 @@ let initializing = false
 
 let storeInitializationEE = new EventEmitter()
 
+/**
+ * this function checks (and eventually restores) the correct shape of the store.data object to
+ * to ensure correct functionality
+ * TODO: do things recursively so that adhoc changes dont have to be implemented by hand
+ */
+function checkStoreIntegrity() {
+    if (!store.data) store.data = {
+        settings: {},
+        persistence: {
+            courses: {},
+            ignoredUpdates: [],
+        }
+    }
+    if (!store.data.persistence) {
+        store.data.persistence = {
+            courses: {},
+            ignoredUpdates: [],
+        }
+    } else {
+        if (!store.data.persistence.courses) store.data.persistence.courses = {}
+        if (!store.data.persistence.ignoredUpdates) store.data.persistence.ignoredUpdates = []
+
+        for (let id in store.data.persistence.courses) {
+            // for retrocompatibility, if the shape is not right reset the whole object
+            if (
+                store.data.persistence.courses[id].name === undefined
+                || store.data.persistence.courses[id].shouldSync === undefined
+            ) {
+                store.data.persistence.courses = {}
+                break
+            }
+        }
+    }
+}
+
+/**
+ * this function checks the manifest version, if lower than the {@link CURRENT_MANIFEST_VERSION}
+ * then corrections should be made to make sure that everything works after an update
+ * @returns 
+ */
+async function updateManifestVersion() {
+    let ver = store.data.manifestVersion ?? 0
+    if (ver === CURRENT_MANIFEST_VERSION) return
+
+    // add here checks to mutate from old version
+
+    // once sure that everything is updated, change the manifest version
+    store.data.manifestVersion = CURRENT_MANIFEST_VERSION
+}
+
 export async function initializeStore(): Promise<void> {
     return new Promise(async (resolve, reject) => {
         if (initialized) {
@@ -71,33 +128,10 @@ export async function initializeStore(): Promise<void> {
         initializing = true
 
         await store.read()
-        if (!store.data) store.data = {
-            settings: {},
-            persistence: {
-                courses: {},
-                ignoredUpdates: [],
-            }
-        }
-        if (!store.data.persistence) {
-            store.data.persistence = {
-                courses: {},
-                ignoredUpdates: [],
-            }
-        } else {
-            if (!store.data.persistence.courses) store.data.persistence.courses = {}
-            if (!store.data.persistence.ignoredUpdates) store.data.persistence.ignoredUpdates = []
+        checkStoreIntegrity()
+        await updateManifestVersion()
 
-            for (let id in store.data.persistence.courses) {
-                // for retrocompatibility, if the shape is not right reset the whole object
-                if (store.data.persistence.courses[id].name === undefined
-                    || store.data.persistence.courses[id].shouldSync === undefined
-                ) {
-                    store.data.persistence.courses = {}
-                    break
-                }
-            }
-        }
-
+        // assign default settings if missing
         store.data.settings = Object.assign({}, defaultSettings, store.data.settings)
         await store.write()
 

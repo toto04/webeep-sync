@@ -144,6 +144,7 @@ function focus() {
 }
 
 function setupTray() {
+    debug('Setting up tray')
     tray = new Tray(trayImg)
     tray.setToolTip('Webeep Sync')
     tray.on('click', () => {
@@ -153,6 +154,7 @@ function setupTray() {
 
 async function updateTrayContext() {
     if (!tray) return
+    debug('Updating tray context')
     await initializeStore()
     const t = i18n.getFixedT(null, 'tray', null)
 
@@ -227,9 +229,7 @@ app.on('ready', async () => {
     await setLoginItem(store.data.settings.openAtLogin)
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+// When all windows are closed, on macOS hide the dock, if the user has disabled background, quit
 app.on('window-all-closed', async () => {
     app.dock?.hide()
     await initializeStore()
@@ -246,8 +246,7 @@ app.on('activate', () => {
     }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+// --- IPC COMUNICATION HANDLES ---
 
 ipcMain.handle('window-control', (e, command: string) => {
     const win = BrowserWindow.getFocusedWindow()
