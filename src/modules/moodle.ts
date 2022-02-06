@@ -247,10 +247,11 @@ export class MoodleClient extends EventEmitter {
                     if (file.type !== 'file') continue  // only add files to the download (duh)
 
                     let { filename, filepath, filesize, fileurl, timecreated, timemodified } = file
+                    filepath = path.join(modulename, filepath)
                     // if the contentgroup is 'Materiali', do not create a subfolder, as many courses
                     // use it as the only folder with downloadable contents
                     filepath = contentGroup.name === 'Materiali' ? filepath : path.join(contentGroup.name, filepath)
-                    filepath = path.join(course.name, modulename, filepath)
+                    filepath = path.join(course.name, filepath)
 
                     // TODO: find a better way to handle illegal characters
                     filepath = filepath.replace(/[:*?"<>|]/g, '_')
