@@ -7,6 +7,9 @@ import { initializeStore, store } from './store'
 
 const { log, debug } = createLogger('MoodleClient')
 
+/** module name to be excluded from file search to prevent download of junk */
+const EXCLUDED_MODNAMES = ['page', 'forum', 'url', 'wooclap', 'choice', 'feedback', 'label', 'lesson']
+
 export interface Course {
     id: number,
     fullname: string,
@@ -31,6 +34,7 @@ type Contents = {
     modules: {
         id: number,
         name: string,
+        modname: string,
         contents?: ({
             type: string,
         } & FileInfo)[],
@@ -219,21 +223,38 @@ export class MoodleClient extends EventEmitter {
         return this.cachedCourses
     }
 
+    /**
+     * this function calls the moodle api to get all the files to be downloaded from a specified 
+     * course
+     * @param course the course object from {@link getCourses}
+     * @returns a promise that resolve to an array with all the FileInfo objects
+     */
     async getFileInfos(course: Course): Promise<FileInfo[]> {
         // TODO: course custom folder name
         let contents: Contents = await this.call('core_course_get_contents', { courseid: course.id }, false)
         let files: FileInfo[] = []
-        let mat = contents.find(c => c.name === 'Materiali')
-        if (!mat) return []
-        for (const module of mat.modules) {
-            let { name: modulename, contents } = module
-            if (!contents) continue
-            for (const file of contents) {
-                if (file.type === 'file') {
+
+        for (const contentGroup of contents) {
+
+            for (const module of contentGroup.modules) {
+                let { name: modulename, contents, modname } = module
+
+                // if the modname is excluded or if the module is empty, skip this module, 
+                if (EXCLUDED_MODNAMES.includes(modname)) continue
+                if (!contents) continue
+
+                for (const file of contents) {
+                    if (file.type !== 'file') continue  // only add files to the download (duh)
+
                     let { filename, filepath, filesize, fileurl, timecreated, timemodified } = file
+                    // if the contentgroup is 'Materiali', do not create a subfolder, as many courses
+                    // use it as the only folder with downloadable contents
+                    filepath = contentGroup.name === 'Materiali' ? filepath : path.join(contentGroup.name, filepath)
                     filepath = path.join(course.name, modulename, filepath)
+
                     // TODO: find a better way to handle illegal characters
                     filepath = filepath.replace(/[:*?"<>|]/g, '_')
+
                     files.push({
                         coursename: course.name,
                         filename,
@@ -246,6 +267,7 @@ export class MoodleClient extends EventEmitter {
                 }
             }
         }
+
         return files
     }
 }
