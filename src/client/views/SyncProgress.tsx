@@ -3,7 +3,7 @@ import { FC, useContext, useEffect, useState } from 'react'
 import { PrograssBar } from '../components/ProgressBar'
 import React from 'react'
 
-import { DownloadState, formatSize, SyncResult } from '../../util'
+import { breakableString, DownloadState, formatSize, SyncResult } from '../../util'
 import { NewFilesList, Progress } from '../../modules/download'
 import { NewFilesModal } from './NewFilesModal'
 import { LoginContext } from '../LoginContext'
@@ -27,7 +27,7 @@ let SyncProgressWrap: FC<{ progress: Progress }> = props => {
                 <div className="fileinfo">
                     <span className="filename">{progress.filename}</span>
                     <span className="filepath">
-                        {progress.absolutePath.replace(/\\/g, '\\\u200B').replace(/\//g, '/\u200B')}
+                        {breakableString(progress.absolutePath)}
                     </span>
                 </div>
                 <span className="right">

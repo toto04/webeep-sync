@@ -4,6 +4,7 @@ import { shell } from 'electron'
 import { ipcRenderer } from 'electron'
 import { Switch } from './Settings'
 import { useTranslation } from 'react-i18next'
+import { breakableString } from '../../util'
 
 const hour = 60 * 60 * 1000
 
@@ -27,7 +28,7 @@ export let SyncSettings: FC = props => {
         <div className="download-path section">
             <div style={{ flex: 1 }}>
                 <h3>{t('downloadFolder')}</h3>
-                <span className="path">{path.replace(/\\/g, '\\\u200B').replace(/\//g, '/\u200B')}</span>
+                <span className="path">{breakableString(path)}</span>
             </div>
             <div className="clickable" onClick={() => {
                 shell.openPath(path)
