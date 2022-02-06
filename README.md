@@ -158,7 +158,7 @@ background and you can choose how often the synchronizations will take place, so
 files up to date. Or you can turn off autosync and download all your files at once
 when you like.
 
-<img src="https://i.imgur.com/ywvOwSY.png" />
+<img src="https://imgur.com/FTeGabS.png" />
 
 ## Downloads
 In the Github releases you can find the app already packaged and ready to use for Windows and macOS
