@@ -36,6 +36,8 @@
         "noLogin": "Login to start syncing!",
         "newFiles_one": "{{count}} new file downloaded",
         "newFiles_other": "{{count}} new files downloaded",
+        "prevNewFiles_one": "{{count}} new file downloaded in background",
+        "prevNewFiles_other": "{{count}} new files downloaded in background",
         "viewFiles": "View files",
         "resultMessage": {
             "success": "Everything is up to date!",

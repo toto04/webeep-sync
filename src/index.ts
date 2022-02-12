@@ -19,7 +19,7 @@ import { createLogger } from './modules/logger'
 import { loginManager } from './modules/login'
 import { moodleClient } from './modules/moodle'
 import { initializeStore, store, } from './modules/store'
-import { downloadManager } from './modules/download'
+import { downloadManager, NewFilesList } from './modules/download'
 import { updates } from './modules/updates'
 
 import { i18nInit, i18n } from './modules/i18next'
@@ -46,8 +46,7 @@ let tray: Tray = null
 let iconImg = nativeImage.createFromPath(path.join(__static, '/icons/icon.ico'))
 let trayImg = nativeImage.createFromPath(path.join(__static, '/icons/tray.png'))
 
-let psbID: number
-
+let psbID: number // power save blocker id, to prevent suspension mid sync
 downloadManager.on('sync', () => {
     psbID = powerSaveBlocker.start('prevent-app-suspension')
     updateTrayContext()
@@ -56,6 +55,8 @@ downloadManager.on('stop', () => {
     if (powerSaveBlocker.isStarted(psbID)) powerSaveBlocker.stop(psbID)
     updateTrayContext()
 })
+
+let syncedItems: NewFilesList = {}
 
 const windowsLoginSettings = {
     // path: path.resolve(path.dirname(process.execPath), '../Update.exe'),
@@ -83,11 +84,13 @@ async function setLoginItem(openAtLogin: boolean) {
     })
 }
 
+let mainWindow: BrowserWindow
+
 const createWindow = (): void => {
     app.dock?.show()
     debug('Creating new main windows')
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         height: 600,
         width: 800,
         autoHideMenuBar: true,
@@ -101,41 +104,62 @@ const createWindow = (): void => {
         },
         icon: iconImg
     })
-
-    const send = (channel: string, ...args: any[]) => {
-        if (!mainWindow.isDestroyed())
-            mainWindow.webContents.send(channel, ...args)
-    }
-
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-    loginManager.on('token', async () => {
-        send('is-logged', true)
-        send('courses', await moodleClient.getCoursesWithoutCache())
-    })
-    loginManager.on('logout', () => send('is-logged', false))
-    moodleClient.on('network_event', conn => send('network_event', conn))
-    moodleClient.on('username', username => send('username', username))
-    if (moodleClient.username) send('username', moodleClient.username)
-
-    downloadManager.on('sync', () => send('syncing', true))
-    downloadManager.on('stop', result => {
-        send('syncing', false)
-        send('sync-result', result)
-    })
-    downloadManager.on('progress', progress => send('progress', progress))
-    downloadManager.on('state', state => send('download-state', state))
-    downloadManager.on('new-files', files => send('new-files', files))
-
-    moodleClient.on('courses', async c => send('courses', c))
-
-    updates.on('new_update', update => send('new-update', update))
-
-    i18n.on('languageChanged', lng => send('language', {
-        lng,
-        bundle: i18n.getResourceBundle(lng, 'client')
-    }))
 }
+
+
+/**
+ * sends data to the frontend via electron's IPC
+ * @param channel the IPC channel string on which the message is sent
+ * @param args args to be sent with the message
+ * @returns true if the message was sent, false otherwise
+ */
+function send(channel: string, ...args: any[]) {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(channel, ...args)
+        return true
+    }
+    return false
+}
+loginManager.on('token', async () => {
+    send('is-logged', true)
+    send('courses', await moodleClient.getCoursesWithoutCache())
+})
+loginManager.on('logout', () => send('is-logged', false))
+moodleClient.on('network_event', conn => send('network_event', conn))
+moodleClient.on('username', username => send('username', username))
+if (moodleClient.username) send('username', moodleClient.username)
+
+downloadManager.on('sync', () => send('syncing', true))
+downloadManager.on('stop', result => {
+    send('syncing', false)
+    send('sync-result', result)
+})
+downloadManager.on('progress', progress => send('progress', progress))
+downloadManager.on('state', state => send('download-state', state))
+downloadManager.on('new-files', files => {
+    console.log(files)
+    // if (Object.keys(files).length === 0) return // dont do anything if there are no new files
+    const sent = send('new-files', files)
+    if (!sent) {
+        // the window is closed
+        for (let course in files) {
+            if (!syncedItems[course]) syncedItems[course] = []
+            syncedItems[course].push(...files[course])
+        }
+        // send notification
+    }
+})
+
+moodleClient.on('courses', async c => send('courses', c))
+
+updates.on('new_update', update => send('new-update', update))
+
+i18n.on('languageChanged', lng => send('language', {
+    lng,
+    bundle: i18n.getResourceBundle(lng, 'client')
+}))
 
 function focus() {
     let windows = BrowserWindow.getAllWindows()
@@ -416,4 +440,9 @@ ipcMain.handle('ignore-update', async (e, update: string) => {
     store.data.persistence.ignoredUpdates.push(update)
     await updates.checkUpdate()
     await store.write()
+})
+
+ipcMain.handle('get-previously-synced-items', () => {
+    setImmediate(() => syncedItems = {}) // empty the syncedItems variable only after returning it
+    return syncedItems
 })

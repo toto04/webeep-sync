@@ -36,6 +36,8 @@
         "noLogin": "Fai il login per incominciare a sincronizzare!",
         "newFiles_one": "{{count}} nuovo file scaricato",
         "newFiles_other": "{{count}} nuovi file scaricati",
+        "prevNewFiles_one": "{{count}} nuovo file scaricato in background",
+        "prevNewFiles_other": "{{count}} nuovi file scaricati in background",
         "viewFiles": "Mostra i file",
         "resultMessage": {
             "success": "Tutto sincronizzato!",
