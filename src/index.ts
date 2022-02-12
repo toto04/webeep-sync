@@ -414,11 +414,6 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
         let newPath = path.resolve(store.data.settings.downloadPath, newName)
         debug(`Renamed course ${id} to ${newName}`)
         await fs.rename(oldPath, newPath)
-        // update the cache for the UI
-        moodleClient.cachedCourses.find(c => c.id === id).name = newName
-        store.data.persistence.courses[id].name = newName
-        await store.write()
-        e.sender.send('courses', moodleClient.getCourses())
     } catch (err) {
         // catch the error, if it's ENOENT it just means that the folder doesn't exist, and the error
         // should be ignored, otherwise something happened while renaming the folder
@@ -427,6 +422,15 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
             error(`An error occoured while renaming a course folder, was a file inside it open? err: ${err.code}`)
         }
     } finally {
+        if (success) {
+            // update the cache for the UI
+            moodleClient.cachedCourses.find(c => c.id === id).name = newName
+            // update the store
+            store.data.persistence.courses[id].name = newName
+            await store.write()
+            // send new courses information to frontend
+            e.sender.send('courses', moodleClient.getCourses())
+        }
         return success
     }
 })
