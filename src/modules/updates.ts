@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 
 import { app } from 'electron'
 import got from 'got'
-import { store, initializeStore } from './store'
+import { store, storeIsReady } from './store'
 import { createLogger } from './logger'
 const { debug, log } = createLogger('UpdateManager')
 
@@ -18,7 +18,7 @@ export class UpdateManager extends EventEmitter {
     constructor() {
         super()
         let autoCheck = async () => {
-            await initializeStore()
+            await storeIsReady()
             if (store.data.settings.checkForUpdates) {
                 this.checkUpdate()
             }
@@ -35,7 +35,7 @@ export class UpdateManager extends EventEmitter {
         let versionRE = /(\d+)\.(\d+)\.(\d+)/ // regexp parsing version
         try {
             debug('checking for new version')
-            await initializeStore()
+            await storeIsReady()
             let res = await got.get('https://api.github.com/repos/toto04/webeep-sync/releases/latest', {
                 headers: {
                     "Accept": 'application/vnd.github.v3+json'

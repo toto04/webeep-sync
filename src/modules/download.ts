@@ -5,7 +5,7 @@ import got, { CancelableRequest } from 'got'
 
 import { createLogger } from './logger'
 import { FileInfo, moodleClient } from './moodle'
-import { initializeStore, store } from './store'
+import { storeIsReady, store } from './store'
 import { loginManager } from './login'
 
 import { DownloadState, SyncResult } from '../util'
@@ -46,7 +46,7 @@ export class DownloadManager extends EventEmitter {
 
     constructor() {
         super()
-        initializeStore().then(() => {
+        storeIsReady().then(() => {
             setTimeout(() => {
                 let autosync = () => {
                     if (!store.data.settings.autosyncEnabled) return
@@ -95,7 +95,7 @@ export class DownloadManager extends EventEmitter {
     }
 
     private async _sync(): Promise<SyncResult> {
-        await initializeStore() // just to be sure that the settings are initialized
+        await storeIsReady() // just to be sure that the settings are initialized
         let { downloadPath } = store.data.settings
         this.stopped = false
         try {
@@ -216,7 +216,7 @@ export class DownloadManager extends EventEmitter {
     }
 
     async setAutosync(sync: boolean) {
-        await initializeStore()
+        await storeIsReady()
         store.data.settings.autosyncEnabled = sync
         store.write()
     }

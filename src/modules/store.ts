@@ -24,6 +24,7 @@ export interface Settings {
     openAtLogin?: boolean
     language?: 'it' | 'en'
     checkForUpdates?: boolean
+    notificationOnNewFiles?: boolean
 }
 
 export interface Persistence {
@@ -54,6 +55,7 @@ export const defaultSettings: Required<Settings> = {
     openAtLogin: false,
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
     checkForUpdates: true,
+    notificationOnNewFiles: true,
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')
@@ -114,7 +116,7 @@ async function updateManifestVersion() {
     store.data.manifestVersion = CURRENT_MANIFEST_VERSION
 }
 
-export async function initializeStore(): Promise<void> {
+export async function storeIsReady(): Promise<void> {
     return new Promise(async (resolve, reject) => {
         if (initialized) {
             resolve()
@@ -140,4 +142,4 @@ export async function initializeStore(): Promise<void> {
         log('Store initialized!')
     })
 }
-initializeStore()
+storeIsReady()
