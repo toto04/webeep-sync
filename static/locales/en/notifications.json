@@ -1,0 +1,10 @@
+{
+    "body": {
+        "default": "Click on this notification to see them",
+        "singleFile": "{{filename}} has been downloaded in {{coursename}}",
+        "singleCourse": "New files for the course {{coursename}}",
+        "multipleCourses": "New files for {{count}} different courses"
+    },
+    "notificationTitle_one": "A new file have been downloaded",
+    "notificationTitle_other": "{{count}} new files have been downloaded"
+}

@@ -69,7 +69,6 @@ export let SyncProgress: FC = props => {
 
     useEffect(() => {
         ipcRenderer.invoke('get-previously-synced-items').then((files: NewFilesList) => {
-            console.log(files)
             setPrevNewFilesList(files)
         })
 
@@ -88,7 +87,6 @@ export let SyncProgress: FC = props => {
     for (let course in prevNewFilesList) {
         prevnumfiles += prevNewFilesList[course].length
     }
-    console.log(prevnumfiles)
 
     let elem: JSX.Element
 
@@ -117,7 +115,6 @@ export let SyncProgress: FC = props => {
                 }</div>
                 break
             } else if (prevnumfiles) {
-                console.log('heyyyyy!!!!')
                 elem = <div className="sync-progress-idle">
                     <div className="new-files">
                         <h3>{t('prevNewFiles', { count: prevnumfiles })}</h3>

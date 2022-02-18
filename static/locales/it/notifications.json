@@ -1,0 +1,10 @@
+{
+    "body": {
+        "default": "Clicca questa notifica per visualizzarli",
+        "singleFile": "{{filename}} è stato scaricato in {{coursename}}",
+        "singleCourse": "Nuovi file del corso {{coursename}}",
+        "multipleCourses": "Nuovi file per {{count}} corsi diversi"
+    },
+    "notificationTitle_one": "È stato scaricato un nuovo file",
+    "notificationTitle_other": "Sono stati scaricati {{count}} nuovi file"
+}

@@ -13,15 +13,12 @@ export function i18nInit(): Promise<void> {
             resolve()
             return
         }
+        if (initializing) i18n.on('loaded', () => resolve())
+        else {
 
-        if (initializing) {
-            i18n.on('loaded', () => {
-                resolve()
-            })
-        } else {
             initializing = true
             await i18n.use(I18Backend).init({
-                ns: ['common', 'tray', 'client'],
+                ns: ['common', 'tray', 'client', 'notifications'],
                 defaultNS: 'common',
                 fallbackLng: 'en',
                 saveMissing: true,
@@ -32,6 +29,7 @@ export function i18nInit(): Promise<void> {
             })
             initialized = true
             resolve()
+
         }
     })
 }

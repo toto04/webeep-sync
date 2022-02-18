@@ -75,6 +75,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
 
     return <Modal title={t('settings')} onClose={() => props.onClose()}>
         {settings ? <div className="settings">
+
             {newUpdate !== null ? <div className="setting-section update">
                 <h3>{t('newUpdateAvailable')}</h3>
                 <span>v{newUpdate} • <Link href='https://github.com/toto04/webeep-sync/releases/latest'>changelog</Link></span>
@@ -84,6 +85,8 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     setNewUpdate(await ipcRenderer.invoke('get-available-update'))
                 }}>{t('ignoreUpdate')}</a>
             </div> : undefined}
+
+
             <div className="setting-section">
                 {theme ? <div className="setting">
                     <span>{t('colorTheme')}</span>
@@ -98,6 +101,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                         <option value="dark">{t('theme.dark')}</option>
                     </select>
                 </div> : undefined}
+
                 <div className="setting">
                     <span>{t('language')}</span>
                     <select value={settings.language} onChange={e => {
@@ -109,6 +113,8 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     </select>
                 </div>
             </div>
+
+
             <div className="setting-section">
                 <div className="setting">
                     <span>{t('notifyUpdate')}</span>
@@ -118,6 +124,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     />
                     <span className="desc">{t('notifyUpdate_desc')}</span>
                 </div>
+
                 <div className="setting">
                     <span>{t('openAtLogin')}</span>
                     <Switch
@@ -125,6 +132,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                         checked={settings.openAtLogin}
                     />
                 </div>
+
                 <div className="setting">
                     <span>{t('keepOpenInBackground')}</span>
                     <Switch
@@ -133,6 +141,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     />
                     <span className="desc">{t('keepOpenInBackground_desc')}</span>
                 </div>
+
                 <div className={`setting ${settings.keepOpenInBackground ? '' : 'disabled'}`}>
                     <span>{t('showInTray')}</span>
                     <Switch
@@ -141,12 +150,22 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                         checked={settings.keepOpenInBackground && settings.trayIcon}
                     />
                 </div>
+
                 {settings.keepOpenInBackground && !settings.trayIcon ? <div className="setting-warn">
                     <IoWarning />
                     <span>{t('trayWarning')}</span>
                 </div> : undefined}
             </div>
+
+
             <div className="setting-section">
+                <div className="setting">
+                    <span>Mandami una notifica quando trovi nuovi file in background</span>
+                    <Switch
+                        onChange={v => updateSettigns({ ...settings, notificationOnNewFiles: v })}
+                        checked={settings.notificationOnNewFiles}
+                    />
+                </div>
                 <div className="setting">
                     <span>{t('newCourses')}</span>
                     <Switch
@@ -156,6 +175,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     <span className="desc">{t('newCourses_desc')}</span>
                 </div>
             </div>
+
             <button className="danger-button" onClick={() => {
                 ipcRenderer.send('logout')
             }}>{t('logout')}</button>

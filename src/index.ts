@@ -8,6 +8,7 @@ import {
     Menu,
     nativeImage,
     nativeTheme,
+    Notification,
     powerSaveBlocker,
     shell,
     Tray,
@@ -18,7 +19,7 @@ import { __static } from './util'
 import { createLogger } from './modules/logger'
 import { loginManager } from './modules/login'
 import { moodleClient } from './modules/moodle'
-import { initializeStore, store, } from './modules/store'
+import { storeIsReady, store, } from './modules/store'
 import { downloadManager, NewFilesList } from './modules/download'
 import { updates } from './modules/updates'
 
@@ -55,8 +56,6 @@ downloadManager.on('stop', () => {
     if (powerSaveBlocker.isStarted(psbID)) powerSaveBlocker.stop(psbID)
     updateTrayContext()
 })
-
-let syncedItems: NewFilesList = {}
 
 const windowsLoginSettings = {
     // path: path.resolve(path.dirname(process.execPath), '../Update.exe'),
@@ -138,17 +137,53 @@ downloadManager.on('stop', result => {
 })
 downloadManager.on('progress', progress => send('progress', progress))
 downloadManager.on('state', state => send('download-state', state))
+
+/**
+ * global variable storing new files downloaded in background to show once the main window opens
+ */
+let syncedItems: NewFilesList = {}
+
+function showNewFilesNotification(numfiles: number) {
+    const t = i18n.getFixedT(null, 'notifications', null)
+
+    const courses = Object.keys(syncedItems)
+    let body = t('body.default')
+
+    if (numfiles === 1) {
+        const coursename = courses[0]
+        const file = syncedItems[coursename][0]
+        body = t('body.singleFile', { filename: file.filename, coursename })
+    } else {
+        if (courses.length === 1)
+            body = t('body.singleCourse', { coursename: courses[0] })
+        else
+            body = t('body.multipleCourses', { count: courses.length })
+    }
+
+    const notification = new Notification({
+        title: t('notificationTitle', { count: numfiles }),
+        body,
+    })
+    notification.once('click', () => focus())
+    notification.show()
+}
+
 downloadManager.on('new-files', files => {
-    console.log(files)
-    // if (Object.keys(files).length === 0) return // dont do anything if there are no new files
     const sent = send('new-files', files)
+
     if (!sent) {
-        // the window is closed
+        // the window is closed, store all new files in the syncedItems object (and send notification)
+        let numfiles = 0
         for (let course in files) {
+            numfiles += files[course].length
+            // update the syncedItems object to contain all new synced items
             if (!syncedItems[course]) syncedItems[course] = []
             syncedItems[course].push(...files[course])
         }
-        // send notification
+
+        if (numfiles && store.data.settings.notificationOnNewFiles) {
+            showNewFilesNotification(numfiles)
+        }
     }
 })
 
@@ -179,7 +214,7 @@ function setupTray() {
 async function updateTrayContext() {
     if (!tray) return
     debug('Updating tray context')
-    await initializeStore()
+    await storeIsReady()
     const t = i18n.getFixedT(null, 'tray', null)
 
     const s = downloadManager.syncing
@@ -219,7 +254,7 @@ app.on('second-instance', () => {
 app.on('ready', async () => {
     log('App ready!')
     const loginItemSettings = app.getLoginItemSettings(windowsLoginSettings)
-    await initializeStore()
+    await storeIsReady()
 
     // setup internationalization
     await i18nInit()
@@ -256,7 +291,7 @@ app.on('ready', async () => {
 // When all windows are closed, on macOS hide the dock, if the user has disabled background, quit
 app.on('window-all-closed', async () => {
     app.dock?.hide()
-    await initializeStore()
+    await storeIsReady()
     if (store.data.settings.keepOpenInBackground === false) {
         app.quit()
     }
@@ -310,7 +345,7 @@ ipcMain.on('request-login', async e => {
 })
 
 ipcMain.on('set-should-sync', async (e, courseid: number, shouldSync: boolean) => {
-    await initializeStore()
+    await storeIsReady()
     store.data.persistence.courses[courseid].shouldSync = shouldSync
     await store.write()
 })
@@ -319,7 +354,7 @@ ipcMain.on('sync-start', e => downloadManager.sync())
 ipcMain.on('sync-stop', e => downloadManager.stop())
 
 ipcMain.on('sync-settings', async e => {
-    await initializeStore()
+    await storeIsReady()
     e.reply('download-path', store.data.settings.downloadPath)
     e.reply('autosync', store.data.settings.autosyncEnabled)
     e.reply('autosync-interval', store.data.settings.autosyncInterval)
@@ -440,7 +475,7 @@ ipcMain.handle('get-available-update', () => {
 })
 
 ipcMain.handle('ignore-update', async (e, update: string) => {
-    await initializeStore()
+    await storeIsReady()
     store.data.persistence.ignoredUpdates.push(update)
     await updates.checkUpdate()
     await store.write()
