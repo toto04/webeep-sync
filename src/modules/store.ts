@@ -13,6 +13,9 @@ const { debug, log } = createLogger('Store')
  */
 const CURRENT_MANIFEST_VERSION = 1
 
+/**
+ * Check in the Settings page in the app for detailed explanation of what each setting does
+ */
 export interface Settings {
     syncNewCourses?: boolean
     downloadPath?: string
@@ -36,6 +39,10 @@ export interface Persistence {
     }
     lastSynced?: number
     ignoredUpdates: string[]
+    /**
+     * whether or not a notification has already been sent to the user
+     */
+    notificationsHasBeenSent?: boolean
 }
 
 export interface Store {

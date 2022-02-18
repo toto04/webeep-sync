@@ -143,13 +143,18 @@ downloadManager.on('state', state => send('download-state', state))
  */
 let syncedItems: NewFilesList = {}
 
-function showNewFilesNotification(numfiles: number) {
+async function showNewFilesNotification(numfiles: number) {
+    await storeIsReady()
     const t = i18n.getFixedT(null, 'notifications', null)
 
     const courses = Object.keys(syncedItems)
     let body = t('body.default')
 
-    if (numfiles === 1) {
+    if (!store.data.persistence.notificationsHasBeenSent) {
+        body = t('body.firstNotification')
+        store.data.persistence.notificationsHasBeenSent = true
+        store.write()
+    } else if (numfiles === 1) {
         const coursename = courses[0]
         const file = syncedItems[coursename][0]
         body = t('body.singleFile', { filename: file.filename, coursename })

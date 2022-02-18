@@ -77,6 +77,7 @@
         "keepOpenInBackground_desc": "Keep the app running in background while all windows are closed. If autosync is enabled, they will happen in background too",
         "showInTray": "Show app in tray",
         "trayWarning": "With the tray disabled, you wont be able to tell if the app is running. Once you close the window, you'll need to relaunch the app to open it again. If you have autosyncs enabled, those will keep going in the background.",
+        "notifications": "Send a notification when new files are downloaded in background",
         "newCourses": "Sync new courses",
         "newCourses_desc": "When new courses are found, automatically add them to the courses that will be synced",
         "logout": "log out",

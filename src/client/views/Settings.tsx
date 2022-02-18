@@ -160,7 +160,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
 
             <div className="setting-section">
                 <div className="setting">
-                    <span>Mandami una notifica quando trovi nuovi file in background</span>
+                    <span>{t('notifications')}</span>
                     <Switch
                         onChange={v => updateSettigns({ ...settings, notificationOnNewFiles: v })}
                         checked={settings.notificationOnNewFiles}

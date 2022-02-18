@@ -77,6 +77,7 @@
         "keepOpenInBackground_desc": "Lascia l'app aperta in backround quando tutte le finestre sono chiuse. Se gli autosync sono abilitati, anche questi avverranno in background",
         "showInTray": "Mostra l'app nel tray",
         "trayWarning": "Con il tray disabilitato, non potrai vedere se l'app è aperta. Quando chiudi la finestra, dovrai rilanciare l'app per aprirla di nuovo. Se hai gli autosync abilitati, quelli continueranno in background.",
+        "notifications": "Mandami una notifica quando trovi nuovi file in background",
         "newCourses": "Sincronizza nuovi corsi",
         "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
         "logout": "log out",
