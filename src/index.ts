@@ -143,6 +143,11 @@ downloadManager.on('state', state => send('download-state', state))
  */
 let syncedItems: NewFilesList = {}
 
+/**
+ * Prepare a new notification with a different body based on the number of files
+ * downloaded and the number of courses from which files were downloaded, then show it
+ * @param numfiles the number of new files downloaded in background
+ */
 async function showNewFilesNotification(numfiles: number) {
     await storeIsReady()
     const t = i18n.getFixedT(null, 'notifications', null)
@@ -169,7 +174,7 @@ async function showNewFilesNotification(numfiles: number) {
         title: t('notificationTitle', { count: numfiles }),
         body,
     })
-    notification.once('click', () => focus())
+    notification.on('click', () => focus())
     notification.show()
 }
 
@@ -186,7 +191,8 @@ downloadManager.on('new-files', files => {
             syncedItems[course].push(...files[course])
         }
 
-        if (numfiles && store.data.settings.notificationOnNewFiles) {
+        // if there are new files, notifications are on and are supported, send a new notification
+        if (numfiles && store.data.settings.notificationOnNewFiles && Notification.isSupported()) {
             showNewFilesNotification(numfiles)
         }
     }
@@ -260,6 +266,8 @@ app.on('ready', async () => {
     log('App ready!')
     const loginItemSettings = app.getLoginItemSettings(windowsLoginSettings)
     await storeIsReady()
+
+    app.setAppUserModelId('webeep-sync')    // windows wants this thing
 
     // setup internationalization
     await i18nInit()
