@@ -13,6 +13,9 @@ const { debug, log } = createLogger('Store')
  */
 const CURRENT_MANIFEST_VERSION = 1
 
+/**
+ * Check in the Settings page in the app for detailed explanation of what each setting does
+ */
 export interface Settings {
     syncNewCourses?: boolean
     downloadPath?: string
@@ -24,6 +27,7 @@ export interface Settings {
     openAtLogin?: boolean
     language?: 'it' | 'en'
     checkForUpdates?: boolean
+    notificationOnNewFiles?: boolean
 }
 
 export interface Persistence {
@@ -35,6 +39,10 @@ export interface Persistence {
     }
     lastSynced?: number
     ignoredUpdates: string[]
+    /**
+     * whether or not a notification has already been sent to the user
+     */
+    notificationsHasBeenSent?: boolean
 }
 
 export interface Store {
@@ -54,6 +62,7 @@ export const defaultSettings: Required<Settings> = {
     openAtLogin: false,
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
     checkForUpdates: true,
+    notificationOnNewFiles: true,
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')
@@ -114,7 +123,7 @@ async function updateManifestVersion() {
     store.data.manifestVersion = CURRENT_MANIFEST_VERSION
 }
 
-export async function initializeStore(): Promise<void> {
+export async function storeIsReady(): Promise<void> {
     return new Promise(async (resolve, reject) => {
         if (initialized) {
             resolve()
@@ -140,4 +149,4 @@ export async function initializeStore(): Promise<void> {
         log('Store initialized!')
     })
 }
-initializeStore()
+storeIsReady()

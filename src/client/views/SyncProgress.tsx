@@ -64,8 +64,14 @@ export let SyncProgress: FC = props => {
 
     let [viewingFiles, setViewingFiles] = useState(false)
     let [newFilesList, setNewFilesList] = useState<NewFilesList>()
+    let [viewingPrevFiles, setViewingPrevFiles] = useState(false)
+    let [prevNewFilesList, setPrevNewFilesList] = useState<NewFilesList>()
 
     useEffect(() => {
+        ipcRenderer.invoke('get-previously-synced-items').then((files: NewFilesList) => {
+            setPrevNewFilesList(files)
+        })
+
         ipcRenderer.on('progress', (e, progress: Progress) => setProgress(progress))
         ipcRenderer.on('download-state', (e, state: DownloadState) => setDownloadState(state))
         ipcRenderer.on('sync-result', (e, result: SyncResult) => setSyncResult(result))
@@ -75,6 +81,11 @@ export let SyncProgress: FC = props => {
     let numfiles = 0
     for (let course in newFilesList) {
         numfiles += newFilesList[course].length
+    }
+
+    let prevnumfiles = 0
+    for (let course in prevNewFilesList) {
+        prevnumfiles += prevNewFilesList[course].length
     }
 
     let elem: JSX.Element
@@ -102,30 +113,44 @@ export let SyncProgress: FC = props => {
                             {t(`resultMessage.${SyncResult[syncResult]}`)}
                         </h3>
                 }</div>
-                break;
+                break
+            } else if (prevnumfiles) {
+                elem = <div className="sync-progress-idle">
+                    <div className="new-files">
+                        <h3>{t('prevNewFiles', { count: prevnumfiles })}</h3>
+                        <button
+                            className="confirm-button"
+                            onClick={() => setViewingPrevFiles(true)}
+                        >
+                            {t('viewFiles')}
+                        </button>
+                    </div>
+                </div>
+                break
             } else if (!connected) {
                 elem = <div className="sync-progress-idle">
                     <h3>{t('noConnection')}</h3>
                 </div>
-                break;
+                break
             } else if (!isLogged) {
                 elem = <div className="sync-progress-idle">
                     <h3>{t('noLogin')}</h3>
                 </div>
-                break;
+                break
             }
         case DownloadState.downloading:
             if (progress) {
                 // if the download state is downloading, only when there is progress to display
                 // show the progress bars & info of the download
                 elem = <SyncProgressWrap progress={progress} />
-                break;
+                break
             }
         default:
             // in every other cases, just show the correct status message
             elem = <div className="sync-progress-idle">
                 <h3>{t(`statusMessage.${DownloadState[downloadState]}`)}</h3>
             </div>
+            break
     }
 
     return <div className="sync-progress section">
@@ -134,6 +159,13 @@ export let SyncProgress: FC = props => {
             ? <NewFilesModal
                 files={newFilesList}
                 onClose={() => setViewingFiles(false)}
+            />
+            : undefined
+        }
+        {viewingPrevFiles
+            ? <NewFilesModal
+                files={prevNewFilesList}
+                onClose={() => setViewingPrevFiles(false)}
             />
             : undefined
         }

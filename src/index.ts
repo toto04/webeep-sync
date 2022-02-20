@@ -8,6 +8,7 @@ import {
     Menu,
     nativeImage,
     nativeTheme,
+    Notification,
     powerSaveBlocker,
     shell,
     Tray,
@@ -18,8 +19,8 @@ import { __static } from './util'
 import { createLogger } from './modules/logger'
 import { loginManager } from './modules/login'
 import { moodleClient } from './modules/moodle'
-import { initializeStore, store, } from './modules/store'
-import { downloadManager } from './modules/download'
+import { storeIsReady, store, } from './modules/store'
+import { downloadManager, NewFilesList } from './modules/download'
 import { updates } from './modules/updates'
 
 import { i18nInit, i18n } from './modules/i18next'
@@ -46,8 +47,7 @@ let tray: Tray = null
 let iconImg = nativeImage.createFromPath(path.join(__static, '/icons/icon.ico'))
 let trayImg = nativeImage.createFromPath(path.join(__static, '/icons/tray.png'))
 
-let psbID: number
-
+let psbID: number // power save blocker id, to prevent suspension mid sync
 downloadManager.on('sync', () => {
     psbID = powerSaveBlocker.start('prevent-app-suspension')
     updateTrayContext()
@@ -83,11 +83,13 @@ async function setLoginItem(openAtLogin: boolean) {
     })
 }
 
+let mainWindow: BrowserWindow
+
 const createWindow = (): void => {
     app.dock?.show()
     debug('Creating new main windows')
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         height: 600,
         width: 800,
         autoHideMenuBar: true,
@@ -101,41 +103,109 @@ const createWindow = (): void => {
         },
         icon: iconImg
     })
-
-    const send = (channel: string, ...args: any[]) => {
-        if (!mainWindow.isDestroyed())
-            mainWindow.webContents.send(channel, ...args)
-    }
-
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-    loginManager.on('token', async () => {
-        send('is-logged', true)
-        send('courses', await moodleClient.getCoursesWithoutCache())
-    })
-    loginManager.on('logout', () => send('is-logged', false))
-    moodleClient.on('network_event', conn => send('network_event', conn))
-    moodleClient.on('username', username => send('username', username))
-    if (moodleClient.username) send('username', moodleClient.username)
-
-    downloadManager.on('sync', () => send('syncing', true))
-    downloadManager.on('stop', result => {
-        send('syncing', false)
-        send('sync-result', result)
-    })
-    downloadManager.on('progress', progress => send('progress', progress))
-    downloadManager.on('state', state => send('download-state', state))
-    downloadManager.on('new-files', files => send('new-files', files))
-
-    moodleClient.on('courses', async c => send('courses', c))
-
-    updates.on('new_update', update => send('new-update', update))
-
-    i18n.on('languageChanged', lng => send('language', {
-        lng,
-        bundle: i18n.getResourceBundle(lng, 'client')
-    }))
 }
+
+
+/**
+ * sends data to the frontend via electron's IPC
+ * @param channel the IPC channel string on which the message is sent
+ * @param args args to be sent with the message
+ * @returns true if the message was sent, false otherwise
+ */
+function send(channel: string, ...args: any[]) {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(channel, ...args)
+        return true
+    }
+    return false
+}
+loginManager.on('token', async () => {
+    send('is-logged', true)
+    send('courses', await moodleClient.getCoursesWithoutCache())
+})
+loginManager.on('logout', () => send('is-logged', false))
+moodleClient.on('network_event', conn => send('network_event', conn))
+moodleClient.on('username', username => send('username', username))
+if (moodleClient.username) send('username', moodleClient.username)
+
+downloadManager.on('sync', () => send('syncing', true))
+downloadManager.on('stop', result => {
+    send('syncing', false)
+    send('sync-result', result)
+})
+downloadManager.on('progress', progress => send('progress', progress))
+downloadManager.on('state', state => send('download-state', state))
+
+/**
+ * global variable storing new files downloaded in background to show once the main window opens
+ */
+let syncedItems: NewFilesList = {}
+
+/**
+ * Prepare a new notification with a different body based on the number of files
+ * downloaded and the number of courses from which files were downloaded, then show it
+ * @param numfiles the number of new files downloaded in background
+ */
+async function showNewFilesNotification(numfiles: number) {
+    await storeIsReady()
+    const t = i18n.getFixedT(null, 'notifications', null)
+
+    const courses = Object.keys(syncedItems)
+    let body = t('body.default')
+
+    if (!store.data.persistence.notificationsHasBeenSent) {
+        body = t('body.firstNotification')
+        store.data.persistence.notificationsHasBeenSent = true
+        store.write()
+    } else if (numfiles === 1) {
+        const coursename = courses[0]
+        const file = syncedItems[coursename][0]
+        body = t('body.singleFile', { filename: file.filename, coursename })
+    } else {
+        if (courses.length === 1)
+            body = t('body.singleCourse', { coursename: courses[0] })
+        else
+            body = t('body.multipleCourses', { count: courses.length })
+    }
+
+    const notification = new Notification({
+        title: t('notificationTitle', { count: numfiles }),
+        body,
+    })
+    notification.on('click', () => focus())
+    notification.show()
+}
+
+downloadManager.on('new-files', files => {
+    const sent = send('new-files', files)
+
+    if (!sent) {
+        // the window is closed, store all new files in the syncedItems object (and send notification)
+        let numfiles = 0
+        for (let course in files) {
+            numfiles += files[course].length
+            // update the syncedItems object to contain all new synced items
+            if (!syncedItems[course]) syncedItems[course] = []
+            syncedItems[course].push(...files[course])
+        }
+
+        // if there are new files, notifications are on and are supported, send a new notification
+        if (numfiles && store.data.settings.notificationOnNewFiles && Notification.isSupported()) {
+            showNewFilesNotification(numfiles)
+        }
+    }
+})
+
+moodleClient.on('courses', async c => send('courses', c))
+
+updates.on('new_update', update => send('new-update', update))
+
+i18n.on('languageChanged', lng => send('language', {
+    lng,
+    bundle: i18n.getResourceBundle(lng, 'client')
+}))
 
 function focus() {
     let windows = BrowserWindow.getAllWindows()
@@ -155,7 +225,7 @@ function setupTray() {
 async function updateTrayContext() {
     if (!tray) return
     debug('Updating tray context')
-    await initializeStore()
+    await storeIsReady()
     const t = i18n.getFixedT(null, 'tray', null)
 
     const s = downloadManager.syncing
@@ -195,7 +265,9 @@ app.on('second-instance', () => {
 app.on('ready', async () => {
     log('App ready!')
     const loginItemSettings = app.getLoginItemSettings(windowsLoginSettings)
-    await initializeStore()
+    await storeIsReady()
+
+    app.setAppUserModelId('webeep-sync')    // windows wants this thing
 
     // setup internationalization
     await i18nInit()
@@ -232,7 +304,7 @@ app.on('ready', async () => {
 // When all windows are closed, on macOS hide the dock, if the user has disabled background, quit
 app.on('window-all-closed', async () => {
     app.dock?.hide()
-    await initializeStore()
+    await storeIsReady()
     if (store.data.settings.keepOpenInBackground === false) {
         app.quit()
     }
@@ -286,7 +358,7 @@ ipcMain.on('request-login', async e => {
 })
 
 ipcMain.on('set-should-sync', async (e, courseid: number, shouldSync: boolean) => {
-    await initializeStore()
+    await storeIsReady()
     store.data.persistence.courses[courseid].shouldSync = shouldSync
     await store.write()
 })
@@ -295,7 +367,7 @@ ipcMain.on('sync-start', e => downloadManager.sync())
 ipcMain.on('sync-stop', e => downloadManager.stop())
 
 ipcMain.on('sync-settings', async e => {
-    await initializeStore()
+    await storeIsReady()
     e.reply('download-path', store.data.settings.downloadPath)
     e.reply('autosync', store.data.settings.autosyncEnabled)
     e.reply('autosync-interval', store.data.settings.autosyncInterval)
@@ -390,11 +462,6 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
         let newPath = path.resolve(store.data.settings.downloadPath, newName)
         debug(`Renamed course ${id} to ${newName}`)
         await fs.rename(oldPath, newPath)
-        // update the cache for the UI
-        moodleClient.cachedCourses.find(c => c.id === id).name = newName
-        store.data.persistence.courses[id].name = newName
-        await store.write()
-        e.sender.send('courses', moodleClient.getCourses())
     } catch (err) {
         // catch the error, if it's ENOENT it just means that the folder doesn't exist, and the error
         // should be ignored, otherwise something happened while renaming the folder
@@ -403,6 +470,15 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
             error(`An error occoured while renaming a course folder, was a file inside it open? err: ${err.code}`)
         }
     } finally {
+        if (success) {
+            // update the cache for the UI
+            moodleClient.cachedCourses.find(c => c.id === id).name = newName
+            // update the store
+            store.data.persistence.courses[id].name = newName
+            await store.write()
+            // send new courses information to frontend
+            e.sender.send('courses', moodleClient.getCourses())
+        }
         return success
     }
 })
@@ -412,8 +488,13 @@ ipcMain.handle('get-available-update', () => {
 })
 
 ipcMain.handle('ignore-update', async (e, update: string) => {
-    await initializeStore()
+    await storeIsReady()
     store.data.persistence.ignoredUpdates.push(update)
     await updates.checkUpdate()
     await store.write()
+})
+
+ipcMain.handle('get-previously-synced-items', () => {
+    setImmediate(() => syncedItems = {}) // empty the syncedItems variable only after returning it
+    return syncedItems
 })

@@ -3,7 +3,7 @@ import { EventEmitter } from 'events'
 import got from 'got'
 import { createLogger } from './logger'
 import { loginManager, } from './login'
-import { initializeStore, store } from './store'
+import { storeIsReady, store } from './store'
 
 const { log, debug } = createLogger('MoodleClient')
 
@@ -170,7 +170,7 @@ export class MoodleClient extends EventEmitter {
      */
     async getCoursesWithoutCache(catchNetworkError: boolean = false): Promise<Course[]> {
         let userid = this.userid ?? await this.getUserID()
-        await initializeStore()
+        await storeIsReady()
 
         // once the store is initialized fetch and parse the courses
         let courses: any[] = await this.call('core_enrol_get_users_courses', { userid }, catchNetworkError)
