@@ -155,17 +155,20 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     <IoWarning />
                     <span>{t('trayWarning')}</span>
                 </div> : undefined}
+
+                <div className={`setting ${settings.keepOpenInBackground ? '' : 'disabled'}`}>
+                    <span>{t('notifications')}</span>
+                    <Switch
+                        disabled={!settings.keepOpenInBackground}
+                        onChange={v => updateSettigns({ ...settings, notificationOnNewFiles: v })}
+                        checked={settings.keepOpenInBackground && settings.notificationOnNewFiles}
+                    />
+                </div>
+
             </div>
 
 
             <div className="setting-section">
-                <div className="setting">
-                    <span>{t('notifications')}</span>
-                    <Switch
-                        onChange={v => updateSettigns({ ...settings, notificationOnNewFiles: v })}
-                        checked={settings.notificationOnNewFiles}
-                    />
-                </div>
                 <div className="setting">
                     <span>{t('newCourses')}</span>
                     <Switch
