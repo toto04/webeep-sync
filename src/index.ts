@@ -192,7 +192,10 @@ downloadManager.on('new-files', files => {
         }
 
         // if there are new files, notifications are on and are supported, send a new notification
-        if (numfiles && store.data.settings.notificationOnNewFiles && Notification.isSupported()) {
+        if (numfiles
+            && store.data.settings.keepOpenInBackground     // be sure app can be open in background
+            && store.data.settings.notificationOnNewFiles   // ^ not sure if this can occur but better safe then sorry
+            && Notification.isSupported()) {
             showNewFilesNotification(numfiles)
         }
     }
