@@ -1,4 +1,5 @@
 import path from 'path'
+import fs from 'fs/promises'
 import { nativeTheme } from 'electron'
 import { EventEmitter } from 'events'
 import { app } from 'electron'
@@ -11,7 +12,7 @@ const { debug, log } = createLogger('Store')
  * store.json manifest version, to be increased when breaking changes are made so that a correct 
  * fixes for the change can be implemented in the {@link updateManifestVersion} function
  */
-const CURRENT_MANIFEST_VERSION = 1
+const CURRENT_MANIFEST_VERSION = 2
 
 /**
  * Check in the Settings page in the app for detailed explanation of what each setting does
@@ -118,6 +119,21 @@ async function updateManifestVersion() {
     if (ver === CURRENT_MANIFEST_VERSION) return
 
     // add here checks to mutate from old version
+    if (ver < 2) {
+        // this fixes leading/trailing whitespaces in folders which causes all sorts of wierd bugs
+        for (const id in store.data.persistence.courses) {
+            try {
+                let trimmed = store.data.persistence.courses[id].name.trim()
+                if (trimmed !== store.data.persistence.courses[id].name) {
+                    let oldPath = path.resolve(store.data.settings.downloadPath, store.data.persistence.courses[id].name)
+                    let newPath = path.resolve(store.data.settings.downloadPath, trimmed)
+                    store.data.persistence.courses[id].name = trimmed
+                    log(`Trimmed course ${id} folder: ${trimmed}`)
+                    await fs.rename(oldPath, newPath)
+                }
+            } catch (e) { log(`ignoring error while trimming course ${id}`) }
+        }
+    }
 
     // once sure that everything is updated, change the manifest version
     store.data.manifestVersion = CURRENT_MANIFEST_VERSION
@@ -138,10 +154,11 @@ export async function storeIsReady(): Promise<void> {
 
         await store.read()
         checkStoreIntegrity()
-        await updateManifestVersion()
 
         // assign default settings if missing
         store.data.settings = Object.assign({}, defaultSettings, store.data.settings)
+        await updateManifestVersion()
+
         await store.write()
 
         initialized = true
