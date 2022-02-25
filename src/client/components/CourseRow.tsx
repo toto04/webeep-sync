@@ -33,11 +33,16 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
     let confirmEditing = async () => {
         checkInputValidity()
         if (input.validity.valid) {
-            let success = await ipcRenderer.invoke('rename-course', props.course.id, folder)
+            // updates the state with the trimmed string
+            setFolder(folder.trim())
+            // send the trimmed string to the backend
+            let success = await ipcRenderer.invoke('rename-course', props.course.id, folder.trim())
             if (success) {
+                // if the folder was renamed successfully, exit editing and unfocus the input
                 setEditing(false)
                 input.blur()
             } else {
+                // else output a custom validity report explaining the error while renaming the folder
                 input.setCustomValidity(t('errPerm'))
                 input.reportValidity()
             }
@@ -75,7 +80,7 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
                 }}
                 onChange={e => {
                     checkInputValidity()
-                    setFolder(e.target.value)
+                    setFolder(e.target.value.trimStart())   // prevent space from the start
                 }}
                 onFocus={() => setEditing(true)}
                 onBlur={() => {
