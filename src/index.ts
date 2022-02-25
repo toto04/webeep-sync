@@ -467,7 +467,8 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
         // should be ignored, otherwise something happened while renaming the folder
         if (err.code !== 'ENOENT') {
             success = false
-            error(`An error occoured while renaming a course folder, was a file inside it open? err: ${err.code}`)
+            error(`An error occoured while renaming a course folder ${id} to ${newName}, was a file inside it open? err: ${err.code}`)
+            error(err)
         }
     } finally {
         if (success) {
