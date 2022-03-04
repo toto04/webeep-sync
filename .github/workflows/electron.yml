@@ -1,15 +1,15 @@
 # name of your github action
-name: CI
+name: build
 # this will help you specify where to run
 on:
   push:
-    branches:
+    tags:
       # this will run on the electron branch
-      - workflows
+      - v*
 
 # this is where the magic happens, each job happens in parallel btw
 jobs:
-  build_on_mac:
+  macos_build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@master
@@ -26,27 +26,40 @@ jobs:
         run: yarn make --arch=x64,arm64
       - name: see build
         run: ls out/make
-      - uses: actions/upload-artifact@master
+      - name: get version
+        run: yarn version
+        id: version
+      - name: create new release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: out/make/*
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
 
-  build_on_win:
-    runs-on: windows-2016
-    steps:
-      - uses: actions/checkout@master
-        with:
-          ref: workflows
-      - uses: actions/setup-node@master
-        with:
-          node-version: 16.x
-      - name: see directory
-        run: ls
-      - name: install dependecies
-        run: yarn install
-      - name: build installer
-        run: yarn make
-      - name: see build
-        run: ls out/make/squirrel.windows/x64
-      - uses: actions/upload-artifact@master
-        with:
-          path: out/make/squirrel.windows/x64/*
+      # - uses: actions/upload-artifact@master
+      #   with:
+      #     path: out/make/*
+
+  # windows_build:
+  #   runs-on: windows-2016
+  #   steps:
+  #     - uses: actions/checkout@master
+  #       with:
+  #         ref: workflows
+  #     - uses: actions/setup-node@master
+  #       with:
+  #         node-version: 16.x
+  #     - name: see directory
+  #       run: ls
+  #     - name: install dependecies
+  #       run: yarn install
+  #     - name: build installer
+  #       run: yarn make
+  #     - name: see build
+  #       run: ls out/make/squirrel.windows/x64
+  #     - uses: actions/upload-artifact@master
+  #       with:
+  #         path: out/make/squirrel.windows/x64/*
