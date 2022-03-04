@@ -20,15 +20,27 @@ jobs:
           node-version: 16.x
       - name: see directory
         run: ls
+      - name: install dependecies
+        run: yarn install
+      - name: build binaries
+        run: yarn make --arch=x64,arm64
+      - name: see build
+        run: ls out/make
 
   build_on_win:
     runs-on: windows-2016
     steps:
       - uses: actions/checkout@master
         with:
-          ref: feature/github-actions
+          ref: workflows
       - uses: actions/setup-node@master
         with:
           node-version: 16.x
       - name: see directory
         run: ls
+      - name: install dependecies
+        run: yarn install
+      - name: build installer
+        run: yarn make
+      - name: see build
+        run: ls out/make
