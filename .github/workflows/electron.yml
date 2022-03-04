@@ -26,6 +26,9 @@ jobs:
         run: yarn make --arch=x64,arm64
       - name: see build
         run: ls out/make
+      - uses: actions/upload-artifact@master
+        with:
+          path: out/make/*
 
   build_on_win:
     runs-on: windows-2016
@@ -43,4 +46,7 @@ jobs:
       - name: build installer
         run: yarn make
       - name: see build
-        run: ls out/make
+        run: ls out/make/squirrel.windows/x64
+      - uses: actions/upload-artifact@master
+        with:
+          path: out/make/squirrel.windows/x64/*
