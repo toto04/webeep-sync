@@ -128,6 +128,7 @@ export class DownloadManager extends EventEmitter {
         log(`finished syncing with result:  ${SyncResult[result]}`)
 
         if (result === SyncResult.success) {
+            // update the last synced timestamp only if the sync was successful
             store.data.persistence.lastSynced = Date.now()
             store.write()
         }
@@ -244,6 +245,7 @@ export class DownloadManager extends EventEmitter {
 
                 case 'RequestError':
                 case 'HTTPError':
+                case 'TimeoutError':
                     return SyncResult.networkError
 
                 case 'FSError':
@@ -282,23 +284,23 @@ export class DownloadManager extends EventEmitter {
      */
     async getFilesToDownload() {
         this.updateState(DownloadState.fetchingCourses)
-        let cs = await moodleClient.getCoursesWithoutCache()
+        const cs = await moodleClient.getCoursesWithoutCache()
 
         let filesToDownload: FileInfo[] = []
-        let { courses } = store.data.persistence
-        let { downloadPath } = store.data.settings
+        const { courses } = store.data.persistence
+        const { downloadPath } = store.data.settings
 
         this.updateState(DownloadState.fetchingFiles)
 
-        for (const c of cs) {
-            if (!courses[c.id].shouldSync) continue
+        // get files for all courses in parallel, otherwise it takes a shit ton of time
+        const syncableCourses = cs.filter(c => courses[c.id].shouldSync)
+        const courseFiles = await Promise.all(syncableCourses.map(c => moodleClient.getFileInfos(c)))
 
-            // TODO: check all courses in parallel
-
-            let allfiles = await moodleClient.getFileInfos(c)
-            for (const file of allfiles) {
+        // honestly, this takes around 20ms total, it's not even worth to do in parallel
+        for (const files of courseFiles)
+            for (const file of files) {
                 const fullpath = path.join(file.filepath, file.filename)
-                let absolutePath = path.join(downloadPath, fullpath)
+                const absolutePath = path.join(downloadPath, fullpath)
 
                 try {
                     let stats = await fs.stat(absolutePath)
@@ -316,7 +318,7 @@ export class DownloadManager extends EventEmitter {
                     filesToDownload.push(file)
                 }
             }
-        }
+
         return filesToDownload
     }
 
@@ -326,4 +328,8 @@ export class DownloadManager extends EventEmitter {
         store.write()
     }
 }
+
+/**
+ * Module used to handle the actual syncing process, the download and writing for each file
+ */
 export let downloadManager = new DownloadManager()
