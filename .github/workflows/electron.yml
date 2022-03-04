@@ -1,0 +1,34 @@
+# name of your github action
+name: CI
+# this will help you specify where to run
+on:
+  push:
+    branches:
+      # this will run on the electron branch
+      - workflows
+
+# this is where the magic happens, each job happens in parallel btw
+jobs:
+  build_on_mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          ref: electron
+      - uses: actions/setup-node@master
+        with:
+          node-version: 16.x
+      - name: see directory
+        run: ls
+
+  build_on_win:
+    runs-on: windows-2016
+    steps:
+      - uses: actions/checkout@master
+        with:
+          ref: feature/github-actions
+      - uses: actions/setup-node@master
+        with:
+          node-version: 16.x
+      - name: see directory
+        run: ls
