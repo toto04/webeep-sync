@@ -222,8 +222,10 @@ export class DownloadManager extends EventEmitter {
 
             // Push 3 requests to kickstart the download process
             let requests: Promise<void>[] = []  // the current pushed requests
-            let maxConcurrentDownloads = 5
-            for (let i = 0; i < maxConcurrentDownloads && i < files.length; i++) {
+            let concurrentDownloads = Math.min(store.data.settings.maxConcurrentDownloads, files.length)
+            if (isNaN(concurrentDownloads) || concurrentDownloads < 1) concurrentDownloads = 1 // better safe then sorry
+            debug(`Beginning download with ${concurrentDownloads} concurrent downloads`)
+            for (let i = 0; i < concurrentDownloads; i++) {
                 requests.push(pushNewRequest())
             }
 

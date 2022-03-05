@@ -29,6 +29,7 @@ export interface Settings {
     language?: 'it' | 'en'
     checkForUpdates?: boolean
     notificationOnNewFiles?: boolean
+    maxConcurrentDownloads?: number
 }
 
 export interface Persistence {
@@ -64,6 +65,7 @@ export const defaultSettings: Required<Settings> = {
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
     checkForUpdates: true,
     notificationOnNewFiles: true,
+    maxConcurrentDownloads: 5,
 }
 
 let storePath = path.join(app.getPath('userData'), 'store.json')

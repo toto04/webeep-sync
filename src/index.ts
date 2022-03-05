@@ -429,6 +429,10 @@ ipcMain.handle('version', () => app.getVersion())
 ipcMain.handle('set-settings', async (e, newSettings) => {
     store.data.settings = { ...store.data.settings, ...newSettings }
 
+    // concurrent downloads
+    if (isNaN(store.data.settings.maxConcurrentDownloads) || store.data.settings.maxConcurrentDownloads < 1)
+        store.data.settings.maxConcurrentDownloads = 1
+
     // tray 
     if ((
         !store.data.settings.keepOpenInBackground

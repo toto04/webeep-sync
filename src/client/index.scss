@@ -796,6 +796,11 @@ $modal-anim-time: 0.15s;
             padding: 2px;
             border-radius: 4px;
         }
+        input[type="number"] {
+            width: 50px;
+            justify-self: flex-end;
+            padding: 3px;
+        }
         .checkbox {
             padding: 0;
         }

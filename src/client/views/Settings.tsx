@@ -177,6 +177,21 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     />
                     <span className="desc">{t('newCourses_desc')}</span>
                 </div>
+                <div className="setting">
+                    <span>{t('concurrentDownloads')}</span>
+                    <input
+                        type="number"
+                        min={1}
+                        max={100}
+                        value={settings.maxConcurrentDownloads}
+                        onChange={e => {
+                            let maxConcurrentDownloads = parseInt(e.target.value)
+                            if (maxConcurrentDownloads > 100) maxConcurrentDownloads = 100
+                            updateSettigns({ ...settings, maxConcurrentDownloads })
+                        }}
+                    />
+                    <span className="desc">{t('concurrentDownloads_desc')}</span>
+                </div>
             </div>
 
             <button className="danger-button" onClick={() => {
