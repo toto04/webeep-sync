@@ -14,7 +14,7 @@ import {
     Tray,
 } from 'electron'
 
-import { __static } from './util'
+import { DownloadState, __static } from './util'
 
 import { createLogger } from './modules/logger'
 import { loginManager } from './modules/login'
@@ -130,13 +130,24 @@ moodleClient.on('network_event', conn => send('network_event', conn))
 moodleClient.on('username', username => send('username', username))
 if (moodleClient.username) send('username', moodleClient.username)
 
+let sendProgressInterval: NodeJS.Timer
+
 downloadManager.on('sync', () => send('syncing', true))
 downloadManager.on('stop', result => {
+    clearInterval(sendProgressInterval)
     send('syncing', false)
     send('sync-result', result)
 })
-downloadManager.on('progress', progress => send('progress', progress))
-downloadManager.on('state', state => send('download-state', state))
+// downloadManager.on('progress', progress => send('progress', progress))
+downloadManager.on('state', state => {
+    if (state === DownloadState.downloading) {
+        sendProgressInterval = setInterval(() => {
+            let progress = downloadManager.getCurrentProgress()
+            if (progress) send('progress', progress)
+        }, 20)
+    }
+    send('download-state', state)
+})
 
 /**
  * global variable storing new files downloaded in background to show once the main window opens
@@ -417,6 +428,10 @@ ipcMain.handle('version', () => app.getVersion())
 // this event handles the settings update, has side effects
 ipcMain.handle('set-settings', async (e, newSettings) => {
     store.data.settings = { ...store.data.settings, ...newSettings }
+
+    // concurrent downloads
+    if (isNaN(store.data.settings.maxConcurrentDownloads) || store.data.settings.maxConcurrentDownloads < 1)
+        store.data.settings.maxConcurrentDownloads = 1
 
     // tray 
     if ((

@@ -104,7 +104,7 @@ button {
     padding: 2px;
     min-width: 24px;
     min-height: 24px;
-    transition: backdrop-filter 0.2s ease-in-out;
+    transition: backdrop-filter 0.1s ease-in-out;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
@@ -162,7 +162,7 @@ svg.warning {
     border-radius: 4px;
     overflow: hidden;
     width: 100%;
-    background-color: white;
+    background-color: $very-light-gray;
     margin-bottom: 6px;
     .progress-bar-inside {
         @keyframes progressbar {
@@ -405,7 +405,6 @@ $modal-anim-time: 0.15s;
 
 .sync-progress {
     display: flex;
-    overflow: hidden;
     flex-direction: column;
     height: 130px;
 
@@ -440,7 +439,8 @@ $modal-anim-time: 0.15s;
         flex-direction: column;
         align-items: stretch;
         border-radius: 6px;
-        overflow: hidden;
+        position: relative;
+
         .progress-container {
             display: flex;
             flex: 1;
@@ -462,6 +462,63 @@ $modal-anim-time: 0.15s;
         .fileinfo {
             max-width: 80%;
             display: inline;
+        }
+    }
+
+    .sync-progress-list {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        .progress-ellipses {
+            cursor: default;
+        }
+
+        .tooltip {
+            z-index: 15;
+            max-height: 300px;
+            width: 300px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            box-sizing: border-box;
+
+            padding: 6px;
+            border-radius: 8px;
+            background-color: $almost-white;
+            box-shadow: 0px 0px 8px 5px #0001;
+
+            .file-progress {
+                background-color: white;
+                padding: 4px;
+                border-radius: 4px;
+                &:not(:last-child) {
+                    margin-bottom: 6px;
+                }
+                span {
+                    display: block;
+                    margin: 0;
+                }
+                .filename {
+                    font-family: "Poppins", sans-serif;
+                    font-size: 13px;
+                    font-weight: bold;
+                }
+                .filepath {
+                    font-size: 10px;
+                    margin-bottom: 2px;
+                }
+                .file-size-info {
+                    font-size: 12px;
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 2px;
+                }
+                .progress-bar {
+                    height: 6px;
+                }
+            }
         }
     }
 
@@ -575,6 +632,9 @@ $modal-anim-time: 0.15s;
             svg {
                 color: white;
                 width: 20px;
+                &.active {
+                    filter: drop-shadow(2px 2px 2px #0002);
+                }
             }
         }
         &:not(:last-child)::before {
@@ -796,6 +856,11 @@ $modal-anim-time: 0.15s;
             padding: 2px;
             border-radius: 4px;
         }
+        input[type="number"] {
+            width: 50px;
+            justify-self: flex-end;
+            padding: 3px;
+        }
         .checkbox {
             padding: 0;
         }
@@ -922,6 +987,13 @@ $modal-anim-time: 0.15s;
                     color: white;
                 }
             }
+        }
+    }
+    .tooltip {
+        background-color: $very-dark-gray !important;
+
+        .file-progress {
+            background-color: $almost-black !important;
         }
     }
 }
