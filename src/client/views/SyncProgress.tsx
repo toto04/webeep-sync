@@ -1,13 +1,13 @@
 import { ipcRenderer } from 'electron'
-import { FC, useContext, useEffect, useState } from 'react'
-import { PrograssBar } from '../components/ProgressBar'
-import React from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { breakableString, DownloadState, formatSize, SyncResult } from '../../util'
 import { NewFilesList, Progress } from '../../modules/download'
 import { NewFilesModal } from './NewFilesModal'
 import { LoginContext } from '../LoginContext'
-import { useTranslation } from 'react-i18next'
+import { PrograssBar } from '../components/ProgressBar'
+import { SyncProgressList } from '../components/SyncProgressList'
 
 /**
  * This component is what is shown while there is a download in progress.
@@ -18,20 +18,28 @@ let SyncProgressWrap: FC<{ progress: Progress }> = props => {
 
     let { progress } = props
 
-    let filePercentage = progress?.fileDownloaded / progress?.fileTotal
+    let fdown = progress?.files?.[0]?.downloaded ?? 0
+    let ftot = progress?.files?.[0]?.total ?? 0
+
+    let filePercentage = fdown / ftot
     let percentage = progress?.downloaded / progress?.total
 
     return <div className="sync-progress-wrap">
+        {progress?.files?.length > 1
+            ? <SyncProgressList files={progress.files} />
+            : undefined
+        }
+
         <div>
             <div className="progress-container">
                 <div className="fileinfo">
-                    <span className="filename">{progress.filename}</span>
+                    <span className="filename">{progress.files[0].filename}</span>
                     <span className="filepath">
-                        {breakableString(progress.absolutePath)}
+                        {breakableString(progress.files[0].absolutePath)}
                     </span>
                 </div>
                 <span className="right">
-                    {`${formatSize(progress.fileDownloaded)} / ${formatSize(progress.fileTotal)} (${Math.floor(filePercentage * 100)}%)`}
+                    {`${formatSize(progress.files[0].downloaded)} / ${formatSize(progress.files[0].total)} (${Math.floor(filePercentage * 100)}%)`}
                 </span>
             </div>
             <PrograssBar progress={filePercentage} />

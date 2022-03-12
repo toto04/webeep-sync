@@ -12,16 +12,17 @@ import { DownloadState, SyncResult } from '../util'
 
 let { log, error, debug } = createLogger('DownloadManager')
 
-export interface SingleProgress {
+export interface FileProgress {
     filename: string
     absolutePath: string
-    fileDownloaded: number
-    fileTotal: number
-}
-
-export type Progress = SingleProgress & {
     downloaded: number
     total: number
+}
+
+export type Progress = {
+    downloaded: number
+    total: number
+    files: FileProgress[]
 }
 
 export type NewFilesList = {
@@ -57,7 +58,7 @@ export class DownloadManager extends EventEmitter {
 
     currentDownloads: {
         request: CancelableRequest<Response<string>>
-        progress: SingleProgress
+        progress: FileProgress
     }[] = []
 
     currentState: DownloadState = DownloadState.idle
@@ -179,15 +180,15 @@ export class DownloadManager extends EventEmitter {
                     progress: {
                         absolutePath,
                         filename: file.filename,
-                        fileDownloaded: 0,
-                        fileTotal: file.filesize,
+                        downloaded: 0,
+                        total: file.filesize,
                     }
                 }
                 this.currentDownloads.push(download)
 
                 request.on('downloadProgress', ({ transferred }) => {
                     // update the download object on each chunk
-                    download.progress.fileDownloaded = transferred
+                    download.progress.downloaded = transferred
                 })
 
                 let res = await request
@@ -222,8 +223,10 @@ export class DownloadManager extends EventEmitter {
 
             // Push 3 requests to kickstart the download process
             let requests: Promise<void>[] = []  // the current pushed requests
-            let concurrentDownloads = Math.min(store.data.settings.maxConcurrentDownloads, files.length)
+            let concurrentDownloads = store.data.settings.maxConcurrentDownloads
             if (isNaN(concurrentDownloads) || concurrentDownloads < 1) concurrentDownloads = 1 // better safe then sorry
+            concurrentDownloads = Math.min(concurrentDownloads, files.length)
+
             debug(`Beginning download with ${concurrentDownloads} concurrent downloads`)
             for (let i = 0; i < concurrentDownloads; i++) {
                 requests.push(pushNewRequest())
@@ -268,13 +271,14 @@ export class DownloadManager extends EventEmitter {
      */
     getCurrentProgress(): Progress | null {
         if (!this.currentDownloads.length) return null
+
         return {
-            ...this.currentDownloads[0].progress,
             total: this.total,
             downloaded: this.currentDownloads.reduce(
-                (t, d) => t + d.progress.fileDownloaded,
+                (t, d) => t + d.progress.downloaded,
                 this.totalUntilNow
-            )
+            ),
+            files: this.currentDownloads.map(d => d.progress)
         }
     }
 
