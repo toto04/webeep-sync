@@ -4,11 +4,12 @@ import got from 'got'
 import { createLogger } from './logger'
 import { loginManager, } from './login'
 import { storeIsReady, store } from './store'
+import { sanitizePath } from '../util'
 
 const { log, debug } = createLogger('MoodleClient')
 
 /** module name to be excluded from file search to prevent download of junk */
-const EXCLUDED_MODNAMES = ['page', 'forum', 'url', 'wooclap', 'choice', 'feedback', 'label', 'lesson']
+export const EXCLUDED_MODNAMES = ['page', 'forum', 'url', 'wooclap', 'choice', 'feedback', 'label', 'lesson']
 
 export interface Course {
     id: number,
@@ -28,7 +29,7 @@ export interface FileInfo {
     updating?: boolean, // set to true if the file is already downloaded, and is being updated
 }
 
-type Contents = {
+export type Contents = {
     id: number,
     name: string,
     modules: {
@@ -230,7 +231,6 @@ export class MoodleClient extends EventEmitter {
      * @returns a promise that resolve to an array with all the FileInfo objects
      */
     async getFileInfos(course: Course): Promise<FileInfo[]> {
-        // TODO: course custom folder name
         let contents: Contents = await this.call('core_course_get_contents', { courseid: course.id }, false)
         let files: FileInfo[] = []
 
@@ -247,14 +247,27 @@ export class MoodleClient extends EventEmitter {
                     if (file.type !== 'file') continue  // only add files to the download (duh)
 
                     let { filename, filepath, filesize, fileurl, timecreated, timemodified } = file
-                    filepath = path.join(modulename, filepath)
+
+                    // if the modname is 'resource' & the content is a single file, the modulename
+                    // should be used in place of the filename, as thats how it's displayed on webeep
+                    if (modname === 'resource' && contents.length === 1) {
+                        console.log({ file, modname, modulename })
+                        filename = modulename + path.extname(filename)
+                    } else {
+                        filepath = path.join(modulename, filepath)
+                    }
+
                     // if the contentgroup is 'Materiali' or similar, do not create a subfolder, as many courses
                     // use it as the only folder with downloadable contents
-                    filepath = contentGroup.name.toLowerCase().includes('material') ? filepath : path.join(contentGroup.name, filepath)
+                    filepath = contentGroup.name.toLowerCase().includes('material')
+                        ? filepath
+                        : path.join(contentGroup.name, filepath)
+
                     filepath = path.join(course.name, filepath)
 
-                    // TODO: find a better way to handle illegal characters
-                    filepath = filepath.replace(/[:*?"<>|]/g, '_')
+                    // in the end sanitize the path removing all characters that cause a mess
+                    filename = sanitizePath(filename)
+                    filepath = sanitizePath(filepath)
 
                     files.push({
                         coursename: course.name,

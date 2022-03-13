@@ -119,6 +119,7 @@ function checkStoreIntegrity() {
 async function updateManifestVersion() {
     let ver = store.data.manifestVersion ?? 0
     if (ver === CURRENT_MANIFEST_VERSION) return
+    log(`applying fixes for outdated manifest version: ${ver} / ${CURRENT_MANIFEST_VERSION}`)
 
     // add here checks to mutate from old version
     if (ver < 2) {
@@ -139,6 +140,7 @@ async function updateManifestVersion() {
 
     // once sure that everything is updated, change the manifest version
     store.data.manifestVersion = CURRENT_MANIFEST_VERSION
+    log(`manifest version updated! (now ${CURRENT_MANIFEST_VERSION})`)
 }
 
 export async function storeIsReady(): Promise<void> {
