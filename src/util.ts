@@ -45,5 +45,6 @@ export function sanitizePath(str: string): string {
     str = str.replace(/[\n\t\r]+/g, ' ')    // replace invalid white spaces
     str = str.replace(/[:*?"<>|]/g, '_')    // remove invalid windows characters
     str = str.replace(/\. *\//g, '/')       // remove trailing dots from folders
+    str = str.replace(/\. *\\/g, '\\')      // remove trailing dots from windows
     return str
 }
