@@ -35,3 +35,15 @@ export function formatSize(size: number): string {
 export function breakableString(str: string): string {
     return str.replace(/\\/g, '\\\u200B').replace(/\//g, '/\u200B').replace(/\+/g, '+\u200B')
 }
+
+/**
+ * replaces a couple of problematic characters that cause havoc in the FS (expecially on windows)
+ * @param str the string to be sanitized
+ * @returns the sanitized string
+ */
+export function sanitizePath(str: string): string {
+    str = str.replace(/[\n\t\r]+/g, ' ')    // replace invalid white spaces
+    str = str.replace(/[:*?"<>|]/g, '_')    // remove invalid windows characters
+    str = str.replace(/\. *\//g, '/')       // remove trailing dots from folders
+    return str
+}

@@ -4,6 +4,7 @@ import got from 'got'
 import { createLogger } from './logger'
 import { loginManager, } from './login'
 import { storeIsReady, store } from './store'
+import { sanitizePath } from '../util'
 
 const { log, debug } = createLogger('MoodleClient')
 
@@ -264,9 +265,9 @@ export class MoodleClient extends EventEmitter {
 
                     filepath = path.join(course.name, filepath)
 
-                    // TODO: find a better way to handle illegal characters
-                    filename = filename.replace(/[:*?"<>|]/g, '_')
-                    filepath = filepath.replace(/[:*?"<>|]/g, '_')
+                    // in the end sanitize the path removing all characters that cause a mess
+                    filename = sanitizePath(filename)
+                    filepath = sanitizePath(filepath)
 
                     files.push({
                         coursename: course.name,
