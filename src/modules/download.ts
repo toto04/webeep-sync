@@ -198,6 +198,21 @@ export class DownloadManager extends EventEmitter {
                     await fs.writeFile(absolutePath, res.rawBody)
                     await fs.utimes(absolutePath, new Date(), new Date(file.timemodified * 1000))
                 } catch (e) {
+                    if (e.code === 'EISDIR') {
+                        try {
+                            await fs.rm(e.path, { recursive: true, force: true })
+                            files.push(file)    // this download should really be tried again
+                            return
+                        } catch (e) {
+                            error('\n')
+                            error('Error while removing a folder that shouldnt exist! That shouldn\'t happen :c')
+                            error('If you see this error just manually delete the download folder')
+                            error(e)
+                            error(`Path: ${e.path}`)
+                            error('\n')
+                        }
+                    }
+
                     // yes i know, i catch an error just to throw it, but this way anything that
                     // happens while writing will just be an "FSError" and nothing else, and will be
                     // properly logged (which doesn't need to happen in case of a network error)
