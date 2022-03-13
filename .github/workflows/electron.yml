@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - workflows
+      - main
 
 jobs:
   macos_build:
