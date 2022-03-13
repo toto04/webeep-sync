@@ -251,7 +251,6 @@ export class MoodleClient extends EventEmitter {
                     // if the modname is 'resource' & the content is a single file, the modulename
                     // should be used in place of the filename, as thats how it's displayed on webeep
                     if (modname === 'resource' && contents.length === 1) {
-                        console.log({ file, modname, modulename })
                         filename = modulename + path.extname(filename)
                     } else {
                         filepath = path.join(modulename, filepath)
