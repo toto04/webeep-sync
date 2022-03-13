@@ -1,13 +1,10 @@
-# name of your github action
 name: build
-# this will help you specify where to run
+
 on:
   push:
-    tags:
-      # this will run on the electron branch
-      - v*
+    branches:
+      - workflows
 
-# this is where the magic happens, each job happens in parallel btw
 jobs:
   macos_build:
     runs-on: macos-latest
@@ -23,43 +20,28 @@ jobs:
       - name: install dependecies
         run: yarn install
       - name: build binaries
-        run: yarn make --arch=x64,arm64
-      - name: see build
-        run: ls out/make
-      - name: get version
-        run: yarn version
-        id: version
-      - name: create new release
-        uses: actions/create-release@v1
+        run: yarn run publish --arch=x64,arm64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: see build
+        run: ls out/make
+
+  windows_build:
+    runs-on: windows-2016
+    steps:
+      - uses: actions/checkout@master
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: false
-
-      # - uses: actions/upload-artifact@master
-      #   with:
-      #     path: out/make/*
-
-  # windows_build:
-  #   runs-on: windows-2016
-  #   steps:
-  #     - uses: actions/checkout@master
-  #       with:
-  #         ref: workflows
-  #     - uses: actions/setup-node@master
-  #       with:
-  #         node-version: 16.x
-  #     - name: see directory
-  #       run: ls
-  #     - name: install dependecies
-  #       run: yarn install
-  #     - name: build installer
-  #       run: yarn make
-  #     - name: see build
-  #       run: ls out/make/squirrel.windows/x64
-  #     - uses: actions/upload-artifact@master
-  #       with:
-  #         path: out/make/squirrel.windows/x64/*
+          ref: workflows
+      - uses: actions/setup-node@master
+        with:
+          node-version: 16.x
+      - name: see directory
+        run: ls
+      - name: install dependecies
+        run: yarn install
+      - name: build installer
+        run: yarn run publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: see build
+        run: ls out/make/squirrel.windows/x64
