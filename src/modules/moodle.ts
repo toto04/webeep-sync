@@ -276,6 +276,17 @@ export class MoodleClient extends EventEmitter {
                     filename = sanitizePath(filename)
                     filepath = sanitizePath(filepath)
 
+                    // if there is a file with the same name in the same folder, add a number to the end
+                    let i = 1
+                    while (files.find(f => f.filepath === filepath && f.filename === filename)) {
+                        let basename = path.basename(filename, path.extname(filename))
+                        // remove the old number
+                        if (i > 1) basename = basename.slice(0, -3 - (String(i - 1).length))
+                        // reconstruct the filename
+                        filename = `${basename} (${i})${path.extname(filename)}`
+                        i++
+                    }
+
                     files.push({
                         coursename: course.name,
                         filename,
