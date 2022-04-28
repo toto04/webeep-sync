@@ -10,7 +10,7 @@ import { loginManager } from './login'
 
 import { DownloadState, SyncResult } from '../util'
 
-let { log, error, debug } = createLogger('DownloadManager')
+const { log, error, debug } = createLogger('DownloadManager')
 
 export interface FileProgress {
     filename: string
@@ -50,8 +50,8 @@ export declare interface DownloadManager {
 }
 
 export class DownloadManager extends EventEmitter {
-    private stopped: boolean = false
-    syncing: boolean = false
+    private stopped = false
+    syncing = false
 
     private total = 0           // total to be downloaded
     private totalUntilNow = 0   // size of all completed downloads
@@ -67,9 +67,9 @@ export class DownloadManager extends EventEmitter {
         super()
         storeIsReady().then(() => {
             setTimeout(() => {
-                let autosync = () => {
+                const autosync = () => {
                     if (!store.data.settings.autosyncEnabled) return
-                    let dt = Date.now() - (store.data.persistence.lastSynced ?? 0)
+                    const dt = Date.now() - (store.data.persistence.lastSynced ?? 0)
                     if (dt > store.data.settings.autosyncInterval && !this.syncing) {
                         log('Scheduled autosync beginning!')
                         this.sync()
@@ -102,7 +102,7 @@ export class DownloadManager extends EventEmitter {
      * This function does not directly emit the "stopped" {@link SyncResult}, as the correct status 
      * will be returned by the {@link sync} function (the stopped state will bubble as the next TODO)
      */
-    async stop() {
+    stop(): void {
         if (!this.stopped) {
             this.stopped = true
             this.cancelAllRequests()
@@ -125,7 +125,7 @@ export class DownloadManager extends EventEmitter {
         this.syncing = true
         this.emit('sync')
 
-        let result = await this._sync()
+        const result = await this._sync()
         log(`finished syncing with result:  ${SyncResult[result]}`)
 
         if (result === SyncResult.success) {
@@ -147,19 +147,19 @@ export class DownloadManager extends EventEmitter {
      */
     private async _sync(): Promise<SyncResult> {
         await storeIsReady()    // just to be sure that the settings are initialized
-        let { downloadPath } = store.data.settings
+        const { downloadPath } = store.data.settings
         this.stopped = false
         try {
-            let files = await this.getFilesToDownload()
+            const files = await this.getFilesToDownload()
 
             this.updateState(DownloadState.downloading)
-            let newFilesList: NewFilesList = {}
+            const newFilesList: NewFilesList = {}
             this.currentDownloads = []
             this.total = files.reduce((tot, f) => tot + f.filesize, 0)
             this.totalUntilNow = 0
 
             // this function gets called recursively each time to download a new file
-            let pushNewRequest = async () => {
+            const pushNewRequest = async () => {
                 if (this.stopped) return
                 const file = files.pop()    // pop a file from the list, 
 
@@ -191,7 +191,7 @@ export class DownloadManager extends EventEmitter {
                     download.progress.downloaded = transferred
                 })
 
-                let res = await request
+                const res = await request
 
                 try {
                     await fs.mkdir(path.dirname(absolutePath), { recursive: true })
@@ -237,7 +237,7 @@ export class DownloadManager extends EventEmitter {
             }
 
             // Push 3 requests to kickstart the download process
-            let requests: Promise<void>[] = []  // the current pushed requests
+            const requests: Promise<void>[] = []  // the current pushed requests
             let concurrentDownloads = store.data.settings.maxConcurrentDownloads
             if (isNaN(concurrentDownloads) || concurrentDownloads < 1) concurrentDownloads = 1 // better safe then sorry
             concurrentDownloads = Math.min(concurrentDownloads, files.length)
@@ -303,11 +303,11 @@ export class DownloadManager extends EventEmitter {
      * already been synced.
      * @returns A promise that resolves to an array of FileInfos with the files that need to be downloaded
      */
-    async getFilesToDownload() {
+    async getFilesToDownload(): Promise<FileInfo[]> {
         this.updateState(DownloadState.fetchingCourses)
         const cs = await moodleClient.getCoursesWithoutCache()
 
-        let filesToDownload: FileInfo[] = []
+        const filesToDownload: FileInfo[] = []
         const { courses } = store.data.persistence
         const { downloadPath } = store.data.settings
 
@@ -324,7 +324,7 @@ export class DownloadManager extends EventEmitter {
                 const absolutePath = path.join(downloadPath, fullpath)
 
                 try {
-                    let stats = await fs.stat(absolutePath)
+                    const stats = await fs.stat(absolutePath)
                     if (
                         stats.mtime.getTime() / 1000 !== file.timemodified
                         || stats.size !== file.filesize
@@ -343,7 +343,7 @@ export class DownloadManager extends EventEmitter {
         return filesToDownload
     }
 
-    async setAutosync(sync: boolean) {
+    async setAutosync(sync: boolean): Promise<void> {
         await storeIsReady()
         store.data.settings.autosyncEnabled = sync
         store.write()
@@ -353,4 +353,4 @@ export class DownloadManager extends EventEmitter {
 /**
  * Module used to handle the actual syncing process, the download and writing for each file
  */
-export let downloadManager = new DownloadManager()
+export const downloadManager = new DownloadManager()

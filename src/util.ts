@@ -19,7 +19,7 @@ export enum SyncResult {
 }
 
 export function formatSize(size: number): string {
-    let suxs = ['B', 'kB', 'MB', 'GB', 'TB']
+    const suxs = ['B', 'kB', 'MB', 'GB', 'TB']
     let i = 0;
     while (size > 1000 && i < suxs.length - 1) {
         size /= 1000

@@ -8,6 +8,7 @@ let initializing = false
 let initialized = false
 
 export function i18nInit(): Promise<void> {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
         if (initialized) {
             resolve()

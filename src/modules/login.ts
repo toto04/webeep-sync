@@ -7,18 +7,18 @@ import { createLogger } from './logger'
 const { log, debug } = createLogger('LoginManager')
 
 /** @file the path to the token file which stores the encrypted token */
-let tokenPath = path.join(app.getPath('userData'), 'token')
+const tokenPath = path.join(app.getPath('userData'), 'token')
 
 declare interface LoginManager {
     on(eventName: 'ready', handler: () => void): this
-    once(eventName: 'ready', handler: () => void): this
     on(eventName: 'token', handler: (token: string) => void): this
-    once(eventName: 'token', handler: (token: string) => void): this
     on(eventName: 'logout', handler: () => void): this
+    once(eventName: 'ready', handler: () => void): this
+    once(eventName: 'token', handler: (token: string) => void): this
     once(eventName: 'logout', handler: () => void): this
 }
 class LoginManager extends EventEmitter {
-    ready: boolean = false
+    ready = false
     token: string
     isLogged = false
 
@@ -49,8 +49,8 @@ class LoginManager extends EventEmitter {
             // the moodlemobile:// protocol gets intercepted and the token is extracted from the response
             protocol.registerHttpProtocol('moodlemobile', (req, cb) => {
                 debug('Intercepted call to moodlemobile protocol')
-                let b64token = req.url.split('token=')[1]
-                let token = Buffer.from(b64token, 'base64').toString().split(':::')[1]
+                const b64token = req.url.split('token=')[1]
+                const token = Buffer.from(b64token, 'base64').toString().split(':::')[1]
                 this.isLogged = true
                 this.token = token
                 this.emit('token', token)
@@ -69,6 +69,7 @@ class LoginManager extends EventEmitter {
         try {
             // if the file does not exist, just ignore the error when trying to unlink it
             await fs.unlink(tokenPath)
+            // eslint-disable-next-line no-empty
         } catch (e) { }
     }
 
@@ -112,7 +113,7 @@ class LoginManager extends EventEmitter {
             } else this.loginWindow.focus() // if the window already exists, focus it
 
             // called when the window gets closed before the token is retrieved
-            let onclose = async () => {
+            const onclose = async () => {
                 log('Login process aborted!')
                 await this.logout()
                 resolve(false)
@@ -135,4 +136,4 @@ class LoginManager extends EventEmitter {
  * Also manages the that lets the user input their credentials.
  * @see {@link LoginManager.createLoginWindow} for more about how the login process works
  */
-export let loginManager = new LoginManager()
+export const loginManager = new LoginManager()

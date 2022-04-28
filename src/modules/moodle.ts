@@ -43,7 +43,7 @@ export type Contents = {
 }[]
 
 function getDefaultName(fullname: string) {
-    let m = fullname.match(/\d+ - (.+) \(.+\)/)
+    const m = fullname.match(/\d+ - (.+) \(.+\)/)
     return m ? m[1] : fullname
 }
 
@@ -57,7 +57,7 @@ export declare interface MoodleClient {
 export class MoodleClient extends EventEmitter {
     userid?: number
     username?: string
-    connected: boolean = true
+    connected = true
 
     waitingForCourses = false
     cachedCourses: Course[] = []
@@ -93,8 +93,9 @@ export class MoodleClient extends EventEmitter {
      */
     async call(
         wsfunction: string,
-        data?: { [key: string]: any },
-        catchNetworkError: boolean = true,
+        data?: { [key: string]: unknown },
+        catchNetworkError = true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): Promise<any> {
         debug(`API call to function: ${wsfunction}`)
         if (data) debug(`    data: ${JSON.stringify(data)}`)
@@ -104,7 +105,7 @@ export class MoodleClient extends EventEmitter {
             return
         }
         try {
-            let res = await got.post('https://webeep.polimi.it/webservice/rest/server.php', {
+            const res = await got.post('https://webeep.polimi.it/webservice/rest/server.php', {
                 timeout: { request: 10000 },
                 form: {
                     wstoken: loginManager.token,
@@ -115,10 +116,10 @@ export class MoodleClient extends EventEmitter {
                     ...data
                 }
             })
-            let parsed = JSON.parse(res.body)
+            const parsed = JSON.parse(res.body)
             if (parsed.errorcode === 'invalidtoken') {
                 debug('Invalid token, requesting new token')
-                let logged = await loginManager.createLoginWindow()
+                const logged = await loginManager.createLoginWindow()
                 if (logged) return await this.call(wsfunction, data, catchNetworkError)
             } else {
                 this.setConnected(true)
@@ -132,7 +133,7 @@ export class MoodleClient extends EventEmitter {
             this.setConnected(false)
             if (catchNetworkError) {
                 return await new Promise((resolve, reject) => {
-                    let tryConnection = async () => {
+                    const tryConnection = async () => {
                         try {
                             debug('retring API call...')
                             resolve(await this.call(wsfunction, data, false))
@@ -151,10 +152,10 @@ export class MoodleClient extends EventEmitter {
      * Get the user id, needed to retrieve the enrolled courses, also retrieves the user's full name
      * @returns the user id
      */
-    async getUserID() {
-        let res = await this.call('core_webservice_get_site_info')
+    async getUserID(): Promise<number> {
+        const res = await this.call('core_webservice_get_site_info')
         if (!res) throw new Error('Cannot retrieve userID, are you logged in?')
-        let { userid, fullname }: { userid: number, fullname: string } = res
+        const { userid, fullname }: { userid: number, fullname: string } = res
         this.username = fullname
         this.emit('username', fullname)
         this.userid = userid
@@ -169,21 +170,24 @@ export class MoodleClient extends EventEmitter {
      * it succeedes
      * @returns A promise which resolves with the list of the enrolled courses
      */
-    async getCoursesWithoutCache(catchNetworkError: boolean = false): Promise<Course[]> {
-        let userid = this.userid ?? await this.getUserID()
+    async getCoursesWithoutCache(catchNetworkError = false): Promise<Course[]> {
+        const userid = this.userid ?? await this.getUserID()
         await storeIsReady()
 
         // once the store is initialized fetch and parse the courses
-        let courses: any[] = await this.call('core_enrol_get_users_courses', { userid }, catchNetworkError)
-        let defaultNames = courses.map(c => getDefaultName(c.fullname))
-        let c: Course[] = courses.map((c, i) => {
-            let { id, fullname } = c
+        const courses: {
+            fullname: string,
+            id: number
+        }[] = await this.call('core_enrol_get_users_courses', { userid }, catchNetworkError)
+        const defaultNames = courses.map(c => getDefaultName(c.fullname))
+        const c: Course[] = courses.map((c, i) => {
+            const { id, fullname } = c
 
 
 
             if (!store.data.persistence.courses[id]) {
                 // check if there are multiple courses that would be shortened to the same folder
-                let allInstances = defaultNames.reduce((arr, el, j) => {
+                const allInstances = defaultNames.reduce((arr, el, j) => {
                     if (el === defaultNames[i]) { arr.push(j) }
                     return arr
                 }, [])
@@ -231,13 +235,13 @@ export class MoodleClient extends EventEmitter {
      * @returns a promise that resolve to an array with all the FileInfo objects
      */
     async getFileInfos(course: Course): Promise<FileInfo[]> {
-        let contents: Contents = await this.call('core_course_get_contents', { courseid: course.id }, false)
-        let files: FileInfo[] = []
+        const contents: Contents = await this.call('core_course_get_contents', { courseid: course.id }, false)
+        const files: FileInfo[] = []
 
         for (const contentGroup of contents) {
 
             for (const module of contentGroup.modules) {
-                let { name: modulename, contents, modname } = module
+                const { name: modulename, contents, modname } = module
 
                 // if the modname is excluded or if the module is empty, skip this module, 
                 if (EXCLUDED_MODNAMES.includes(modname)) continue
@@ -284,4 +288,4 @@ export class MoodleClient extends EventEmitter {
         return files
     }
 }
-export let moodleClient = new MoodleClient()
+export const moodleClient = new MoodleClient()

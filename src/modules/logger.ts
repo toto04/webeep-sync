@@ -1,10 +1,11 @@
+/* eslint-disable no-empty */
 import fs from 'fs/promises'
 import path from 'path'
 import { EventEmitter } from 'events'
 import { app } from 'electron'
 
 const DEV = process.argv.includes('--dev')
-let logFolderPath = path.join(app.getPath('userData'), 'app_logs')
+const logFolderPath = path.join(app.getPath('userData'), 'app_logs')
 
 function timeStamp() {
     return new Date().toISOString().substring(0, 19)
@@ -32,7 +33,7 @@ class Logger extends EventEmitter {
 
         if (!DEV) {
             fs.mkdir(logFolderPath, { recursive: true }).then(async () => {
-                let logPath = path.join(logFolderPath, `${timeStamp()}.log`.replace(/:/g, '.'))
+                const logPath = path.join(logFolderPath, `${timeStamp()}.log`.replace(/:/g, '.'))
                 this.logFile = await fs.open(logPath, 'w')
                 this.writeToFile(`-- WeBeep Sync LOG BEGIN --\nLog Level: ${LogLevel[this.logLevel]}\n\n`)
 
@@ -58,31 +59,31 @@ class Logger extends EventEmitter {
         }
     }
 
-    error(message: any, _module?: string) {
+    error(message: unknown, _module?: string) {
         if (this.logLevel < LogLevel.WARN) return
         try {
-            let mstr = _module ? ` [${_module}]` : ''
-            let msg = `[${timeStamp()}]${mstr} <WARN> ${String(message)}`
+            const mstr = _module ? ` [${_module}]` : ''
+            const msg = `[${timeStamp()}]${mstr} <WARN> ${String(message)}`
             if (!this.logFile) console.error(msg)
             else this.writeToFile(msg)
         } catch (e) { }
     }
 
-    log(message: any, _module?: string) {
+    log(message: unknown, _module?: string) {
         if (this.logLevel < LogLevel.INFO) return
         try {
-            let mstr = _module ? ` [${_module}]` : ''
-            let msg = `[${timeStamp()}]${mstr} <INFO> ${String(message)}`
+            const mstr = _module ? ` [${_module}]` : ''
+            const msg = `[${timeStamp()}]${mstr} <INFO> ${String(message)}`
             if (!this.logFile) console.log(msg)
             else this.writeToFile(msg)
         } catch (e) { }
     }
 
-    debug(message: any, _module?: string) {
+    debug(message: unknown, _module?: string) {
         if (this.logLevel < LogLevel.DEBUG) return
         try {
-            let mstr = _module ? ` [${_module}]` : ''
-            let msg = `[${timeStamp()}]${mstr} <DBUG> ${String(message)}`
+            const mstr = _module ? ` [${_module}]` : ''
+            const msg = `[${timeStamp()}]${mstr} <DBUG> ${String(message)}`
             if (!this.logFile) console.log(msg)
             else this.writeToFile(msg)
         } catch (e) { }
@@ -96,12 +97,14 @@ class Logger extends EventEmitter {
      */
     createLogger(moduleName: string) {
         return {
-            error: (message: any) => this.error(message, moduleName),
-            log: (message: any) => this.log(message, moduleName),
-            debug: (message: any) => this.debug(message, moduleName),
+            error: (message: unknown) => this.error(message, moduleName),
+            log: (message: unknown) => this.log(message, moduleName),
+            debug: (message: unknown) => this.debug(message, moduleName),
         }
     }
 }
-let logger = new Logger()
+const logger = new Logger()
 export default logger
-export let createLogger = (moduleName: string) => logger.createLogger(moduleName)
+export const createLogger = (moduleName: string): ReturnType<typeof logger.createLogger> => {
+    return logger.createLogger(moduleName)
+}

@@ -1,12 +1,12 @@
 import path from 'path'
 import fs from 'fs/promises'
-import { nativeTheme } from 'electron'
+import { nativeTheme, app } from 'electron'
 import { EventEmitter } from 'events'
-import { app } from 'electron'
+// eslint-disable-next-line import/no-unresolved
 import { Low, JSONFile } from 'lowdb'
 
 import { createLogger } from './logger'
-const { debug, log } = createLogger('Store')
+const { log } = createLogger('Store')
 
 /**
  * store.json manifest version, to be increased when breaking changes are made so that a correct 
@@ -68,13 +68,13 @@ export const defaultSettings: Required<Settings> = {
     maxConcurrentDownloads: 5,
 }
 
-let storePath = path.join(app.getPath('userData'), 'store.json')
-export let store = new Low<Store>(new JSONFile(storePath))
+const storePath = path.join(app.getPath('userData'), 'store.json')
+export const store = new Low<Store>(new JSONFile(storePath))
 
 let initialized = false
 let initializing = false
 
-let storeInitializationEE = new EventEmitter()
+const storeInitializationEE = new EventEmitter()
 
 /**
  * this function checks (and eventually restores) the correct shape of the store.data object to
@@ -98,7 +98,7 @@ function checkStoreIntegrity() {
         if (!store.data.persistence.courses) store.data.persistence.courses = {}
         if (!store.data.persistence.ignoredUpdates) store.data.persistence.ignoredUpdates = []
 
-        for (let id in store.data.persistence.courses) {
+        for (const id in store.data.persistence.courses) {
             // for retrocompatibility, if the shape is not right reset the whole object
             if (
                 store.data.persistence.courses[id].name === undefined
@@ -117,7 +117,7 @@ function checkStoreIntegrity() {
  * @returns 
  */
 async function updateManifestVersion() {
-    let ver = store.data.manifestVersion ?? 0
+    const ver = store.data.manifestVersion ?? 0
     if (ver === CURRENT_MANIFEST_VERSION) return
     log(`applying fixes for outdated manifest version: ${ver} / ${CURRENT_MANIFEST_VERSION}`)
 
@@ -126,10 +126,10 @@ async function updateManifestVersion() {
         // this fixes leading/trailing whitespaces in folders which causes all sorts of wierd bugs
         for (const id in store.data.persistence.courses) {
             try {
-                let trimmed = store.data.persistence.courses[id].name.trim()
+                const trimmed = store.data.persistence.courses[id].name.trim()
                 if (trimmed !== store.data.persistence.courses[id].name) {
-                    let oldPath = path.resolve(store.data.settings.downloadPath, store.data.persistence.courses[id].name)
-                    let newPath = path.resolve(store.data.settings.downloadPath, trimmed)
+                    const oldPath = path.resolve(store.data.settings.downloadPath, store.data.persistence.courses[id].name)
+                    const newPath = path.resolve(store.data.settings.downloadPath, trimmed)
                     store.data.persistence.courses[id].name = trimmed
                     log(`Trimmed course ${id} folder: ${trimmed}`)
                     await fs.rename(oldPath, newPath)
@@ -144,6 +144,7 @@ async function updateManifestVersion() {
 }
 
 export async function storeIsReady(): Promise<void> {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
         if (initialized) {
             resolve()
