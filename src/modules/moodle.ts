@@ -260,6 +260,10 @@ export class MoodleClient extends EventEmitter {
                         filepath = path.join(modulename, filepath)
                     }
 
+                    // remove slashes from the filname to prevent subfolders
+                    filename = filename.replace(/\//g, '_')
+                    filename = filename.replace(/\\/g, '_')
+
                     // if the contentgroup is 'Materiali' or similar, do not create a subfolder, as many courses
                     // use it as the only folder with downloadable contents
                     filepath = contentGroup.name.toLowerCase().includes('material')
