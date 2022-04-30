@@ -6,15 +6,15 @@ import { IoClose, IoAddCircleOutline, IoCheckmarkCircle } from 'react-icons/io5'
 import { HiCheck } from 'react-icons/hi'
 import { useTranslation } from 'react-i18next'
 
-export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
-    let [input, setInput] = useState<HTMLInputElement>()
-    let [checked, setChecked] = useState(props.course.shouldSync)
-    let [folder, setFolder] = useState(props.course.name)
-    let [editing, setEditing] = useState(false)
+export const CourseRow: FC<{ course: Course, index: number }> = (props) => {
+    const [input, setInput] = useState<HTMLInputElement>()
+    const [checked, setChecked] = useState(props.course.shouldSync)
+    const [folder, setFolder] = useState(props.course.name)
+    const [editing, setEditing] = useState(false)
 
-    let { t } = useTranslation('client', { keyPrefix: 'courseList.row' })
+    const { t } = useTranslation('client', { keyPrefix: 'courseList.row' })
 
-    let checkInputValidity = () => {
+    const checkInputValidity = () => {
         if (input.value.length < 1)
             input.setCustomValidity(t('tooShort'))
         else if (input.value.length >= 255)
@@ -24,19 +24,19 @@ export let CourseRow: FC<{ course: Course, index: number }> = (props) => {
         else input.setCustomValidity('')
     }
 
-    let cancelEditing = () => {
+    const cancelEditing = () => {
         setFolder(props.course.name)
         setEditing(false)
         input.blur()
     }
 
-    let confirmEditing = async () => {
+    const confirmEditing = async () => {
         checkInputValidity()
         if (input.validity.valid) {
             // updates the state with the trimmed string
             setFolder(folder.trim())
             // send the trimmed string to the backend
-            let success = await ipcRenderer.invoke('rename-course', props.course.id, folder.trim())
+            const success = await ipcRenderer.invoke('rename-course', props.course.id, folder.trim())
             if (success) {
                 // if the folder was renamed successfully, exit editing and unfocus the input
                 setEditing(false)

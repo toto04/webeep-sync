@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Course } from '../../modules/moodle'
 import { CourseRow } from '../components/CourseRow'
 
-export let CourseList: FC<{ courses: Course[] }> = (props) => {
-    let [shadow, setShadow] = useState(false)
-    let { t } = useTranslation('client', { keyPrefix: 'courseList' })
+export const CourseList: FC<{ courses: Course[] }> = (props) => {
+    const [shadow, setShadow] = useState(false)
+    const { t } = useTranslation('client', { keyPrefix: 'courseList' })
 
     return <div className="course-list section">
         <div className={`course-header ${shadow ? 'shadow' : undefined}`}>

@@ -23,7 +23,7 @@ switch (platform()) {
 const themes = ['light', 'dark', 'system'] as const
 type Theme = typeof themes[number]
 
-export let Switch: FC<{
+export const Switch: FC<{
     onChange: (v: boolean) => void
     checked: boolean
     onColor?: string
@@ -45,7 +45,7 @@ export let Switch: FC<{
     />
 }
 
-let Link: FC<{ href: string, className?: string }> = props => {
+const Link: FC<{ href: string, className?: string }> = props => {
     return <a onClick={e => {
         e.preventDefault()
         shell.openExternal(props.href)
@@ -55,13 +55,13 @@ let Link: FC<{ href: string, className?: string }> = props => {
 }
 
 let prevTheme: Theme // the previous theme is stored in case the users cancel the settigns change
-export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
-    let { t } = useTranslation('client', { keyPrefix: 'settings' })
+export const SettingsModal: FC<{ onClose: () => void }> = (props) => {
+    const { t } = useTranslation('client', { keyPrefix: 'settings' })
 
-    let [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
-    let [theme, setTheme] = useState<Theme>('system')
-    let [version, setVersion] = useState('')
-    let [newUpdate, setNewUpdate] = useState<string | null>(null)
+    const [settings, updateSettigns] = useState<Omit<Settings, 'autosyncEnabled' | 'downloadPath' | 'autosyncInterval'>>()
+    const [theme, setTheme] = useState<Theme>('system')
+    const [version, setVersion] = useState('')
+    const [newUpdate, setNewUpdate] = useState<string | null>(null)
 
     useEffect(() => {
         ipcRenderer.invoke('settings').then(s => updateSettigns(s))
@@ -91,7 +91,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 {theme ? <div className="setting">
                     <span>{t('colorTheme')}</span>
                     <select value={theme} onChange={e => {
-                        let theme = e.target.value as Theme
+                        const theme = e.target.value as Theme
                         ipcRenderer.send('set-native-theme', theme)
                         setTheme(theme)
                         updateSettigns({ ...settings, nativeThemeSource: theme })
@@ -105,7 +105,7 @@ export let SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 <div className="setting">
                     <span>{t('language')}</span>
                     <select value={settings.language} onChange={e => {
-                        let language = e.target.value as 'it' | 'en'
+                        const language = e.target.value as 'it' | 'en'
                         updateSettigns({ ...settings, language })
                     }}>
                         <option value="it">Italiano</option>

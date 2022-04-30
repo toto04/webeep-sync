@@ -8,7 +8,7 @@ import { LoginContext } from '../LoginContext'
 let _i18n: i18n
 
 function readableTime(lastSynced?: number): string {
-    let t = _i18n.getFixedT(null, 'client', 'mainView.readableTime')
+    const t = _i18n.getFixedT(null, 'client', 'mainView.readableTime')
     if (!lastSynced) return t('never')
     let dt = (Date.now() - lastSynced) / 1000
     if (dt < 60) return t('now')
@@ -24,18 +24,18 @@ function readableTime(lastSynced?: number): string {
     return t('months')
 }
 
-export let MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
-    let { isLogged, username, syncing, connected } = useContext(LoginContext)
+export const MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (props) => {
+    const { isLogged, username, syncing, connected } = useContext(LoginContext)
 
-    let { t, i18n } = useTranslation('client', { keyPrefix: 'mainView' })
+    const { t, i18n } = useTranslation('client', { keyPrefix: 'mainView' })
 
-    let [elapsedTime, setElapsedTime] = useState('...')
-    let [updateAvailable, setUpdateAvailable] = useState(false)
+    const [elapsedTime, setElapsedTime] = useState('...')
+    const [updateAvailable, setUpdateAvailable] = useState(false)
 
     useEffect(() => {
         _i18n = i18n
-        let updateTime = async () => {
-            let ls = await ipcRenderer.invoke('lastsynced')
+        const updateTime = async () => {
+            const ls = await ipcRenderer.invoke('lastsynced')
             setElapsedTime(readableTime(ls))
         }
         setInterval(() => updateTime(), 60000)

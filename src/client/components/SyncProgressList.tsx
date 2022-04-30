@@ -7,8 +7,8 @@ import { PrograssBar } from './ProgressBar'
 import { breakableString, formatSize } from '../../util'
 
 let to: NodeJS.Timeout
-export let SyncProgressList: FC<{ files: FileProgress[] }> = props => {
-    let [showingTooltip, setShowingTooltip] = useState(false)
+export const SyncProgressList: FC<{ files: FileProgress[] }> = props => {
+    const [showingTooltip, setShowingTooltip] = useState(false)
 
     return <div
         className="sync-progress-list"
@@ -34,7 +34,7 @@ export let SyncProgressList: FC<{ files: FileProgress[] }> = props => {
         {showingTooltip
             ? <div className="tooltip">
                 {props.files.filter((_, i) => i !== 0).map((f, i) => {
-                    let perc = f.downloaded / f.total
+                    const perc = f.downloaded / f.total
                     return <div className='file-progress' key={`file-progress-list_${i}`}>
                         <span className="filename">{breakableString(f.filename)}</span>
                         <span className='filepath'>{breakableString(f.absolutePath)}</span>

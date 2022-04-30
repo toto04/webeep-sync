@@ -10,9 +10,9 @@ interface CheckboxProps {
     NegativeIcon?: IconType
 }
 
-export let Checkbox: FC<CheckboxProps> = (props) => {
-    let PositiveIcon = props.PositiveIcon ?? IoCheckbox
-    let NegativeIcon = props.NegativeIcon ?? IoSquareOutline
+export const Checkbox: FC<CheckboxProps> = (props) => {
+    const PositiveIcon = props.PositiveIcon ?? IoCheckbox
+    const NegativeIcon = props.NegativeIcon ?? IoSquareOutline
     return <div className="checkbox" style={{ backgroundColor: props.value ? props.color : undefined }}>
         {props.value
             ? <PositiveIcon className="active" onClick={() => props.onChange(false)} />
