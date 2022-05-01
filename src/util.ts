@@ -19,7 +19,7 @@ export enum SyncResult {
 }
 
 export function formatSize(size: number): string {
-    let suxs = ['B', 'kB', 'MB', 'GB', 'TB']
+    const suxs = ['B', 'kB', 'MB', 'GB', 'TB']
     let i = 0;
     while (size > 1000 && i < suxs.length - 1) {
         size /= 1000
@@ -44,7 +44,7 @@ export function breakableString(str: string): string {
 export function sanitizePath(str: string): string {
     str = str.replace(/[\n\t\r]+/g, ' ')    // replace invalid white spaces
     str = str.replace(/[:*?"<>|]/g, '_')    // remove invalid windows characters
-    str = str.replace(/\. *\//g, '/')       // remove trailing dots from folders
-    str = str.replace(/\. *\\/g, '\\')      // remove trailing dots from windows
+    str = str.replace(/ *\.? *\/ */g, '/')  // remove trailing/leading dots and spaces from folders
+    str = str.replace(/ *\.? *\\ */g, '\\') // remove trailing/leading dots and spaces from Windows
     return str
 }

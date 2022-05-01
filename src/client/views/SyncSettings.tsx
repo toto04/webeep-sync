@@ -1,20 +1,19 @@
 import React, { FC, useEffect, useState } from 'react'
 import { IoFolderOpen, IoPencil } from 'react-icons/io5'
-import { shell } from 'electron'
-import { ipcRenderer } from 'electron'
+import { shell, ipcRenderer } from 'electron'
 import { Switch } from './Settings'
 import { useTranslation } from 'react-i18next'
 import { breakableString } from '../../util'
 
 const hour = 60 * 60 * 1000
 
-export let SyncSettings: FC = props => {
+export const SyncSettings: FC = props => {
 
-    let [path, setPath] = useState('...')
-    let [autosync, setAutosync] = useState(false)
-    let [syncInterval, setSyncInterval] = useState(0)
+    const [path, setPath] = useState('...')
+    const [autosync, setAutosync] = useState(false)
+    const [syncInterval, setSyncInterval] = useState(0)
 
-    let { t } = useTranslation('client', { keyPrefix: 'syncSettings' })
+    const { t } = useTranslation('client', { keyPrefix: 'syncSettings' })
 
     useEffect(() => {
         ipcRenderer.on('download-path', (e, path: string) => setPath(path))

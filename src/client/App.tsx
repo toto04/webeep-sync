@@ -20,15 +20,15 @@ const shouldDisplayWindowsControls = platform() === 'win32'
 
 i18next.use(initReactI18next).init({ fallbackLng: 'en' })
 
-let App: FC = () => {
-    let [setting, setSetting] = useState(false)
+const App: FC = () => {
+    const [setting, setSetting] = useState(false)
 
-    let [isLogged, setLogged] = useState(false)
-    let [username, setUser] = useState<string>('...')
-    let [syncing, setSyncing] = useState(false)
-    let [connected, setConnected] = useState(true)
+    const [isLogged, setLogged] = useState(false)
+    const [username, setUser] = useState<string>('...')
+    const [syncing, setSyncing] = useState(false)
+    const [connected, setConnected] = useState(true)
 
-    let [courses, setCourses] = useState<Course[]>()
+    const [courses, setCourses] = useState<Course[]>()
 
     useEffect(() => {
         ipcRenderer.on('is-logged', (e, success: boolean, username?: string, exp?: boolean) => {
@@ -41,7 +41,7 @@ let App: FC = () => {
         ipcRenderer.on('syncing', (e, sync: boolean) => setSyncing(sync))
         ipcRenderer.on('network_event', (e, conn: boolean) => setConnected(conn))
         ipcRenderer.on('courses', (e, courses: Course[]) => setCourses(courses))
-        ipcRenderer.on('language', async (e, p: { lng: string, bundle: any }) => {
+        ipcRenderer.on('language', async (e, p: { lng: string, bundle: unknown }) => {
             if (!i18next.hasResourceBundle(p.lng, 'client'))
                 i18next.addResourceBundle(p.lng, 'client', p.bundle)
             await i18next.changeLanguage(p.lng)

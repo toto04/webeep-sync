@@ -1,7 +1,7 @@
 {
     "name": "webeep-sync",
     "productName": "WeBeep Sync",
-    "version": "0.8.1",
+    "version": "0.8.2",
     "description": "keep your webeep files synced",
     "repository": {
         "type": "git",
@@ -24,7 +24,7 @@
     "devDependencies": {
         "@electron-forge/cli": "^6.0.0-beta.61",
         "@electron-forge/maker-deb": "^6.0.0-beta.61",
-        "@electron-forge/maker-dmg": "^6.0.0-beta.61",
+        "@electron-forge/maker-dmg": "^6.0.0-beta.63",
         "@electron-forge/maker-rpm": "^6.0.0-beta.61",
         "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
         "@electron-forge/maker-zip": "^6.0.0-beta.61",

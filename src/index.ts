@@ -44,8 +44,8 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 let tray: Tray = null
-let iconImg = nativeImage.createFromPath(path.join(__static, '/icons/icon.ico'))
-let trayImg = nativeImage.createFromPath(path.join(__static, '/icons/tray.png'))
+const iconImg = nativeImage.createFromPath(path.join(__static, '/icons/icon.ico'))
+const trayImg = nativeImage.createFromPath(path.join(__static, '/icons/tray.png'))
 
 let psbID: number // power save blocker id, to prevent suspension mid sync
 downloadManager.on('sync', () => {
@@ -114,7 +114,7 @@ const createWindow = (): void => {
  * @param args args to be sent with the message
  * @returns true if the message was sent, false otherwise
  */
-function send(channel: string, ...args: any[]) {
+function send(channel: string, ...args: unknown[]) {
     if (mainWindow && !mainWindow.isDestroyed()) {
         mainWindow.webContents.send(channel, ...args)
         return true
@@ -142,7 +142,7 @@ downloadManager.on('stop', result => {
 downloadManager.on('state', state => {
     if (state === DownloadState.downloading) {
         sendProgressInterval = setInterval(() => {
-            let progress = downloadManager.getCurrentProgress()
+            const progress = downloadManager.getCurrentProgress()
             if (progress) send('progress', progress)
         }, 20)
     }
@@ -195,7 +195,7 @@ downloadManager.on('new-files', files => {
     if (!sent) {
         // the window is closed, store all new files in the syncedItems object (and send notification)
         let numfiles = 0
-        for (let course in files) {
+        for (const course in files) {
             numfiles += files[course].length
             // update the syncedItems object to contain all new synced items
             if (!syncedItems[course]) syncedItems[course] = []
@@ -222,7 +222,7 @@ i18n.on('languageChanged', lng => send('language', {
 }))
 
 function focus() {
-    let windows = BrowserWindow.getAllWindows()
+    const windows = BrowserWindow.getAllWindows()
     if (windows.length === 0) createWindow()
     else windows[0].focus()
 }
@@ -288,7 +288,7 @@ app.on('ready', async () => {
     await i18n.changeLanguage(store.data.settings.language)
 
     // if the app was opened at login, do not show the window, only launch it in the tray
-    let trayOnly = loginItemSettings.wasOpenedAtLogin || process.argv.includes('--tray-only')
+    const trayOnly = loginItemSettings.wasOpenedAtLogin || process.argv.includes('--tray-only')
     if (!trayOnly || !store.data.settings.keepOpenInBackground) createWindow()
     else {
         debug('Starting app in tray only')
@@ -304,7 +304,7 @@ app.on('ready', async () => {
 
     // handle launch item settings 
     // disabled is true only if there's a launch item present and it is set to false
-    let disable = !(loginItemSettings.launchItems?.reduce((d, i) => i.enabled && d, true) ?? true)
+    const disable = !(loginItemSettings.launchItems?.reduce((d, i) => i.enabled && d, true) ?? true)
     // if a launch item is already present but the user has disabled it from task manager,
     // settings.openAtLogin should be set to false
     if (disable) {
@@ -355,7 +355,7 @@ ipcMain.on('get-context', e => {
     e.reply('username', moodleClient.username)
     e.reply('syncing', downloadManager.syncing)
     e.reply('network_event', moodleClient.connected)
-    let lng = store.data.settings.language
+    const lng = store.data.settings.language
     e.reply('language', {
         lng,
         bundle: i18n.getResourceBundle(lng, 'client')
@@ -388,7 +388,7 @@ ipcMain.on('sync-settings', async e => {
 })
 
 ipcMain.on('select-download-path', async e => {
-    let path = await dialog.showOpenDialog({
+    const path = await dialog.showOpenDialog({
         properties: ['openDirectory', 'createDirectory',],
         title: 'select download folder'
     })
@@ -415,7 +415,7 @@ ipcMain.handle('lastsynced', e => {
 })
 
 ipcMain.handle('settings', e => {
-    let settingsCopy = { ...store.data.settings }
+    const settingsCopy = { ...store.data.settings }
     // this three settings are not managed in the settings menu
     delete settingsCopy.autosyncEnabled
     delete settingsCopy.downloadPath
@@ -476,8 +476,8 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
     let success = true
     try {
         // try to rename the folder, if the folder doesn't exist just ignore it
-        let oldPath = path.resolve(store.data.settings.downloadPath, store.data.persistence.courses[id].name)
-        let newPath = path.resolve(store.data.settings.downloadPath, newName)
+        const oldPath = path.resolve(store.data.settings.downloadPath, store.data.persistence.courses[id].name)
+        const newPath = path.resolve(store.data.settings.downloadPath, newName)
         debug(`Renamed course ${id} to ${newName}`)
         await fs.rename(oldPath, newPath)
     } catch (err) {

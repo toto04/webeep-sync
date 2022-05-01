@@ -17,7 +17,7 @@ export class UpdateManager extends EventEmitter {
 
     constructor() {
         super()
-        let autoCheck = async () => {
+        const autoCheck = async () => {
             await storeIsReady()
             if (store.data.settings.checkForUpdates) {
                 this.checkUpdate()
@@ -32,31 +32,31 @@ export class UpdateManager extends EventEmitter {
      * @returns null if there is no new version, otherwise a string containing the new version (e.g 0.5.1)
      */
     private async getLatestUpdate(): Promise<string | null> {
-        let versionRE = /(\d+)\.(\d+)\.(\d+)/ // regexp parsing version
+        const versionRE = /(\d+)\.(\d+)\.(\d+)/ // regexp parsing version
         try {
             debug('checking for new version')
             await storeIsReady()
-            let res = await got.get('https://api.github.com/repos/toto04/webeep-sync/releases/latest', {
+            const res = await got.get('https://api.github.com/repos/toto04/webeep-sync/releases/latest', {
                 headers: {
                     "Accept": 'application/vnd.github.v3+json'
                 }
             })
-            let latestVersion: string = JSON.parse(res.body).tag_name.substring(1)
+            const latestVersion: string = JSON.parse(res.body).tag_name.substring(1)
             if (store.data.persistence.ignoredUpdates.includes(latestVersion)) {
                 debug('latest update is set to be ignored')
                 return null
             }
 
-            let latestMatch = latestVersion.match(versionRE)
-            let oldMatch = app.getVersion().match(versionRE)
+            const latestMatch = latestVersion.match(versionRE)
+            const oldMatch = app.getVersion().match(versionRE)
             // remove the first element to get just the matching groups
             latestMatch.splice(0, 1)
             oldMatch.splice(0, 1)
 
-            let latestV: number[] = latestMatch.map(v => parseInt(v))
-            let oldV: number[] = oldMatch.map(v => parseInt(v))
+            const latestV: number[] = latestMatch.map(v => parseInt(v))
+            const oldV: number[] = oldMatch.map(v => parseInt(v))
 
-            let newVersion = latestV[0] > oldV[0] || latestV[1] > oldV[1] || latestV[2] > oldV[2]
+            const newVersion = latestV[0] > oldV[0] || latestV[1] > oldV[1] || latestV[2] > oldV[2]
             if (newVersion) {
                 log(`Found new version v${latestVersion}!`)
                 return latestVersion
@@ -71,12 +71,12 @@ export class UpdateManager extends EventEmitter {
      * checks if a new update is available, and caches it in the {@link availableUpdate} string
      * @returns null if there is no new versio, otherwise a string containing the new version (e.g 0.5.1)
      */
-    async checkUpdate() {
-        let update = await this.getLatestUpdate()
+    async checkUpdate(): Promise<string> {
+        const update = await this.getLatestUpdate()
         this.availableUpdate = update
         this.emit('new_update', update)
         return update
     }
 }
 
-export let updates = new UpdateManager()
+export const updates = new UpdateManager()

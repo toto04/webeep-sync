@@ -1,4 +1,4 @@
-import React, { createContext } from 'react'
+import { createContext } from 'react'
 
 interface ILoginContext {
     isLogged: boolean
@@ -7,7 +7,7 @@ interface ILoginContext {
     connected: boolean
 }
 
-export let LoginContext = createContext<ILoginContext>({
+export const LoginContext = createContext<ILoginContext>({
     isLogged: false,
     syncing: false,
     connected: true

@@ -1,12 +1,12 @@
 import React, { FC, useState } from 'react'
 import { IoClose } from 'react-icons/io5'
 
-export let Modal: FC<{
+export const Modal: FC<{
     onClose: () => void
     title: string
     style?: React.CSSProperties
 }> = (props) => {
-    let [shadow, setShadow] = useState(false)
+    const [shadow, setShadow] = useState(false)
 
     return <div
         className="modal-container"

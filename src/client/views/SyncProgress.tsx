@@ -1,3 +1,4 @@
+/* eslint-disable no-fallthrough */
 import { ipcRenderer } from 'electron'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,16 +14,16 @@ import { SyncProgressList } from '../components/SyncProgressList'
  * This component is what is shown while there is a download in progress.
  * Shows progress bars with download percentage and path of the files being downloaded
  */
-let SyncProgressWrap: FC<{ progress: Progress }> = props => {
-    let { t } = useTranslation('client', { keyPrefix: 'syncProgress' })
+const SyncProgressWrap: FC<{ progress: Progress }> = props => {
+    const { t } = useTranslation('client', { keyPrefix: 'syncProgress' })
 
-    let { progress } = props
+    const { progress } = props
 
-    let fdown = progress?.files?.[0]?.downloaded ?? 0
-    let ftot = progress?.files?.[0]?.total ?? 0
+    const fdown = progress?.files?.[0]?.downloaded ?? 0
+    const ftot = progress?.files?.[0]?.total ?? 0
 
-    let filePercentage = fdown / ftot
-    let percentage = progress?.downloaded / progress?.total
+    const filePercentage = fdown / ftot
+    const percentage = progress?.downloaded / progress?.total
 
     return <div className="sync-progress-wrap">
         {progress?.files?.length > 1
@@ -61,19 +62,19 @@ let SyncProgressWrap: FC<{ progress: Progress }> = props => {
  * shows different messages depending on the state of the download process, or different errors
  * depending on the sync result. While downloading, shows the progress bars
  */
-export let SyncProgress: FC = props => {
-    let { connected, isLogged } = useContext(LoginContext)
+export const SyncProgress: FC = props => {
+    const { connected, isLogged } = useContext(LoginContext)
 
-    let { t } = useTranslation('client', { keyPrefix: 'syncProgress' })
+    const { t } = useTranslation('client', { keyPrefix: 'syncProgress' })
 
-    let [progress, setProgress] = useState<Progress>()
-    let [downloadState, setDownloadState] = useState<DownloadState>(DownloadState.idle)
-    let [syncResult, setSyncResult] = useState<SyncResult>()
+    const [progress, setProgress] = useState<Progress>()
+    const [downloadState, setDownloadState] = useState<DownloadState>(DownloadState.idle)
+    const [syncResult, setSyncResult] = useState<SyncResult>()
 
-    let [viewingFiles, setViewingFiles] = useState(false)
-    let [newFilesList, setNewFilesList] = useState<NewFilesList>()
-    let [viewingPrevFiles, setViewingPrevFiles] = useState(false)
-    let [prevNewFilesList, setPrevNewFilesList] = useState<NewFilesList>()
+    const [viewingFiles, setViewingFiles] = useState(false)
+    const [newFilesList, setNewFilesList] = useState<NewFilesList>()
+    const [viewingPrevFiles, setViewingPrevFiles] = useState(false)
+    const [prevNewFilesList, setPrevNewFilesList] = useState<NewFilesList>()
 
     useEffect(() => {
         ipcRenderer.invoke('get-previously-synced-items').then((files: NewFilesList) => {
@@ -87,12 +88,12 @@ export let SyncProgress: FC = props => {
     }, [])
 
     let numfiles = 0
-    for (let course in newFilesList) {
+    for (const course in newFilesList) {
         numfiles += newFilesList[course].length
     }
 
     let prevnumfiles = 0
-    for (let course in prevNewFilesList) {
+    for (const course in prevNewFilesList) {
         prevnumfiles += prevNewFilesList[course].length
     }
 

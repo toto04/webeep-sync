@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 
-import { IoCaretForward, IoCaretDown, IoFolderOpen, IoOpen, IoClose } from 'react-icons/io5'
+import { IoCaretForward, IoCaretDown, IoFolderOpen, IoOpen } from 'react-icons/io5'
 
 import { Modal } from '../components/Modal'
 import { formatSize, breakableString } from '../../util'
@@ -8,9 +8,9 @@ import { NewFilesList } from '../../modules/download'
 import { shell } from 'electron'
 import { useTranslation } from 'react-i18next'
 
-let NewFilesCourseCollapsable: FC<{ name: string, files: NewFilesList[string] }> = props => {
-    let [isOpen, toggle] = useState(true)
-    let { t } = useTranslation('client', { keyPrefix: 'newFiles' })
+const NewFilesCourseCollapsable: FC<{ name: string, files: NewFilesList[string] }> = props => {
+    const [isOpen, toggle] = useState(true)
+    const { t } = useTranslation('client', { keyPrefix: 'newFiles' })
 
     return <div className="course-collapsable">
         <h4 onClick={() => toggle(!isOpen)}>
@@ -45,11 +45,11 @@ let NewFilesCourseCollapsable: FC<{ name: string, files: NewFilesList[string] }>
     </div>
 }
 
-export let NewFilesModal: FC<{ onClose: () => void, files: NewFilesList }> = (props) => {
-    let { t } = useTranslation('client', { keyPrefix: 'newFiles' })
+export const NewFilesModal: FC<{ onClose: () => void, files: NewFilesList }> = (props) => {
+    const { t } = useTranslation('client', { keyPrefix: 'newFiles' })
 
     let count = 0
-    for (let course in props.files) {
+    for (const course in props.files) {
         count += props.files[course].length
     }
     return <Modal title={t(`newFiles`, { count })} onClose={() => props.onClose()}>
