@@ -1,0 +1,17 @@
+name: test
+
+on:
+    push:
+
+jobs:
+    lint:
+        name: Run linters
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: actions/setup-node@master
+              with:
+                  node-version: 16.x
+                  cache: "yarn"
+            - run: yarn install --frozen-lockfile --ignore-scripts
+            - run: yarn run lint
