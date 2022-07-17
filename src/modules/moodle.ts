@@ -314,8 +314,16 @@ export class MoodleClient extends EventEmitter {
         return files
     }
 
+    /**
+     * Gets all notifications from the moodle API, as displayed on the webpage
+     * 
+     * Sets the notification cache on call completion and emits the 'notifications' event
+     * @returns a promise that resolves to an array with all the Notification objects
+     */
     async getNotifications(): Promise<Notification[]> {
         try {
+            // this call can fail silently, the notifications will just not be updated
+            // an update will occur anyway when the notifications are checked in the background
             const nots: {
                 notifications: {
                     id: number,
@@ -337,14 +345,31 @@ export class MoodleClient extends EventEmitter {
                 read: n.read,
             }))
 
-            notifications[2].read = false
-
             this.cachedNotifications = notifications
             this.emit('notifications', notifications)
             return notifications
         } catch (e) {
-            return []
+            // return the cache if the call fails
+            return this.cachedNotifications
         }
+    }
+
+    /**
+     * Sets the given notification as read
+     * @param notificationID the id of the notification to be marked as read
+     */
+    async markNotificationAsRead(notificationID: number): Promise<void> {
+        // update the cache to avoid showing the notification as unread again
+        this.cachedNotifications = this.cachedNotifications.map(n => {
+            if (n.id === notificationID)
+                n.read = true
+            return n
+        })
+        this.emit('notifications', this.cachedNotifications) // notify the frontend
+        // actually call the api to mark the notification as read
+        // done after updating the cache to mark the notification as read even without internet
+        // the call will eventually make it through when the user reconnects
+        await this.call('core_message_mark_notification_read', { notificationid: notificationID })
     }
 }
 export const moodleClient = new MoodleClient()

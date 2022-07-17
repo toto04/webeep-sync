@@ -528,3 +528,7 @@ ipcMain.handle('get-notifications', async () => {
         return await moodleClient.getNotifications()
     }
 })
+
+ipcMain.handle('mark-notification-read', async (e, id: number) => {
+    await moodleClient.markNotificationAsRead(id)
+})

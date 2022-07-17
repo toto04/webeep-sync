@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState, } from 'react';
-import { shell } from 'electron'
+import { ipcRenderer, shell } from 'electron'
 import { sanitize } from 'dompurify'
 import { Modal } from './Modal';
 import { Notification } from '../../modules/moodle';
@@ -17,7 +17,7 @@ const { format } = Intl.DateTimeFormat('it-IT', {
  * Component wrapping each notification in the list. Also handles the detailed modal.
  */
 export const NotificationInfo: FC<{ notification: Notification }> = props => {
-    const { title, read, htmlbody, url, timecreated } = props.notification
+    const { title, read, htmlbody, url, timecreated, id } = props.notification
     const [showing, setShowing] = useState(false)
 
     const contentRef = useRef<HTMLDivElement>(null)
@@ -47,7 +47,11 @@ export const NotificationInfo: FC<{ notification: Notification }> = props => {
     return <div
         className="notification"
         onClick={e => {
-            if (!showing) setShowing(true)
+            if (!showing) {
+                setShowing(true)
+                // mark as read if not already
+                if (!read) ipcRenderer.invoke('mark-notification-read', id)
+            }
         }}
     >
         <div className="notification-content">
