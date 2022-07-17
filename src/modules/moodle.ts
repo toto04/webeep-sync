@@ -42,6 +42,15 @@ export type Contents = {
     }[],
 }[]
 
+export type Notification = {
+    id: number,
+    title: string
+    htmlbody: string,
+    timecreated: number,
+    read: boolean,
+    url: string,
+}
+
 function getDefaultName(fullname: string) {
     const m = fullname.match(/\d+ - (.+) \(.+\)/)
     return m ? m[1] : fullname
@@ -53,6 +62,7 @@ export declare interface MoodleClient {
     on(event: 'network_event', listener: (connected: boolean) => void): this,
     on(event: 'username', listener: (username: string) => void): this,
     on(event: 'courses', listener: (courses: Course[]) => void): this,
+    on(event: 'notifications', listener: (notifications: Notification[]) => void): this,
 }
 export class MoodleClient extends EventEmitter {
     userid?: number
@@ -61,6 +71,7 @@ export class MoodleClient extends EventEmitter {
 
     waitingForCourses = false
     cachedCourses: Course[] = []
+    cachedNotifications: Notification[] = []
 
     constructor() {
         super()
@@ -301,6 +312,39 @@ export class MoodleClient extends EventEmitter {
         }
 
         return files
+    }
+
+    async getNotifications(): Promise<Notification[]> {
+        try {
+            const nots: {
+                notifications: {
+                    id: number,
+                    subject: string,
+                    fullmessage: string,
+                    fullmessagehtml: string,
+                    contexturl: string,
+                    timecreated: number,
+                    read: boolean,
+                }[]
+            } = await this.call('message_popup_get_popup_notifications', { useridto: 0, }, false)
+
+            const notifications = nots.notifications.map(n => ({
+                id: n.id,
+                title: n.subject,
+                htmlbody: n.fullmessagehtml,
+                timecreated: n.timecreated,
+                url: n.contexturl,
+                read: n.read,
+            }))
+
+            notifications[2].read = false
+
+            this.cachedNotifications = notifications
+            this.emit('notifications', notifications)
+            return notifications
+        } catch (e) {
+            return []
+        }
     }
 }
 export const moodleClient = new MoodleClient()

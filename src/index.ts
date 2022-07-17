@@ -213,6 +213,7 @@ downloadManager.on('new-files', files => {
 })
 
 moodleClient.on('courses', async c => send('courses', c))
+moodleClient.on('notifications', async n => send('notifications', n))
 
 updates.on('new_update', update => send('new-update', update))
 
@@ -516,4 +517,14 @@ ipcMain.handle('ignore-update', async (e, update: string) => {
 ipcMain.handle('get-previously-synced-items', () => {
     setImmediate(() => syncedItems = {}) // empty the syncedItems variable only after returning it
     return syncedItems
+})
+
+ipcMain.handle('get-notifications', async () => {
+    if (moodleClient.cachedNotifications.length) {
+        moodleClient.getNotifications() // reload the notficaion cache
+        return moodleClient.cachedNotifications
+    } else {
+        // if there are no cached notifications, get them from the server
+        return await moodleClient.getNotifications()
+    }
 })
