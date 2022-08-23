@@ -56,7 +56,14 @@ module.exports = {
         }
     }, {
         name: "@electron-forge/maker-rpm",
-        config: {}
+        config: {
+            bin: 'WeBeep Sync',
+            name: 'webeep-sync',
+            productName: 'WeBeep Sync',
+            description: 'Keep all your WeBeep files synced on your computer!',
+            productDescription: 'Keep all your WeBeep files synced on your computer!',
+            categories: ['Utility'],
+        }
     }],
     publishers: [{
         name: '@electron-forge/publisher-github',
