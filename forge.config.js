@@ -46,10 +46,50 @@ module.exports = {
         }
     }, {
         name: "@electron-forge/maker-deb",
-        config: {}
+        config: {
+            bin: 'WeBeep Sync',
+            name: 'webeep-sync',
+            productName: 'WeBeep Sync',
+            description: 'Keep all your WeBeep files synced on your computer!',
+            productDescription: 'Keep all your WeBeep files synced on your computer!',
+            categories: ['Utility'],
+            // According to the documentation of @electron-forge/maker-deb `icon` should be a single file path,
+            // however this config option gets passed straight to the electron-installer-debian package,
+            // wich says in its documentation that multiple icons sizes are allowed.
+            icon: {
+                "32x32": "./static/icons/icon-32x32.png",
+                "48x48": "./static/icons/icon-48x48.png",
+                "64x64": "./static/icons/icon-64x64.png",
+                "72x72": "./static/icons/icon-72x72.png",
+                "80x80": "./static/icons/icon-80x80.png",
+                "96x96": "./static/icons/icon-96x96.png",
+                "128x128": "./static/icons/icon-128x128.png",
+                "256x256": "./static/icons/icon-256x256.png",
+            }
+        }
     }, {
         name: "@electron-forge/maker-rpm",
-        config: {}
+        config: {
+            bin: 'WeBeep Sync',
+            name: 'webeep-sync',
+            productName: 'WeBeep Sync',
+            description: 'Keep all your WeBeep files synced on your computer!',
+            productDescription: 'Keep all your WeBeep files synced on your computer!',
+            categories: ['Utility'],
+            // According to the documentation of @electron-forge/maker-rpm icon should be a single file path,
+            // however this config option gets passed straight to the electron-installer-redhat package,
+            // wich says in its documentation that multiple icons sizes are allowed.
+            icon: {
+                "32x32": "./static/icons/icon-32x32.png",
+                "48x48": "./static/icons/icon-48x48.png",
+                "64x64": "./static/icons/icon-64x64.png",
+                "72x72": "./static/icons/icon-72x72.png",
+                "80x80": "./static/icons/icon-80x80.png",
+                "96x96": "./static/icons/icon-96x96.png",
+                "128x128": "./static/icons/icon-128x128.png",
+                "256x256": "./static/icons/icon-256x256.png",
+            }
+        }
     }],
     publishers: [{
         name: '@electron-forge/publisher-github',
