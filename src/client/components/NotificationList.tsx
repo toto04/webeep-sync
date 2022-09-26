@@ -18,7 +18,8 @@ let clickEnabled = true;
 export const NotificationList: FC = props => {
     const [showingTooltip, setShowingTooltip] = useState(false)
 
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [notifications, setNotifications] = useState<Notification[]>([])
+    const [unread, setUnread] = useState(0)
     const { t } = useTranslation('client', { keyPrefix: 'mainView.notifications' })
 
     const wrapRef = useRef<HTMLDivElement>(null)
@@ -32,8 +33,13 @@ export const NotificationList: FC = props => {
     })
 
     useEffect(() => {
+        setUnread(notifications.reduce((acc, n) => acc + (n.read ? 0 : 1), 0))
+    }, [notifications])
+
+    useEffect(() => {
         // notification event handler
         ipcRenderer.on('notifications', (e, n) => setNotifications(n))
+        ipcRenderer.invoke('get-notifications').then(n => setNotifications(n));
     }, [])
 
     useEffect(() => {
@@ -52,11 +58,12 @@ export const NotificationList: FC = props => {
             }
         }}
     >
-        <IoNotifications className={'clickable' + (showingTooltip ? ' clicked' : '')}
-            onClick={() => {
-                if (!showingTooltip && clickEnabled) setShowingTooltip(true)
-            }}
-        />
+        <div
+            className={"clickable" + (showingTooltip ? ' clicked' : '') + (unread ? ' badge' : '')}
+            onClick={() => { if (!showingTooltip && clickEnabled) setShowingTooltip(true) }}
+        >
+            <IoNotifications />
+        </div>
         {showingTooltip && <div ref={wrapRef} className="notification-list">
             {notifications && notifications.length
                 ? notifications.map((n, i) => <NotificationInfo notification={n} key={'notification' + i} />)
