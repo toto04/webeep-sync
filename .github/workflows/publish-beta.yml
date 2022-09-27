@@ -3,7 +3,7 @@ name: build
 on:
     push:
         branches:
-            - stable
+            - beta, workflows
 
 jobs:
     macos_build:
@@ -20,6 +20,7 @@ jobs:
             - name: build binaries
               run: yarn run publish --arch=x64,arm64
               env:
+                  PRERELEASE: true
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: see build
               run: ls out/make
@@ -38,6 +39,7 @@ jobs:
             - name: build installer
               run: yarn run publish
               env:
+                  PRERELEASE: true
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: see build
               run: ls out/make/squirrel.windows/x64
