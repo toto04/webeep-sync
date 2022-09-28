@@ -20,6 +20,7 @@ jobs:
               run: chmod +x macos_cert.sh && ./macos_cert.sh
               env:
                   MACOS_CERT_BASE64: ${{ secrets.MACOS_CERT_BASE64 }}
+                  MACOS_CERT_PWD: ${{ secrets.MACOS_CERT_PWD }}
             - name: install dependecies
               run: yarn install --frozen-lockfile --ignore-scripts
             - name: build binaries
