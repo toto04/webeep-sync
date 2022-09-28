@@ -16,6 +16,10 @@ jobs:
                   node-version: 16.x
             - name: see directory
               run: ls
+            - name: install certificate
+              run: chmod +x macos_cert.sh && ./macos_cert.sh
+              env:
+                  MACOS_CERT_BASE64: ${{ secrets.MACOS_CERT_BASE64 }}
             - name: install dependecies
               run: yarn install --frozen-lockfile --ignore-scripts
             - name: build binaries
@@ -29,24 +33,24 @@ jobs:
             - name: see build
               run: ls out/make
 
-    windows_build:
-        runs-on: windows-latest
-        steps:
-            - uses: actions/checkout@master
-            - uses: actions/setup-node@master
-              with:
-                  node-version: 16.x
-            - name: see directory
-              run: ls
-            - name: install dependecies
-              run: yarn install --frozen-lockfile --ignore-scripts
-            - name: build installer
-              run: yarn run publish
-              env:
-                  APPLEID: ${{ secrets.APPLEID }}
-                  APPLEPWD: ${{ secrets.APPLEPWD }}
-                  TEAMID: ${{ secrets.TEAMID }}
-                  PRERELEASE: true
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            - name: see build
-              run: ls out/make/squirrel.windows/x64
+    # windows_build:
+    #     runs-on: windows-latest
+    #     steps:
+    #         - uses: actions/checkout@master
+    #         - uses: actions/setup-node@master
+    #           with:
+    #               node-version: 16.x
+    #         - name: see directory
+    #           run: ls
+    #         - name: install dependecies
+    #           run: yarn install --frozen-lockfile --ignore-scripts
+    #         - name: build installer
+    #           run: yarn run publish
+    #           env:
+    #               APPLEID: ${{ secrets.APPLEID }}
+    #               APPLEPWD: ${{ secrets.APPLEPWD }}
+    #               TEAMID: ${{ secrets.TEAMID }}
+    #               PRERELEASE: true
+    #               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #         - name: see build
+    #           run: ls out/make/squirrel.windows/x64
