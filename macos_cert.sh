@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 KEY_CHAIN=build.keychain
-CERTIFICATE=certificate.cer
+CERTIFICATE=certificate.p12
 
 # Recreate the certificate from the secure environment variable
 echo $MACOS_CERT_BASE64 | base64 --decode > $CERTIFICATE
@@ -15,7 +15,7 @@ security default-keychain -s $KEY_CHAIN
 # Unlock the keychain
 security unlock-keychain -p actions $KEY_CHAIN
 
-security import $CERTIFICATE -k $KEY_CHAIN -P $CERTIFICATE_PASSWORD -T /usr/bin/codesign;
+security import $CERTIFICATE -k $KEY_CHAIN -P $MACOS_CERT_PWD -T /usr/bin/codesign;
 
 security set-key-partition-list -S apple-tool:,apple: -s -k actions $KEY_CHAIN
 
