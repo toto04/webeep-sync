@@ -8,7 +8,9 @@ module.exports = {
         icon: path.resolve(__dirname, "static/icons/icon"),
         appBundleId: "org.polinetwork.webeep-sync",
         osxSign: {
-            identity: process.env.MACOS_IDENTITY,
+            identity:
+                process.env.MACOS_IDENTITY ||
+                "Developer ID Application: PoliNetwork APS (842636PS9J)",
             "hardened-runtime": true,
             entitlements: "entitlements.plist",
             "entitlements-inherit": "entitlements.plist",
