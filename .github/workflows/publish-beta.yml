@@ -14,13 +14,12 @@ jobs:
             - uses: actions/setup-node@master
               with:
                   node-version: 16.x
+            - uses: apple-actions/import-codesign-certs@v1
+              with:
+                  p12-file-base64: ${{ secrets.MACOS_CERT_BASE64 }}
+                  p12-password: ${{ secrets.MACOS_CERT_PWD }}
             - name: see directory
               run: ls
-            - name: install certificate
-              run: chmod +x macos_cert.sh && ./macos_cert.sh
-              env:
-                  MACOS_CERT_BASE64: ${{ secrets.MACOS_CERT_BASE64 }}
-                  MACOS_CERT_PWD: ${{ secrets.MACOS_CERT_PWD }}
             - name: install dependecies
               run: yarn install --frozen-lockfile --ignore-scripts
             - name: build binaries
