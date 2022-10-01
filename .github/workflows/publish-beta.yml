@@ -28,11 +28,22 @@ jobs:
               run: ls
             - name: install dependecies
               run: yarn install --frozen-lockfile
-            - name: build binaries
-              run: yarn make ${{ matrix.os == 'macos-latest' && '--arch=arm64' || '' }}
+            - name: Build packages
+              run: yarn run publish
               env:
                   APPLEID: ${{ secrets.APPLEID }}
                   APPLEPWD: ${{ secrets.APPLEPWD }}
                   TEAMID: ${{ secrets.TEAMID }}
+                  PRERELEASE: true
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Build for M1
+              if: matrix.os == 'macos-latest'
+              run: yarn run publish --arch=arm64
+              env:
+                  APPLEID: ${{ secrets.APPLEID }}
+                  APPLEPWD: ${{ secrets.APPLEPWD }}
+                  TEAMID: ${{ secrets.TEAMID }}
+                  PRERELEASE: true
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: see build
               run: ls out/make
