@@ -167,9 +167,8 @@ module.exports = {
                         zip.addFile(path.basename(art), fs.readFileSync(art));
                         fs.writeFileSync(zipPath, zip.toBuffer());
                     }
-                    fs.unlinkSync(art);
                 });
-                winRelease.artifacts.append(zipPath);
+                winRelease.artifacts.push(zipPath);
                 return makeResults;
             }
         },
