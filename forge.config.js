@@ -31,7 +31,7 @@ module.exports = {
                 name: "webeep-sync",
                 setupIcon: "./static/icons/icon.ico",
                 setupExe: "WeBeep Sync Windows Setup.exe",
-                // TODO: loading gif
+                loadingGif: "./static/icons/loading.gif",
             },
         },
         {
@@ -161,7 +161,6 @@ module.exports = {
             // download an unsigned .exe from the internet, but it's ok if you unzip it first
             let winRelease = makeResults.find((m) => m.platform === "win32");
             if (winRelease) {
-                // TODO: keep the nupkg and RELEASE files when autoupdate is implemented
                 let zipPath; // will be set to the .zip file, will be used for new artifact array
                 console.log("Zipping exe installer...");
                 winRelease.artifacts.forEach((art) => {
