@@ -169,7 +169,7 @@ module.exports = {
                     }
                     fs.unlinkSync(art);
                 });
-                winRelease.artifacts = [zipPath];
+                winRelease.artifacts.append(zipPath);
                 return makeResults;
             }
         },

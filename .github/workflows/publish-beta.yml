@@ -7,52 +7,32 @@ on:
             - workflows
 
 jobs:
-    macos_build:
-        runs-on: macos-latest
+    build:
+        name: Build ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [macos-latest, ubuntu-latest, windows-latest]
         steps:
             - uses: actions/checkout@master
             - uses: actions/setup-node@master
               with:
                   node-version: 16.x
-            - uses: apple-actions/import-codesign-certs@v1
+            - name: Import macOS Certs
+              if: matrix.os == 'macos-latest'
+              uses: apple-actions/import-codesign-certs@v1
               with:
                   p12-file-base64: ${{ secrets.MACOS_CERT_BASE64 }}
                   p12-password: ${{ secrets.MACOS_CERT_PWD }}
-            - name: see identities
-              run: security find-identity -v -p codesigning
             - name: see directory
               run: ls
             - name: install dependecies
               run: yarn install --frozen-lockfile
             - name: build binaries
-              run: yarn run publish
+              run: yarn make ${{ matrix.os == 'macos-latest' && '--arch=x64,arm64' || '' }}
               env:
                   APPLEID: ${{ secrets.APPLEID }}
                   APPLEPWD: ${{ secrets.APPLEPWD }}
                   TEAMID: ${{ secrets.TEAMID }}
-                  PRERELEASE: true
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: see build
               run: ls out/make
-
-    # windows_build:
-    #     runs-on: windows-latest
-    #     steps:
-    #         - uses: actions/checkout@master
-    #         - uses: actions/setup-node@master
-    #           with:
-    #               node-version: 16.x
-    #         - name: see directory
-    #           run: ls
-    #         - name: install dependecies
-    #           run: yarn install --frozen-lockfile --ignore-scripts
-    #         - name: build installer
-    #           run: yarn run publish
-    #           env:
-    #               APPLEID: ${{ secrets.APPLEID }}
-    #               APPLEPWD: ${{ secrets.APPLEPWD }}
-    #               TEAMID: ${{ secrets.TEAMID }}
-    #               PRERELEASE: true
-    #               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #         - name: see build
-    #           run: ls out/make/squirrel.windows/x64
