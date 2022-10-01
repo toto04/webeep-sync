@@ -18,12 +18,14 @@ jobs:
               with:
                   p12-file-base64: ${{ secrets.MACOS_CERT_BASE64 }}
                   p12-password: ${{ secrets.MACOS_CERT_PWD }}
+            - name: see identities
+              run: security find-identity -v -p codesigning
             - name: see directory
               run: ls
             - name: install dependecies
               run: yarn install --frozen-lockfile --ignore-scripts
             - name: build binaries
-              run: yarn run publish --arch=x64,arm64
+              run: yarn run publish
               env:
                   APPLEID: ${{ secrets.APPLEID }}
                   APPLEPWD: ${{ secrets.APPLEPWD }}
