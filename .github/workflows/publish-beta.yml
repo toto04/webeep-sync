@@ -23,7 +23,7 @@ jobs:
             - name: see directory
               run: ls
             - name: install dependecies
-              run: yarn install --frozen-lockfile --ignore-scripts
+              run: yarn install --frozen-lockfile
             - name: build binaries
               run: yarn run publish
               env:
