@@ -46,19 +46,6 @@ export const Switch: FC<{
     />
 }
 
-const Link: FC<{
-    href: string
-    className?: string
-    children: React.ReactNode
-}> = props => {
-    return <a onClick={e => {
-        e.preventDefault()
-        shell.openExternal(props.href)
-    }} className={props.className}>
-        {props.children}
-    </a>
-}
-
 let prevTheme: Theme // the previous theme is stored in case the users cancel the settigns change
 export const SettingsModal: FC<{ onClose: () => void }> = (props) => {
     const { t } = useTranslation('client', { keyPrefix: 'settings' })
