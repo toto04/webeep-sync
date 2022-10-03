@@ -34,7 +34,7 @@
         "@types/react": "^17.0.26",
         "@types/react-dom": "^17.0.9",
         "@typescript-eslint/eslint-plugin": "^4.0.1",
-        "@typescript-eslint/parser": "^4.0.1",
+        "@typescript-eslint/parser": "^4.33.0",
         "@vercel/webpack-asset-relocator-loader": "1.7.0",
         "adm-zip": "^0.5.9",
         "copy-webpack-plugin": "^9.0.1",
