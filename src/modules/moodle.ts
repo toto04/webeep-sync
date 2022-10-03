@@ -195,7 +195,8 @@ export class MoodleClient extends EventEmitter {
         const { courses } = res
         const defaultNames = courses.map(c => getDefaultName(c.fullname))
         const c: Course[] = courses.map((c, i) => {
-            const { id, fullname, coursecategory } = c
+            const { id, coursecategory } = c
+            const fullname = `${c.fullname} (${coursecategory})`
 
             if (!store.data.persistence.courses[id]) {
                 // check if there are multiple courses that would be shortened to the same folder
@@ -207,7 +208,7 @@ export class MoodleClient extends EventEmitter {
 
                 store.data.persistence.courses[id] = {
                     // if multiple courses share the same name, just use the fullname instead
-                    name: (allInstances.length > 1) ? `${fullname} (${coursecategory})` : defaultNames[i],
+                    name: (allInstances.length > 1) ? fullname : defaultNames[i],
                     shouldSync: store.data.settings.syncNewCourses
                 }
             }
