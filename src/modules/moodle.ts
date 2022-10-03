@@ -42,7 +42,7 @@ export type Contents = {
     }[],
 }[]
 
-export type Notification = {
+export type MoodleNotification = {
     id: number,
     title: string
     htmlbody: string,
@@ -62,7 +62,7 @@ export declare interface MoodleClient {
     on(event: 'network_event', listener: (connected: boolean) => void): this,
     on(event: 'username', listener: (username: string) => void): this,
     on(event: 'courses', listener: (courses: Course[]) => void): this,
-    on(event: 'notifications', listener: (notifications: Notification[]) => void): this,
+    on(event: 'notifications', listener: (notifications: MoodleNotification[]) => void): this,
 }
 export class MoodleClient extends EventEmitter {
     userid?: number
@@ -71,12 +71,18 @@ export class MoodleClient extends EventEmitter {
 
     waitingForCourses = false
     cachedCourses: Course[] = []
-    cachedNotifications: Notification[] = []
+    cachedNotifications: MoodleNotification[] = []
 
     constructor() {
         super()
         loginManager.once('ready', () => {
-            if (loginManager.isLogged) this.getUserID()
+            if (loginManager.isLogged) this.getUserID().then(() => {
+                // update the notification cache every 2 minutes
+                this.getNotifications()
+                setInterval(() => {
+                    this.getNotifications()
+                }, 1000 * 60 * 2)
+            })
         })
     }
 
@@ -323,7 +329,7 @@ export class MoodleClient extends EventEmitter {
      * Sets the notification cache on call completion and emits the 'notifications' event
      * @returns a promise that resolves to an array with all the Notification objects
      */
-    async getNotifications(): Promise<Notification[]> {
+    async getNotifications(): Promise<MoodleNotification[]> {
         try {
             // this call can fail silently, the notifications will just not be updated
             // an update will occur anyway when the notifications are checked in the background

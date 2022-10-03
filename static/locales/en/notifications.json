@@ -1,11 +1,16 @@
 {
-    "body": {
-        "firstNotification": "By default, you'll be notified each time new files are downloaded in background, you can disable this in the settings",
-        "default": "Click on this notification to see them",
-        "singleFile": "{{filename}} has been downloaded in {{coursename}}",
-        "singleCourse": "New files for the course \"{{coursename}}\"",
-        "multipleCourses": "New files for {{count}} different courses"
+    "newFiles": {
+        "body": {
+            "firstNotification": "By default, you'll be notified each time new files are downloaded in background, you can disable this in the settings",
+            "default": "Click on this notification to see them",
+            "singleFile": "{{filename}} has been downloaded in {{coursename}}",
+            "singleCourse": "New files for the course \"{{coursename}}\"",
+            "multipleCourses": "New files for {{count}} different courses"
+        },
+        "notificationTitle_one": "A new file have been downloaded",
+        "notificationTitle_other": "{{count}} new files have been downloaded"
     },
-    "notificationTitle_one": "A new file have been downloaded",
-    "notificationTitle_other": "{{count}} new files have been downloaded"
+    "newMessage": {
+        "notificationTitle": "New notification from WeBeep!"
+    }
 }

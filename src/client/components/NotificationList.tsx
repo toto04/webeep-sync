@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron";
 import React, { FC, useEffect, useRef, useState, } from "react";
 import { useTranslation } from "react-i18next";
 import { IoNotifications } from "react-icons/io5";
-import { Notification } from "../../modules/moodle";
+import { MoodleNotification } from "../../modules/moodle";
 import useOnOutsideClick from "../hooks/useOnOutsideClick";
 import { NotificationInfo } from "./NotificationInfo";
 
@@ -18,7 +18,8 @@ let clickEnabled = true;
 export const NotificationList: FC = props => {
     const [showingTooltip, setShowingTooltip] = useState(false)
 
-    const [notifications, setNotifications] = useState<Notification[]>([])
+    const [notifications, setNotifications] = useState<MoodleNotification[]>([])
+    const [toBeOpened, setToBeOpened] = useState<number | null>(null)
     const [unread, setUnread] = useState(0)
     const { t } = useTranslation('client', { keyPrefix: 'mainView.notifications' })
 
@@ -40,6 +41,11 @@ export const NotificationList: FC = props => {
         // notification event handler
         ipcRenderer.on('notifications', (e, n) => setNotifications(n))
         ipcRenderer.invoke('get-notifications').then(n => setNotifications(n));
+        ipcRenderer.invoke('notification-to-be-opened').then(n => {
+            setToBeOpened(n)
+            setShowingTooltip(n != null)
+            if (n != null) ipcRenderer.invoke('mark-notification-read', n)
+        })
     }, [])
 
     useEffect(() => {
@@ -66,7 +72,11 @@ export const NotificationList: FC = props => {
         </div>
         {showingTooltip && <div ref={wrapRef} className="notification-list">
             {notifications && notifications.length
-                ? notifications.map((n, i) => <NotificationInfo notification={n} key={'notification' + i} />)
+                ? notifications.map((n, i) => <NotificationInfo
+                    notification={n}
+                    toBeOpened={toBeOpened === n.id}
+                    key={'notification' + i}
+                />)
                 : <div className="no-notifications">{t('no_notifications')}</div>
             }
         </div>}
