@@ -52,7 +52,7 @@
     "dependencies": {
         "electron-squirrel-startup": "^1.0.0",
         "got": "^11.8.5",
-        "i18next": "^21.6.3",
+        "i18next": "^21.9.2",
         "i18next-fs-backend": "^1.1.4",
         "lowdb": "^3.0.0",
         "react": "^17.0.2",
