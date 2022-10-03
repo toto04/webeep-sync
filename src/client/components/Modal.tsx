@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { IoClose } from 'react-icons/io5'
 
 export const Modal: FC<{
@@ -9,11 +9,18 @@ export const Modal: FC<{
 }> = (props) => {
     const [shadow, setShadow] = useState(false)
 
+    const ref = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        if (ref) ref.current.focus()
+    }, [ref])
+
     return <div
+        ref={ref}
         className="modal-container"
         onClick={e => {
             if (e.target === e.currentTarget) props.onClose()
         }}
+        tabIndex={-1}
         onKeyDown={e => {
             if (e.key === 'Escape') {
                 e.preventDefault()

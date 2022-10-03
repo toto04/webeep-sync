@@ -15,7 +15,10 @@
         "stop": "stop",
         "sync": "avvia sync",
         "loginToSync": "fai il login",
-        "login": "Accedi..."
+        "login": "Accedi...",
+        "notifications": {
+            "no_notifications": "Buone notizie! Nessuna notifica ✨"
+        }
     },
     "syncSettings": {
         "downloadFolder": "Cartella dei download",

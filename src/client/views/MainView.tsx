@@ -4,6 +4,7 @@ import React, { FC, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IoSettingsSharp, IoWarning } from 'react-icons/io5'
 import { LoginContext } from '../LoginContext'
+import { NotificationList } from '../components/NotificationList'
 
 let _i18n: i18n
 
@@ -67,6 +68,12 @@ export const MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (pr
             </span>
         </button>
         <div className="user-status">
+            <div className="status-icons">
+                <NotificationList />
+                <div className={"clickable" + (updateAvailable ? ' badge' : '')}>
+                    <IoSettingsSharp onClick={() => props.onSettings()} />
+                </div>
+            </div>
             <div className="login-info">
                 {connected ? undefined : <IoWarning className="warning" title="not connected" />}
                 {isLogged
@@ -77,11 +84,6 @@ export const MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (pr
                         {t('login')}
                     </a>
                 }
-            </div>
-            <div className={"clickable" + (updateAvailable ? ' update' : '')}>
-                <IoSettingsSharp onClick={() => {
-                    props.onSettings()
-                }} />
             </div>
         </div>
     </div>

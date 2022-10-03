@@ -1,4 +1,4 @@
-import { ipcRenderer, shell } from 'electron'
+import { ipcRenderer } from 'electron'
 import { platform, arch } from 'os'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,6 +6,7 @@ import { IoWarning } from 'react-icons/io5'
 import _Switch from 'react-switch'
 import { Settings } from '../../modules/store'
 import { Modal } from '../components/Modal'
+import { Link } from '../components/Link'
 
 let downloadLink = ''
 switch (platform()) {
