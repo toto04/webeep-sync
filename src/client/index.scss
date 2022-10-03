@@ -316,7 +316,7 @@ $modal-anim-time: 0.15s;
             margin-top: 50px;
             max-height: calc(90vh - 50px - 8px);
             margin-bottom: 8px;
-            overflow: auto;
+            overflow: hidden auto;
         }
     }
 }
