@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState, Suspense } from 'react'
 import { platform } from 'os'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { ipcRenderer } from 'electron'
 import { IoCloseOutline, IoRemoveOutline, IoSquareOutline } from 'react-icons/io5'
 import i18next from 'i18next'
@@ -89,4 +89,5 @@ const App: FC = () => {
     </Suspense>
 }
 
-ReactDOM.render(<App />, document.querySelector('.App'))
+const root = createRoot(document.querySelector('.App'))
+root.render(<App />)

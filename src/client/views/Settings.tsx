@@ -45,7 +45,11 @@ export const Switch: FC<{
     />
 }
 
-const Link: FC<{ href: string, className?: string }> = props => {
+const Link: FC<{
+    href: string
+    className?: string
+    children: React.ReactNode
+}> = props => {
     return <a onClick={e => {
         e.preventDefault()
         shell.openExternal(props.href)
