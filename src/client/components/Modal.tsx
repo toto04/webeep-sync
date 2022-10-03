@@ -5,6 +5,7 @@ export const Modal: FC<{
     onClose: () => void
     title: string
     style?: React.CSSProperties
+    children: React.ReactNode
 }> = (props) => {
     const [shadow, setShadow] = useState(false)
 

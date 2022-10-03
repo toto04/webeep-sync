@@ -3,7 +3,8 @@ name: build
 on:
     push:
         branches:
-            - stable
+            - beta
+            - workflows
 
 jobs:
     build:
@@ -33,6 +34,7 @@ jobs:
                   APPLEID: ${{ secrets.APPLEID }}
                   APPLEPWD: ${{ secrets.APPLEPWD }}
                   TEAMID: ${{ secrets.TEAMID }}
+                  PRERELEASE: true
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Build for M1
               if: matrix.os == 'macos-latest'
@@ -41,6 +43,7 @@ jobs:
                   APPLEID: ${{ secrets.APPLEID }}
                   APPLEPWD: ${{ secrets.APPLEPWD }}
                   TEAMID: ${{ secrets.TEAMID }}
+                  PRERELEASE: true
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: see build
               run: ls out/make

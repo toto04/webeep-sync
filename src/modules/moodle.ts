@@ -76,7 +76,7 @@ export class MoodleClient extends EventEmitter {
     constructor() {
         super()
         loginManager.once('ready', () => {
-            if (loginManager.isLogged && this.connected) this.getUserID()
+            if (loginManager.isLogged) this.getUserID()
         })
     }
 
@@ -182,19 +182,20 @@ export class MoodleClient extends EventEmitter {
      * @returns A promise which resolves with the list of the enrolled courses
      */
     async getCoursesWithoutCache(catchNetworkError = false): Promise<Course[]> {
-        const userid = this.userid ?? await this.getUserID()
         await storeIsReady()
 
         // once the store is initialized fetch and parse the courses
-        const courses: {
-            fullname: string,
-            id: number
-        }[] = await this.call('core_enrol_get_users_courses', { userid }, catchNetworkError)
+        const res: {
+            courses: {
+                fullname: string,
+                id: number,
+                coursecategory: string,
+            }[]
+        } = await this.call('core_course_get_enrolled_courses_by_timeline_classification', { classification: "all" }, catchNetworkError)
+        const { courses } = res
         const defaultNames = courses.map(c => getDefaultName(c.fullname))
         const c: Course[] = courses.map((c, i) => {
-            const { id, fullname } = c
-
-
+            const { id, fullname, coursecategory } = c
 
             if (!store.data.persistence.courses[id]) {
                 // check if there are multiple courses that would be shortened to the same folder
@@ -203,9 +204,10 @@ export class MoodleClient extends EventEmitter {
                     return arr
                 }, [])
 
+
                 store.data.persistence.courses[id] = {
                     // if multiple courses share the same name, just use the fullname instead
-                    name: (allInstances.length > 1) ? fullname : defaultNames[i],
+                    name: (allInstances.length > 1) ? `${fullname} (${coursecategory})` : defaultNames[i],
                     shouldSync: store.data.settings.syncNewCourses
                 }
             }
