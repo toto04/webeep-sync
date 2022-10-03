@@ -18,7 +18,8 @@ $very-dark-gray: #1a1a1a;
 $headbar-height: 30px;
 
 body {
-    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
     margin: 0px;
     background-color: $almost-white;
     user-select: none;
@@ -46,8 +47,10 @@ h3 {
     margin: 0;
 }
 
-button {
-    transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89), box-shadow 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
+button,
+.button {
+    transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89),
+        box-shadow 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
     &:hover {
         filter: brightness(90%);
     }
@@ -115,7 +118,8 @@ button {
     span {
         font-size: 10px;
     }
-    &:hover {
+    &:hover,
+    &.clicked {
         backdrop-filter: brightness(90%);
     }
     &.danger {
@@ -175,7 +179,12 @@ svg.warning {
         }
         animation: progressbar 8s linear infinite;
         height: 100%;
-        background-image: linear-gradient(300deg, #40c8e0, $system-blue, #40c8e0);
+        background-image: linear-gradient(
+            300deg,
+            #40c8e0,
+            $system-blue,
+            #40c8e0
+        );
         background-size: 400% 200%;
     }
 }
@@ -253,6 +262,7 @@ $modal-anim-time: 0.15s;
         }
     }
 
+    outline: 0;
     z-index: 10;
     position: fixed;
     top: $headbar-height;
@@ -295,6 +305,10 @@ $modal-anim-time: 0.15s;
                 box-shadow: 0px 0px 8px 5px #0001;
             }
             h3 {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-right: 32px;
                 font-size: 1.17em;
             }
         }
@@ -302,7 +316,7 @@ $modal-anim-time: 0.15s;
             margin-top: 50px;
             max-height: calc(90vh - 50px - 8px);
             margin-bottom: 8px;
-            overflow: auto;
+            overflow: hidden auto;
         }
     }
 }
@@ -381,13 +395,125 @@ $modal-anim-time: 0.15s;
             display: flex;
             align-items: center;
         }
+        .status-icons {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 6px;
+            align-items: flex-start;
+        }
         span {
             display: inline-flex;
             font-size: 1.1em;
             font-weight: bold;
         }
+
+        .notification-icon {
+            position: relative;
+            outline: 0;
+
+            .notification-list {
+                position: absolute;
+                top: 36px;
+                right: 0;
+
+                z-index: 15;
+                max-height: 300px;
+                width: 260px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                box-sizing: border-box;
+
+                padding: 6px;
+                border-radius: 8px;
+                background-color: $almost-white;
+                box-shadow: 0px 2px 8px 4px #0002;
+
+                // display: flex;
+                // flex-direction: column;
+                // justify-content: stretch;
+                // align-items: center;
+
+                .notification {
+                    &:not(:last-child) {
+                        margin-bottom: 4px;
+                    }
+                    p {
+                        margin: 0;
+                    }
+
+                    .notification-content {
+                        position: relative;
+                        background-color: white;
+                        display: flex;
+                        cursor: pointer;
+                        overflow: hidden;
+                        border-radius: 4px;
+                        transition: all 0.1s ease-in-out;
+                        padding-right: 8px;
+
+                        &:hover {
+                            box-shadow: 0px 0px 6px 4px #0001;
+                        }
+                        .unread-badge {
+                            position: absolute;
+                            right: 0px;
+                            width: 6px;
+                            height: 100%;
+                            background-color: $bright;
+                        }
+                        .notification-brief {
+                            padding: 4px;
+                            display: flex;
+                            flex-direction: column;
+                            p {
+                                font-weight: bold;
+                                font-size: 0.9em;
+                            }
+                            span {
+                                font-weight: normal;
+                                color: #888;
+                                opacity: 0.8;
+                                font-size: 0.8em;
+                                text-align: end;
+                                align-self: flex-end;
+                            }
+                        }
+                    }
+                    .notification-info {
+                        margin: 0 8px;
+                        padding: 8px;
+                        padding-bottom: 12px;
+                        border-radius: 8px;
+                        max-width: 700px;
+                        display: flex;
+                        flex-direction: column;
+                        background-color: white;
+                        div {
+                            user-select: text;
+                        }
+                        a {
+                            color: $bright;
+                        }
+                    }
+                    .confirm-button {
+                        color: white !important;
+                    }
+                }
+
+                .no-notifications {
+                    font-size: 0.9em;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 4px;
+                    opacity: 0.8;
+                    color: #888;
+                }
+            }
+        }
     }
-    .clickable.update {
+    .clickable.badge {
         position: relative;
         &::before {
             content: "";
@@ -487,7 +613,7 @@ $modal-anim-time: 0.15s;
             padding: 6px;
             border-radius: 8px;
             background-color: $almost-white;
-            box-shadow: 0px 0px 8px 5px #0001;
+            box-shadow: 0px 2px 8px 4px #0002;
 
             .file-progress {
                 background-color: white;
@@ -930,7 +1056,8 @@ $modal-anim-time: 0.15s;
         }
     }
     .clickable {
-        &:hover {
+        &:hover,
+        &.clicked {
             backdrop-filter: brightness(400%);
         }
         &.close {
@@ -991,8 +1118,13 @@ $modal-anim-time: 0.15s;
     }
     .tooltip {
         background-color: $very-dark-gray !important;
-
         .file-progress {
+            background-color: $almost-black !important;
+        }
+    }
+    .notification-list {
+        background-color: $very-dark-gray !important;
+        .notification-content {
             background-color: $almost-black !important;
         }
     }

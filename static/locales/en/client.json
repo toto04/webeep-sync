@@ -15,7 +15,10 @@
         "stop": "stop",
         "sync": "sync now",
         "loginToSync": "login to sync",
-        "login": "Log in..."
+        "login": "Log in...",
+        "notifications": {
+            "no_notifications": "Good news! No notifications ✨"
+        }
     },
     "syncSettings": {
         "downloadFolder": "Download folder",

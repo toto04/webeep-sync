@@ -42,6 +42,15 @@ export type Contents = {
     }[],
 }[]
 
+export type Notification = {
+    id: number,
+    title: string
+    htmlbody: string,
+    timecreated: number,
+    read: boolean,
+    url: string,
+}
+
 function getDefaultName(fullname: string) {
     const m = fullname.match(/\d+ - (.+) \(.+\)/)
     return m ? m[1] : fullname
@@ -53,6 +62,7 @@ export declare interface MoodleClient {
     on(event: 'network_event', listener: (connected: boolean) => void): this,
     on(event: 'username', listener: (username: string) => void): this,
     on(event: 'courses', listener: (courses: Course[]) => void): this,
+    on(event: 'notifications', listener: (notifications: Notification[]) => void): this,
 }
 export class MoodleClient extends EventEmitter {
     userid?: number
@@ -61,6 +71,7 @@ export class MoodleClient extends EventEmitter {
 
     waitingForCourses = false
     cachedCourses: Course[] = []
+    cachedNotifications: Notification[] = []
 
     constructor() {
         super()
@@ -303,6 +314,64 @@ export class MoodleClient extends EventEmitter {
         }
 
         return files
+    }
+
+    /**
+     * Gets all notifications from the moodle API, as displayed on the webpage
+     * 
+     * Sets the notification cache on call completion and emits the 'notifications' event
+     * @returns a promise that resolves to an array with all the Notification objects
+     */
+    async getNotifications(): Promise<Notification[]> {
+        try {
+            // this call can fail silently, the notifications will just not be updated
+            // an update will occur anyway when the notifications are checked in the background
+            const nots: {
+                notifications: {
+                    id: number,
+                    subject: string,
+                    fullmessage: string,
+                    fullmessagehtml: string,
+                    contexturl: string,
+                    timecreated: number,
+                    read: boolean,
+                }[]
+            } = await this.call('message_popup_get_popup_notifications', { useridto: 0, }, false)
+
+            const notifications = nots.notifications.map(n => ({
+                id: n.id,
+                title: n.subject,
+                htmlbody: n.fullmessagehtml,
+                timecreated: n.timecreated,
+                url: n.contexturl,
+                read: n.read,
+            }))
+
+            this.cachedNotifications = notifications
+            this.emit('notifications', notifications)
+            return notifications
+        } catch (e) {
+            // return the cache if the call fails
+            return this.cachedNotifications
+        }
+    }
+
+    /**
+     * Sets the given notification as read
+     * @param notificationID the id of the notification to be marked as read
+     */
+    async markNotificationAsRead(notificationID: number): Promise<void> {
+        // update the cache to avoid showing the notification as unread again
+        this.cachedNotifications = this.cachedNotifications.map(n => {
+            if (n.id === notificationID)
+                n.read = true
+            return n
+        })
+        this.emit('notifications', this.cachedNotifications) // notify the frontend
+        // actually call the api to mark the notification as read
+        // done after updating the cache to mark the notification as read even without internet
+        // the call will eventually make it through when the user reconnects
+        await this.call('core_message_mark_notification_read', { notificationid: notificationID })
     }
 }
 export const moodleClient = new MoodleClient()
