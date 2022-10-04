@@ -14,6 +14,14 @@
     ],
     "parser": "@typescript-eslint/parser",
     "rules": {
+        "import/no-unresolved": [
+            2,
+            {
+                "ignore": [
+                    "got"
+                ]
+            }
+        ],
         "import/no-named-as-default-member": "off",
         "no-unsafe-finally": "off",
         "@typescript-eslint/no-unused-vars": [
