@@ -30,7 +30,7 @@
         "@electron-forge/maker-zip": "^6.0.0-beta.66",
         "@electron-forge/plugin-webpack": "^6.0.0-beta.66",
         "@electron-forge/publisher-github": "^6.0.0-beta.66",
-        "@types/dompurify": "^2.3.3",
+        "@types/dompurify": "^2.3.4",
         "@types/i18next-fs-backend": "^1.1.2",
         "@types/react": "^18.0.21",
         "@types/react-dom": "^18.0.6",
@@ -52,7 +52,7 @@
         "webpack": "^5.74.0"
     },
     "dependencies": {
-        "dompurify": "^2.3.9",
+        "dompurify": "^2.4.0",
         "electron-squirrel-startup": "^1.0.0",
         "got": "^11.8.5",
         "i18next": "^21.9.2",
