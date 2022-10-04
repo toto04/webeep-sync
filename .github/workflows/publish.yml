@@ -16,7 +16,7 @@ jobs:
             - uses: actions/checkout@master
             - uses: actions/setup-node@master
               with:
-                  node-version: 16.x
+                  node-version: 18.x
             - name: Import macOS Certs
               if: matrix.os == 'macos-latest'
               uses: apple-actions/import-codesign-certs@v1
