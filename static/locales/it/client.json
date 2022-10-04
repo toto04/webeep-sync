@@ -73,8 +73,6 @@
             "dark": "tema scuro"
         },
         "language": "Lingua",
-        "notifyUpdate": "Avvisami quando c'è un update",
-        "notifyUpdate_desc": "Se viene trovato un nuovo update apparirà un pallino rosso sull'icona impostazioni",
         "openAtLogin": "Apri l'app al login",
         "keepOpenInBackground": "Lascia aperta in background",
         "keepOpenInBackground_desc": "Lascia l'app aperta in backround quando tutte le finestre sono chiuse. Se gli autosync sono abilitati, anche questi avverranno in background",

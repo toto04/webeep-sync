@@ -27,7 +27,6 @@ export interface Settings {
     trayIcon?: boolean
     openAtLogin?: boolean
     language?: 'it' | 'en'
-    checkForUpdates?: boolean
     notificationOnNewFiles?: boolean
     maxConcurrentDownloads?: number
 }
@@ -40,7 +39,6 @@ export interface Persistence {
         }
     }
     lastSynced?: number
-    ignoredUpdates: string[]
     /**
      * whether or not a notification has already been sent to the user
      */
@@ -63,7 +61,6 @@ export const defaultSettings: Required<Settings> = {
     trayIcon: true,
     openAtLogin: false,
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
-    checkForUpdates: true,
     notificationOnNewFiles: true,
     maxConcurrentDownloads: 5,
 }
@@ -86,17 +83,14 @@ function checkStoreIntegrity() {
         settings: {},
         persistence: {
             courses: {},
-            ignoredUpdates: [],
         }
     }
     if (!store.data.persistence) {
         store.data.persistence = {
             courses: {},
-            ignoredUpdates: [],
         }
     } else {
         if (!store.data.persistence.courses) store.data.persistence.courses = {}
-        if (!store.data.persistence.ignoredUpdates) store.data.persistence.ignoredUpdates = []
 
         for (const id in store.data.persistence.courses) {
             // for retrocompatibility, if the shape is not right reset the whole object

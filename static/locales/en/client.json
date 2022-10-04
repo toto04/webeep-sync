@@ -73,8 +73,6 @@
             "dark": "dark theme"
         },
         "language": "Language",
-        "notifyUpdate": "Notify me if there's an update",
-        "notifyUpdate_desc": "If a new update is found, a red dot will appear on the settings icon",
         "openAtLogin": "Open app at login",
         "keepOpenInBackground": "Keep open in background",
         "keepOpenInBackground_desc": "Keep the app running in background while all windows are closed. If autosync is enabled, they will happen in background too",

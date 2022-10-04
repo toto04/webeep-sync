@@ -21,7 +21,6 @@ import { loginManager } from './modules/login'
 import { moodleClient } from './modules/moodle'
 import { storeIsReady, store, } from './modules/store'
 import { downloadManager, NewFilesList } from './modules/download'
-import { updates } from './modules/updates'
 
 import { i18nInit, i18n } from './modules/i18next'
 
@@ -214,8 +213,6 @@ downloadManager.on('new-files', files => {
 
 moodleClient.on('courses', async c => send('courses', c))
 moodleClient.on('notifications', async n => send('notifications', n))
-
-updates.on('new_update', update => send('new-update', update))
 
 i18n.on('languageChanged', lng => send('language', {
     lng,
@@ -501,17 +498,6 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
         }
         return success
     }
-})
-
-ipcMain.handle('get-available-update', () => {
-    return updates.availableUpdate
-})
-
-ipcMain.handle('ignore-update', async (e, update: string) => {
-    await storeIsReady()
-    store.data.persistence.ignoredUpdates.push(update)
-    await updates.checkUpdate()
-    await store.write()
 })
 
 ipcMain.handle('get-previously-synced-items', () => {
