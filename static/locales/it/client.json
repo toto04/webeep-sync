@@ -16,6 +16,8 @@
         "sync": "avvia sync",
         "loginToSync": "fai il login",
         "login": "Accedi...",
+        "notConnected": "Non connesso",
+        "updateAvailable": "Aggiornamento disponibile, clicca per installare",
         "notifications": {
             "no_notifications": "Buone notizie! Nessuna notifica ✨"
         }
