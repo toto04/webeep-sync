@@ -55,7 +55,7 @@
         "dompurify": "^2.4.0",
         "electron-squirrel-startup": "^1.0.0",
         "got": "^12.5.2",
-        "i18next": "^21.9.2",
+        "i18next": "^21.10.0",
         "i18next-fs-backend": "^1.1.5",
         "lowdb": "^3.0.0",
         "react": "^18.2.0",
