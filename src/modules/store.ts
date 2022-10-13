@@ -29,6 +29,7 @@ export interface Settings {
     language?: 'it' | 'en'
     checkForUpdates?: boolean
     notificationOnNewFiles?: boolean
+    notificationOnMessage?: boolean
     maxConcurrentDownloads?: number
 }
 
@@ -39,6 +40,7 @@ export interface Persistence {
             shouldSync: boolean
         }
     }
+    sentMessageNotification: Record<number, { sentTimestamp: number }>
     lastSynced?: number
     ignoredUpdates: string[]
     /**
@@ -65,6 +67,7 @@ export const defaultSettings: Required<Settings> = {
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
     checkForUpdates: true,
     notificationOnNewFiles: true,
+    notificationOnMessage: true,
     maxConcurrentDownloads: 5,
 }
 
@@ -87,16 +90,19 @@ function checkStoreIntegrity() {
         persistence: {
             courses: {},
             ignoredUpdates: [],
+            sentMessageNotification: {},
         }
     }
     if (!store.data.persistence) {
         store.data.persistence = {
             courses: {},
             ignoredUpdates: [],
+            sentMessageNotification: {}
         }
     } else {
         if (!store.data.persistence.courses) store.data.persistence.courses = {}
         if (!store.data.persistence.ignoredUpdates) store.data.persistence.ignoredUpdates = []
+        if (!store.data.persistence.sentMessageNotification) store.data.persistence.sentMessageNotification = {}
 
         for (const id in store.data.persistence.courses) {
             // for retrocompatibility, if the shape is not right reset the whole object
