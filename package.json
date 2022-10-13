@@ -22,9 +22,9 @@
         "forge": "./forge.config.js"
     },
     "devDependencies": {
-        "@electron-forge/cli": "^6.0.0-beta.66",
+        "@electron-forge/cli": "^6.0.0-beta.67",
         "@electron-forge/maker-deb": "^6.0.0-beta.66",
-        "@electron-forge/maker-dmg": "^6.0.0-beta.66",
+        "@electron-forge/maker-dmg": "^6.0.0-beta.67",
         "@electron-forge/maker-rpm": "^6.0.0-beta.66",
         "@electron-forge/maker-squirrel": "^6.0.0-beta.66",
         "@electron-forge/maker-zip": "^6.0.0-beta.66",
@@ -35,7 +35,7 @@
         "@types/react": "^18.0.21",
         "@types/react-dom": "^18.0.6",
         "@typescript-eslint/eslint-plugin": "^5.39.0",
-        "@typescript-eslint/parser": "^5.39.0",
+        "@typescript-eslint/parser": "^5.40.0",
         "@vercel/webpack-asset-relocator-loader": "^1.7.3",
         "adm-zip": "^0.5.9",
         "copy-webpack-plugin": "^11.0.0",
