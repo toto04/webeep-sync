@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState, } from 'react';
 import { ipcRenderer, shell } from 'electron'
 import { sanitize } from 'dompurify'
 import { Modal } from './Modal';
-import { Notification } from '../../modules/moodle';
+import { MoodleNotification } from '../../modules/moodle';
 import { Link } from './Link';
 
 const { format } = Intl.DateTimeFormat('it-IT', {
@@ -16,9 +16,12 @@ const { format } = Intl.DateTimeFormat('it-IT', {
 /**
  * Component wrapping each notification in the list. Also handles the detailed modal.
  */
-export const NotificationInfo: FC<{ notification: Notification }> = props => {
+export const NotificationInfo: FC<{
+    notification: MoodleNotification
+    toBeOpened: boolean
+}> = props => {
     const { title, read, htmlbody, url, timecreated, id } = props.notification
-    const [showing, setShowing] = useState(false)
+    const [showing, setShowing] = useState(props.toBeOpened)
 
     const contentRef = useRef<HTMLDivElement>(null)
 

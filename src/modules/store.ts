@@ -28,6 +28,7 @@ export interface Settings {
     openAtLogin?: boolean
     language?: 'it' | 'en'
     notificationOnNewFiles?: boolean
+    notificationOnMessage?: boolean
     maxConcurrentDownloads?: number
 }
 
@@ -38,6 +39,7 @@ export interface Persistence {
             shouldSync: boolean
         }
     }
+    sentMessageNotification: Record<number, { sentTimestamp: number }>
     lastSynced?: number
     /**
      * whether or not a notification has already been sent to the user
@@ -62,6 +64,7 @@ export const defaultSettings: Required<Settings> = {
     openAtLogin: false,
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
     notificationOnNewFiles: true,
+    notificationOnMessage: true,
     maxConcurrentDownloads: 5,
 }
 
@@ -83,14 +86,17 @@ function checkStoreIntegrity() {
         settings: {},
         persistence: {
             courses: {},
+            sentMessageNotification: {},
         }
     }
     if (!store.data.persistence) {
         store.data.persistence = {
             courses: {},
+            sentMessageNotification: {}
         }
     } else {
         if (!store.data.persistence.courses) store.data.persistence.courses = {}
+        if (!store.data.persistence.sentMessageNotification) store.data.persistence.sentMessageNotification = {}
 
         for (const id in store.data.persistence.courses) {
             // for retrocompatibility, if the shape is not right reset the whole object

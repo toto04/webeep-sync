@@ -19,7 +19,7 @@ import { DownloadState, __static } from './util'
 
 import { createLogger } from './modules/logger'
 import { loginManager } from './modules/login'
-import { moodleClient } from './modules/moodle'
+import { moodleClient, MoodleNotification } from './modules/moodle'
 import { storeIsReady, store, } from './modules/store'
 import { downloadManager, NewFilesList } from './modules/download'
 
@@ -85,26 +85,35 @@ async function setLoginItem(openAtLogin: boolean) {
 
 let mainWindow: BrowserWindow
 
-const createWindow = (): void => {
-    app.dock?.show()
-    debug('Creating new main windows')
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-        height: 600,
-        width: 800,
-        autoHideMenuBar: true,
-        titleBarStyle: 'hidden',
-        trafficLightPosition: { x: 9, y: 9 },
-        minHeight: 460,
-        minWidth: 600,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        },
-        icon: iconImg
+const createWindow = async (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        app.dock?.show()
+        debug('Creating new main windows')
+
+        // Create the browser window.
+        mainWindow = new BrowserWindow({
+            height: 600,
+            width: 800,
+            autoHideMenuBar: true,
+            titleBarStyle: 'hidden',
+            trafficLightPosition: { x: 9, y: 9 },
+            minHeight: 460,
+            minWidth: 600,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false
+            },
+            icon: iconImg,
+            show: false,
+        })
+        mainWindow.on('ready-to-show', () => {
+            mainWindow.show()
+            resolve()
+        })
+
+        // and load the index.html of the app.
+        mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
     })
-    // and load the index.html of the app.
-    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 }
 
 
@@ -161,7 +170,7 @@ let syncedItems: NewFilesList = {}
  */
 async function showNewFilesNotification(numfiles: number) {
     await storeIsReady()
-    const t = i18n.getFixedT(null, 'notifications', null)
+    const t = i18n.getFixedT(null, 'notifications', 'newFiles')
 
     const courses = Object.keys(syncedItems)
     let body = t('body.default')
@@ -189,6 +198,26 @@ async function showNewFilesNotification(numfiles: number) {
     notification.show()
 }
 
+/**
+ * Prepare a new notification with a different body based on the number of files
+ * downloaded and the number of courses from which files were downloaded, then show it
+ * @param numfiles the number of new files downloaded in background
+ */
+async function showMessageNotification(moodleNotif: MoodleNotification) {
+    await storeIsReady()
+    const t = i18n.getFixedT(null, 'notifications', 'newMessage')
+
+    const notification = new Notification({
+        title: t('notificationTitle'),
+        body: moodleNotif.title,
+    })
+    notification.on('click', async () => {
+        notificationToBeOpened = moodleNotif.id
+        await focus()
+    })
+    notification.show()
+}
+
 downloadManager.on('new-files', files => {
     const sent = send('new-files', files)
 
@@ -213,7 +242,30 @@ downloadManager.on('new-files', files => {
 })
 
 moodleClient.on('courses', async c => send('courses', c))
-moodleClient.on('notifications', async n => send('notifications', n))
+let notificationToBeOpened: number | null = null
+moodleClient.on('notifications', async notifications => {
+    const sent = send('notifications', notifications)
+
+    // filter the new notifications
+    await storeIsReady()
+    const newNotifications = notifications
+        .filter(n => !n.read)
+        .filter(n => !store.data.persistence.sentMessageNotification[n.id])
+
+    // save the new notifications as sent
+    newNotifications.forEach(n => store.data.persistence.sentMessageNotification[n.id] = {
+        sentTimestamp: Date.now()
+    })
+    store.write()
+
+    // send a push notification for each new notification
+    if (!sent
+        && store.data.settings.keepOpenInBackground
+        && store.data.settings.notificationOnMessage
+        && Notification.isSupported()) {
+        newNotifications.forEach(n => showMessageNotification(n))
+    }
+})
 
 i18n.on('languageChanged', lng => send('language', {
     lng,
@@ -267,10 +319,14 @@ ipcMain.handle('quit-and-install', () => {
     autoUpdater.quitAndInstall()
 })
 
-function focus() {
+async function focus(): Promise<void> {
     const windows = BrowserWindow.getAllWindows()
-    if (windows.length === 0) createWindow()
-    else windows[0].focus()
+
+    if (windows.length === 0) await createWindow()
+    else return new Promise((res, rej) => {
+        windows[0].on('focus', res)
+        windows[0].focus()
+    })
 }
 
 function setupTray() {
@@ -565,6 +621,16 @@ ipcMain.handle('get-notifications', async () => {
     } else {
         // if there are no cached notifications, get them from the server
         return await moodleClient.getNotifications()
+    }
+})
+
+ipcMain.handle('notification-to-be-opened', async () => {
+    if (notificationToBeOpened) {
+        setImmediate(() => {
+            // reset the notification to be opened
+            notificationToBeOpened = null
+        })
+        return notificationToBeOpened
     }
 })
 
