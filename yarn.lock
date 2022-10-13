@@ -340,13 +340,13 @@
   optionalDependencies:
     electron-installer-debian "^3.0.0"
 
-"@electron-forge/maker-dmg@^6.0.0-beta.66":
-  version "6.0.0-beta.66"
-  resolved "https://registry.yarnpkg.com/@electron-forge/maker-dmg/-/maker-dmg-6.0.0-beta.66.tgz#ef333debae0fd969a80ad77f836f035c8ffc5515"
-  integrity sha512-Rtbp1sr7Kt8/jqxB02mn+19CGHXkGX1D/zQsp9Ygzw/+l4ERq+JDv5lDKVeII61E++M/ywaS6jqB6eUE9ajiLA==
+"@electron-forge/maker-dmg@^6.0.0-beta.67":
+  version "6.0.0-beta.67"
+  resolved "https://registry.yarnpkg.com/@electron-forge/maker-dmg/-/maker-dmg-6.0.0-beta.67.tgz#48d0276f8c0bd6afa7390377b3b718882aad3d14"
+  integrity sha512-xVUo5NJLyCX4bfFJhB/d2rmnw937kaNpc0yhROZuRAEh4EFl4pkqKmlo/H+cltvew4sv+0jRPSgBFU3w8t5akA==
   dependencies:
-    "@electron-forge/maker-base" "6.0.0-beta.66"
-    "@electron-forge/shared-types" "6.0.0-beta.66"
+    "@electron-forge/maker-base" "6.0.0-beta.67"
+    "@electron-forge/shared-types" "6.0.0-beta.67"
     fs-extra "^10.0.0"
   optionalDependencies:
     electron-installer-dmg "^4.0.0"
