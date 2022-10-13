@@ -39,7 +39,7 @@ export interface Persistence {
             shouldSync: boolean
         }
     }
-    sentMessageNotification: Record<number, { sentTimestamp: number }>
+    sentMessageNotifications: Record<string, { sentTimestamp: number }>
     lastSynced?: number
     /**
      * whether or not a notification has already been sent to the user
@@ -86,17 +86,17 @@ function checkStoreIntegrity() {
         settings: {},
         persistence: {
             courses: {},
-            sentMessageNotification: {},
+            sentMessageNotifications: {},
         }
     }
     if (!store.data.persistence) {
         store.data.persistence = {
             courses: {},
-            sentMessageNotification: {}
+            sentMessageNotifications: {}
         }
     } else {
         if (!store.data.persistence.courses) store.data.persistence.courses = {}
-        if (!store.data.persistence.sentMessageNotification) store.data.persistence.sentMessageNotification = {}
+        if (!store.data.persistence.sentMessageNotifications) store.data.persistence.sentMessageNotifications = {}
 
         for (const id in store.data.persistence.courses) {
             // for retrocompatibility, if the shape is not right reset the whole object

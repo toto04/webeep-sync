@@ -246,14 +246,22 @@ let notificationToBeOpened: number | null = null
 moodleClient.on('notifications', async notifications => {
     const sent = send('notifications', notifications)
 
+    // delete old notifications from the store if they are not in the notifications array
+    Object.entries(store.data.persistence.sentMessageNotifications)
+        .forEach(([id, { sentTimestamp }]) => {
+            if ((sentTimestamp < Date.now() - 1000 * 60 * 60 * 24 * 7)
+                && !notifications.find(n => n.id === parseInt(id)))
+                delete store.data.persistence.sentMessageNotifications[id]
+        })
+
     // filter the new notifications
     await storeIsReady()
     const newNotifications = notifications
         .filter(n => !n.read)
-        .filter(n => !store.data.persistence.sentMessageNotification[n.id])
+        .filter(n => !store.data.persistence.sentMessageNotifications[n.id])
 
     // save the new notifications as sent
-    newNotifications.forEach(n => store.data.persistence.sentMessageNotification[n.id] = {
+    newNotifications.forEach(n => store.data.persistence.sentMessageNotifications[n.id] = {
         sentTimestamp: Date.now()
     })
     store.write()
