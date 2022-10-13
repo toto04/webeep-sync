@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs/promises'
 import {
     app,
+    autoUpdater,
     BrowserWindow,
     dialog,
     ipcMain,
@@ -21,7 +22,6 @@ import { loginManager } from './modules/login'
 import { moodleClient, MoodleNotification } from './modules/moodle'
 import { storeIsReady, store, } from './modules/store'
 import { downloadManager, NewFilesList } from './modules/download'
-import { updates } from './modules/updates'
 
 import { i18nInit, i18n } from './modules/i18next'
 
@@ -267,12 +267,57 @@ moodleClient.on('notifications', async notifications => {
     }
 })
 
-updates.on('new_update', update => send('new-update', update))
-
 i18n.on('languageChanged', lng => send('language', {
     lng,
     bundle: i18n.getResourceBundle(lng, 'client')
 }))
+
+
+let updateAvailable = false
+
+autoUpdater.setFeedURL({
+    // TODO: change to production url
+    url: `https://update.electronjs.org/toto04/webeep-sync-releases/${process.platform}-${process.arch}/${app.getVersion()}`,
+})
+
+// check for updates every hour
+setInterval(() => {
+    autoUpdater.checkForUpdates()
+}, 60 * 60 * 1000)
+
+autoUpdater.on('error', (err) => {
+    const { error } = createLogger('UPDATE')
+    error('Error while checking for updates')
+    error(`Stack: ${err.stack}`)
+})
+
+autoUpdater.on('checking-for-update', () => {
+    const { debug } = createLogger('UPDATE')
+    debug('Checking for updates')
+})
+
+autoUpdater.on('update-not-available', () => {
+    const { debug } = createLogger('UPDATE')
+    debug('No updates available')
+})
+
+autoUpdater.on('update-available', () => {
+    const { log } = createLogger('UPDATE')
+    log('New update available, downloading...')
+})
+
+autoUpdater.on('update-downloaded', () => {
+    const { log } = createLogger('UPDATE')
+    log('Update downloaded, will be installed on quit')
+    updateAvailable = true
+    send('update-available')
+})
+
+ipcMain.handle('quit-and-install', () => {
+    const { log } = createLogger('UPDATE')
+    log('Installing update and quitting')
+    autoUpdater.quitAndInstall()
+})
 
 async function focus(): Promise<void> {
     const windows = BrowserWindow.getAllWindows()
@@ -370,6 +415,9 @@ app.on('ready', async () => {
         await store.write()
     }
     await setLoginItem(store.data.settings.openAtLogin)
+
+    // check for updates
+    autoUpdater.checkForUpdates()
 })
 
 // When all windows are closed, on macOS hide the dock, if the user has disabled background, quit
@@ -418,6 +466,8 @@ ipcMain.on('get-context', e => {
         bundle: i18n.getResourceBundle(lng, 'client')
     })
     e.reply('courses', moodleClient.getCourses())
+
+    if (updateAvailable) e.reply('update-available')
 })
 
 ipcMain.on('logout', async e => {
@@ -557,17 +607,6 @@ ipcMain.handle('rename-course', async (e, id: number, newName: string) => {
         }
         return success
     }
-})
-
-ipcMain.handle('get-available-update', () => {
-    return updates.availableUpdate
-})
-
-ipcMain.handle('ignore-update', async (e, update: string) => {
-    await storeIsReady()
-    store.data.persistence.ignoredUpdates.push(update)
-    await updates.checkUpdate()
-    await store.write()
 })
 
 ipcMain.handle('get-previously-synced-items', () => {

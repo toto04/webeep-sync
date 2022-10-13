@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron'
 import { i18n } from 'i18next'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { IoSettingsSharp, IoWarning } from 'react-icons/io5'
+import { IoSettingsSharp, IoWarning, IoRefreshCircle } from 'react-icons/io5'
 import { LoginContext } from '../LoginContext'
 import { NotificationList } from '../components/NotificationList'
 
@@ -45,7 +45,7 @@ export const MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (pr
         updateTime()
 
         ipcRenderer.on('new-update', (e, update) => setUpdateAvailable(update))
-        ipcRenderer.invoke('get-available-update').then(update => setUpdateAvailable(!!update))
+        ipcRenderer.on('update-available', (e) => setUpdateAvailable(true))
     }, [])
 
     return <div className="main-view section">
@@ -69,13 +69,22 @@ export const MainView: FC<{ onLogin: () => void, onSettings: () => void }> = (pr
         </button>
         <div className="user-status">
             <div className="status-icons">
+                {(updateAvailable && !syncing)
+                    ? <div
+                        className='clickable'
+                        onClick={() => ipcRenderer.invoke('quit-and-install')}
+                        title={t('updateAvailable')}
+                    >
+                        <IoRefreshCircle className="new-update" />
+                    </div>
+                    : undefined}
                 <NotificationList />
-                <div className={"clickable" + (updateAvailable ? ' badge' : '')}>
+                <div className="clickable">
                     <IoSettingsSharp onClick={() => props.onSettings()} />
                 </div>
             </div>
             <div className="login-info">
-                {connected ? undefined : <IoWarning className="warning" title="not connected" />}
+                {connected ? undefined : <IoWarning className="warning" title={t('notConnected')} />}
                 {isLogged
                     ? <span>
                         {username}

@@ -27,7 +27,6 @@ export interface Settings {
     trayIcon?: boolean
     openAtLogin?: boolean
     language?: 'it' | 'en'
-    checkForUpdates?: boolean
     notificationOnNewFiles?: boolean
     notificationOnMessage?: boolean
     maxConcurrentDownloads?: number
@@ -42,7 +41,6 @@ export interface Persistence {
     }
     sentMessageNotification: Record<number, { sentTimestamp: number }>
     lastSynced?: number
-    ignoredUpdates: string[]
     /**
      * whether or not a notification has already been sent to the user
      */
@@ -65,7 +63,6 @@ export const defaultSettings: Required<Settings> = {
     trayIcon: true,
     openAtLogin: false,
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
-    checkForUpdates: true,
     notificationOnNewFiles: true,
     notificationOnMessage: true,
     maxConcurrentDownloads: 5,
@@ -89,19 +86,16 @@ function checkStoreIntegrity() {
         settings: {},
         persistence: {
             courses: {},
-            ignoredUpdates: [],
             sentMessageNotification: {},
         }
     }
     if (!store.data.persistence) {
         store.data.persistence = {
             courses: {},
-            ignoredUpdates: [],
             sentMessageNotification: {}
         }
     } else {
         if (!store.data.persistence.courses) store.data.persistence.courses = {}
-        if (!store.data.persistence.ignoredUpdates) store.data.persistence.ignoredUpdates = []
         if (!store.data.persistence.sentMessageNotification) store.data.persistence.sentMessageNotification = {}
 
         for (const id in store.data.persistence.courses) {

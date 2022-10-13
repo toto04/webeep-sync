@@ -401,6 +401,9 @@ $modal-anim-time: 0.15s;
             align-items: flex-end;
             gap: 6px;
             align-items: flex-start;
+            .new-update {
+                color: $bright;
+            }
         }
         span {
             display: inline-flex;
