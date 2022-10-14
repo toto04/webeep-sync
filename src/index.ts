@@ -144,9 +144,8 @@ async function showNewFilesNotification(numfiles: number) {
 }
 
 /**
- * Prepare a new notification with a different body based on the number of files
- * downloaded and the number of courses from which files were downloaded, then show it
- * @param numfiles the number of new files downloaded in background
+ * Prepare a new notification showing the moodle message title
+ * @param moodleNotif the moodle notification
  */
 async function showMessageNotification(moodleNotif: MoodleNotification) {
     await storeIsReady()
@@ -189,7 +188,7 @@ downloadManager.on('new-files', files => {
 moodleClient.on('courses', async c => send('courses', c))
 let notificationToBeOpened: number | null = null
 moodleClient.on('notifications', async notifications => {
-    const sent = send('notifications', notifications)
+    send('notifications', notifications)
 
     // delete old notifications from the store if they are not in the notifications array
     Object.entries(store.data.persistence.sentMessageNotifications)
@@ -212,8 +211,7 @@ moodleClient.on('notifications', async notifications => {
     store.write()
 
     // send a push notification for each new notification
-    if (!sent
-        && store.data.settings.keepOpenInBackground
+    if (store.data.settings.keepOpenInBackground
         && store.data.settings.notificationOnMessage
         && Notification.isSupported()) {
         newNotifications.forEach(n => showMessageNotification(n))
@@ -233,9 +231,16 @@ autoUpdater.setFeedURL({
     url: `https://update.electronjs.org/toto04/webeep-sync-releases/${process.platform}-${process.arch}/${app.getVersion()}`,
 })
 
+async function checkForUpdates() {
+    await storeIsReady()
+    if (!DEV && store.data.settings.automaticUpdates) {
+        autoUpdater.checkForUpdates()
+    }
+}
+
 // check for updates every hour
 setInterval(() => {
-    if (!DEV) autoUpdater.checkForUpdates()
+    checkForUpdates()
 }, 60 * 60 * 1000)
 
 autoUpdater.on('error', (err) => {
@@ -319,7 +324,7 @@ app.on('ready', async () => {
     await setLoginItem(store.data.settings.openAtLogin)
 
     // check for updates
-    autoUpdater.checkForUpdates()
+    checkForUpdates()
 })
 
 // When all windows are closed, on macOS hide the dock, if the user has disabled background, quit

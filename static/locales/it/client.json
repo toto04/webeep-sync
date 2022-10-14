@@ -12,8 +12,8 @@
             "day_other": "{{count}} giorni fa",
             "months": "Mesi fa +"
         },
-        "stop": "stop",
-        "sync": "avvia sync",
+        "stop": "Stop",
+        "sync": "Avvia sync",
         "loginToSync": "fai il login",
         "login": "Accedi...",
         "notConnected": "Non connesso",
@@ -24,8 +24,8 @@
     },
     "syncSettings": {
         "downloadFolder": "Cartella dei download",
-        "open": "apri",
-        "edit": "cambia",
+        "open": "Apri",
+        "edit": "Cambia",
         "syncEvery": "Sync ogni",
         "ai": {
             "hour_one": "1 ora",
@@ -61,12 +61,10 @@
     "newFiles": {
         "newFiles_one": "{{count}} nuovo file scaricato",
         "newFiles_other": "{{count}} nuovi file scaricati",
-        "reveal": "mostra",
-        "open": "apri"
+        "reveal": "Mostra",
+        "open": "Apri"
     },
     "settings": {
-        "newUpdateAvailable": "C'è un nuovo update disponibile! 🎉",
-        "ignoreUpdate": "ignora questa versione",
         "settings": "Impostazioni",
         "colorTheme": "Tema dei colori",
         "theme": {
@@ -75,19 +73,22 @@
             "dark": "tema scuro"
         },
         "language": "Lingua",
+        "automaticUpdates": "Tieni l'app aggiornata",
+        "automaticUpdates_desc": "WeBeep Sync controllerà periodicamente la disponibilità di nuovi aggiornamenti, e li installerà automaticamente",
         "openAtLogin": "Apri l'app al login",
         "keepOpenInBackground": "Lascia aperta in background",
         "keepOpenInBackground_desc": "Lascia l'app aperta in backround quando tutte le finestre sono chiuse. Se gli autosync sono abilitati, anche questi avverranno in background",
         "showInTray": "Mostra l'app nel tray",
         "trayWarning": "Con il tray disabilitato, non potrai vedere se l'app è aperta. Quando chiudi la finestra, dovrai rilanciare l'app per aprirla di nuovo. Se hai gli autosync abilitati, quelli continueranno in background.",
         "notifications": "Mandami una notifica quando trovi nuovi file in background",
+        "msgNotifications": "Mandami una notifica quando ricevo un messaggio su WeBeep",
         "newCourses": "Sincronizza nuovi corsi",
         "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
         "concurrentDownloads": "Download contemporanei",
         "concurrentDownloads_desc": "Un numero più alto di download contemporanei può aumentare la velocità di download, ma rischia di occupare più banda. Si consiglia un numero più basso per connessioni più lente.",
-        "logout": "log out",
-        "cancel": "annulla",
-        "ok": "ok"
+        "logout": "Log out",
+        "cancel": "Annulla",
+        "ok": "Ok"
     },
     "courseList": {
         "courses": "Corsi",

@@ -25,6 +25,7 @@ export interface Settings {
     nativeThemeSource?: typeof nativeTheme.themeSource
     keepOpenInBackground?: boolean
     trayIcon?: boolean
+    automaticUpdates?: boolean
     openAtLogin?: boolean
     language?: 'it' | 'en'
     notificationOnNewFiles?: boolean
@@ -61,6 +62,7 @@ export const defaultSettings: Required<Settings> = {
     nativeThemeSource: 'system',
     keepOpenInBackground: true,
     trayIcon: true,
+    automaticUpdates: true,
     openAtLogin: false,
     language: app.getLocaleCountryCode() === 'IT' ? 'it' : 'en',
     notificationOnNewFiles: true,

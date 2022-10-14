@@ -12,8 +12,8 @@
             "day_other": "{{count}} Days ago",
             "months": "Months ago +"
         },
-        "stop": "stop",
-        "sync": "sync now",
+        "stop": "Stop",
+        "sync": "Sync now",
         "loginToSync": "login to sync",
         "login": "Log in...",
         "notConnected": "Not connected",
@@ -24,8 +24,8 @@
     },
     "syncSettings": {
         "downloadFolder": "Download folder",
-        "open": "open",
-        "edit": "edit",
+        "open": "Open",
+        "edit": "Edit",
         "syncEvery": "Sync every",
         "ai": {
             "hour_one": "1 hour",
@@ -61,12 +61,10 @@
     "newFiles": {
         "newFiles_one": "{{count}} new file downloaded",
         "newFiles_other": "{{count}} new files downloaded",
-        "reveal": "reveal",
-        "open": "open"
+        "reveal": "Reveal",
+        "open": "Open"
     },
     "settings": {
-        "newUpdateAvailable": "There's a new update available! 🎉",
-        "ignoreUpdate": "ignore this version",
         "settings": "Settings",
         "colorTheme": "Color theme",
         "theme": {
@@ -75,19 +73,22 @@
             "dark": "dark theme"
         },
         "language": "Language",
+        "automaticUpdates": "Keep the app up to date",
+        "automaticUpdates_desc": "WeBeep Sync will periodically check for new updates, and will install them automatically",
         "openAtLogin": "Open app at login",
         "keepOpenInBackground": "Keep open in background",
         "keepOpenInBackground_desc": "Keep the app running in background while all windows are closed. If autosync is enabled, they will happen in background too",
         "showInTray": "Show app in tray",
         "trayWarning": "With the tray disabled, you wont be able to tell if the app is running. Once you close the window, you'll need to relaunch the app to open it again. If you have autosyncs enabled, those will keep going in the background.",
         "notifications": "Send a notification when new files are downloaded in background",
+        "msgNotifications": "Send a notification when I recieve a new message in WeBeep",
         "newCourses": "Sync new courses",
         "newCourses_desc": "When new courses are found, automatically add them to the courses that will be synced",
         "concurrentDownloads": "Concurrent downloads",
         "concurrentDownloads_desc": "A higher number of concurrent downloads can increase download speeds, but could put more load on your network. A lower number is preferable for slower connections.",
-        "logout": "log out",
-        "cancel": "cancel",
-        "ok": "ok"
+        "logout": "Log out",
+        "cancel": "Cancel",
+        "ok": "Ok"
     },
     "courseList": {
         "courses": "Courses",

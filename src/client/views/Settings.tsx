@@ -83,6 +83,15 @@ export const SettingsModal: FC<{ onClose: () => void }> = (props) => {
             <div className="setting-section">
 
                 <div className="setting">
+                    <span>{t('automaticUpdates')}</span>
+                    <Switch
+                        onChange={v => updateSettigns({ ...settings, automaticUpdates: v })}
+                        checked={settings.automaticUpdates}
+                    />
+                    <span className="desc">{t('automaticUpdates_desc')}</span>
+                </div>
+
+                <div className="setting">
                     <span>{t('openAtLogin')}</span>
                     <Switch
                         onChange={v => updateSettigns({ ...settings, openAtLogin: v })}
@@ -113,12 +122,26 @@ export const SettingsModal: FC<{ onClose: () => void }> = (props) => {
                     <span>{t('trayWarning')}</span>
                 </div> : undefined}
 
+            </div>
+
+
+            <div className="setting-section">
+
                 <div className={`setting ${settings.keepOpenInBackground ? '' : 'disabled'}`}>
                     <span>{t('notifications')}</span>
                     <Switch
                         disabled={!settings.keepOpenInBackground}
                         onChange={v => updateSettigns({ ...settings, notificationOnNewFiles: v })}
                         checked={settings.keepOpenInBackground && settings.notificationOnNewFiles}
+                    />
+                </div>
+
+                <div className={`setting ${settings.keepOpenInBackground ? '' : 'disabled'}`}>
+                    <span>{t('msgNotifications')}</span>
+                    <Switch
+                        disabled={!settings.keepOpenInBackground}
+                        onChange={v => updateSettigns({ ...settings, notificationOnMessage: v })}
+                        checked={settings.keepOpenInBackground && settings.notificationOnMessage}
                     />
                 </div>
 
