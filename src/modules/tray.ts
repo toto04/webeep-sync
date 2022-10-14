@@ -5,6 +5,7 @@ import { __static } from "../util"
 import { downloadManager } from './download'
 import { store, storeIsReady } from './store'
 import { i18n } from './i18next'
+import { focus } from './window'
 
 const trayImg = nativeImage.createFromPath(path.join(__static, '/icons/tray.png'))
 
