@@ -8,6 +8,8 @@ import { Settings } from '../../modules/store'
 import { Modal } from '../components/Modal'
 import { Link } from '../components/Link'
 
+import PolinetworkLogo from '../assets/polinetwork.svg'
+
 const themes = ['light', 'dark', 'system'] as const
 type Theme = typeof themes[number]
 
@@ -193,6 +195,13 @@ export const SettingsModal: FC<{ onClose: () => void }> = (props) => {
                 <br />
                 <Link href="https://github.com/toto04/webeep-sync">Source code</Link> •&nbsp;
                 <Link href="https://github.com/toto04/webeep-sync/issues">Report a Bug</Link>
+                <br />
+                <br />
+                <Link href="https://polinetwork.org" style={{ color: "#888" }}>
+                    <PolinetworkLogo fill="#888" height={32} width={32} />
+                    <br />
+                    Powered by PoliNetwork
+                </Link>
             </span>
 
             <div className="button-line-container">

@@ -8,11 +8,16 @@ export const Link: FC<{
     href: string
     className?: string
     children: React.ReactNode
+    style?: React.CSSProperties
 }> = props => {
-    return <a onClick={e => {
-        e.preventDefault();
-        shell.openExternal(props.href);
-    }} className={props.className}>
+    return <a
+        onClick={e => {
+            e.preventDefault();
+            shell.openExternal(props.href);
+        }}
+        className={props.className}
+        style={props.style}
+    >
         {props.children}
     </a>;
 };
