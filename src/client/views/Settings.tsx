@@ -1,3 +1,4 @@
+import { platform } from 'os'
 import { ipcRenderer } from 'electron'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +10,8 @@ import { Link } from '../components/Link'
 
 const themes = ['light', 'dark', 'system'] as const
 type Theme = typeof themes[number]
+
+const isLinux = platform() === 'linux'
 
 export const Switch: FC<{
     onChange: (v: boolean) => void
@@ -82,22 +85,27 @@ export const SettingsModal: FC<{ onClose: () => void }> = (props) => {
 
             <div className="setting-section">
 
-                <div className="setting">
-                    <span>{t('automaticUpdates')}</span>
-                    <Switch
-                        onChange={v => updateSettigns({ ...settings, automaticUpdates: v })}
-                        checked={settings.automaticUpdates}
-                    />
-                    <span className="desc">{t('automaticUpdates_desc')}</span>
-                </div>
+                {isLinux
+                    ? undefined
+                    : <>
+                        <div className="setting">
+                            <span>{t('automaticUpdates')}</span>
+                            <Switch
+                                onChange={v => updateSettigns({ ...settings, automaticUpdates: v })}
+                                checked={settings.automaticUpdates}
+                            />
+                            <span className="desc">{t('automaticUpdates_desc')}</span>
+                        </div>
 
-                <div className="setting">
-                    <span>{t('openAtLogin')}</span>
-                    <Switch
-                        onChange={v => updateSettigns({ ...settings, openAtLogin: v })}
-                        checked={settings.openAtLogin}
-                    />
-                </div>
+                        <div className="setting">
+                            <span>{t('openAtLogin')}</span>
+                            <Switch
+                                onChange={v => updateSettigns({ ...settings, openAtLogin: v })}
+                                checked={settings.openAtLogin}
+                            />
+                        </div>
+                    </>
+                }
 
                 <div className="setting">
                     <span>{t('keepOpenInBackground')}</span>

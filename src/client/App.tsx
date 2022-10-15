@@ -12,10 +12,12 @@ import { LoginContext } from './LoginContext'
 import { MainView } from './views/MainView'
 import { SyncSettings } from './views/SyncSettings'
 import { SettingsModal } from './views/Settings'
-import { Course } from '../modules/moodle'
 import { CourseList } from './views/CourseList'
 import { SyncProgress } from './views/SyncProgress'
 
+import { Course } from '../modules/moodle'
+
+const shouldDisplayHeadbar = platform() !== 'linux'
 const shouldDisplayWindowsControls = platform() === 'win32'
 
 i18next.use(initReactI18next).init({ fallbackLng: 'en' })
@@ -53,29 +55,32 @@ const App: FC = () => {
     </div>}>
         <I18nextProvider i18n={i18next}>
             <LoginContext.Provider value={{ isLogged, username, syncing, connected }}>
-                <div className="headbar">
-                    WeBeep Sync
-                    {shouldDisplayWindowsControls
-                        ? <div className="windows-control-buttons">
-                            <div className="windows minimize" onClick={() => {
-                                ipcRenderer.invoke('window-control', 'min')
-                            }}>
-                                <IoRemoveOutline />
+                {shouldDisplayHeadbar
+                    ? <div className="headbar">
+                        WeBeep Sync
+                        {shouldDisplayWindowsControls
+                            ? <div className="windows-control-buttons">
+                                <div className="windows minimize" onClick={() => {
+                                    ipcRenderer.invoke('window-control', 'min')
+                                }}>
+                                    <IoRemoveOutline />
+                                </div>
+                                <div className="windows maximize" onClick={() => {
+                                    ipcRenderer.invoke('window-control', 'max')
+                                }}>
+                                    <IoSquareOutline style={{ width: 12 }} />
+                                </div>
+                                <div className="windows close" onClick={() => {
+                                    ipcRenderer.invoke('window-control', 'close')
+                                }}>
+                                    <IoCloseOutline />
+                                </div>
                             </div>
-                            <div className="windows maximize" onClick={() => {
-                                ipcRenderer.invoke('window-control', 'max')
-                            }}>
-                                <IoSquareOutline style={{ width: 12 }} />
-                            </div>
-                            <div className="windows close" onClick={() => {
-                                ipcRenderer.invoke('window-control', 'close')
-                            }}>
-                                <IoCloseOutline />
-                            </div>
-                        </div>
-                        : undefined
-                    }
-                </div>
+                            : undefined
+                        }
+                    </div>
+                    : undefined
+                }
 
                 <MainView onLogin={() => { ipcRenderer.send('request-login') }} onSettings={() => setSetting(true)} />
                 <SyncSettings />

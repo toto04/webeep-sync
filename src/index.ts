@@ -64,6 +64,7 @@ const windowsLoginSettings = {
  */
 async function setLoginItem(openAtLogin: boolean) {
     if (DEV) return
+    if (process.platform === 'linux') return
 
     await app.whenReady()
     debug(`Setting openAtLogin to ${openAtLogin}`)
@@ -92,7 +93,6 @@ downloadManager.on('stop', result => {
     send('syncing', false)
     send('sync-result', result)
 })
-// downloadManager.on('progress', progress => send('progress', progress))
 downloadManager.on('state', state => {
     if (state === DownloadState.downloading) {
         sendProgressInterval = setInterval(() => {
@@ -233,7 +233,12 @@ autoUpdater.setFeedURL({
 
 async function checkForUpdates() {
     await storeIsReady()
-    if (!DEV && store.data.settings.automaticUpdates) {
+    if (!DEV
+        && process.platform !== 'linux'
+        && store.data.settings.automaticUpdates
+    ) {
+        const { debug } = createLogger('UPDATE')
+        debug('checking for updates')
         autoUpdater.checkForUpdates()
     }
 }
