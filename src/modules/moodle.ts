@@ -4,7 +4,7 @@ import got from 'got'
 import { createLogger } from './logger'
 import { loginManager, } from './login'
 import { storeIsReady, store } from './store'
-import { sanitizePath } from '../util'
+import { generateUID, sanitizePath } from '../util'
 
 const { log, debug } = createLogger('MoodleClient')
 
@@ -49,6 +49,7 @@ export type MoodleNotification = {
     timecreated: number,
     read: boolean,
     url: string,
+    courseid?: string,
 }
 
 function getDefaultName(fullname: string) {
@@ -101,24 +102,33 @@ export class MoodleClient extends EventEmitter {
 
     /**
      * This function handles calls to the Moodle Web API
-     * @param wsfunction the moodle function [Moodle API Docs](https://docs.moodle.org/dev/Web_service_API_functions)
-     * @param data the data to be passed to moodle in the form
-     * @param catchNetworkError if false, when a network error occours this function will throw, if 
-     * true the call will be retried every 2 seconds until a connection can be established, then the
-     * function will resolve normally - default is true
-     * @returns 
      */
     async call(
+        /** 
+         * the moodle function [Moodle API Docs](https://docs.moodle.org/dev/Web_service_API_functions) 
+         */
         wsfunction: string,
+        /**
+         * the data to be passed to moodle in the form
+         */
         data?: { [key: string]: unknown },
+        /** 
+         * if false, when a network error occours this function will throw, if 
+         * true the call will be retried every 2 seconds until a connection can be established, then
+         *  the function will resolve normally - default is true
+         */
         catchNetworkError = true,
+        /**
+         * UUID for logging, if not specified a new one will be generated, passed only when retrying
+         */
+        callUID = generateUID(),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): Promise<any> {
-        debug(`API call to function: ${wsfunction}`)
+        debug(`API call [${callUID}] to function: ${wsfunction}`)
         if (data) debug(`    data: ${JSON.stringify(data)}`)
 
         if (!loginManager.isLogged) {
-            debug('aborting call: logged out')
+            debug(`Aborting call [${callUID}]: logged out`)
             return
         }
         try {
@@ -135,26 +145,26 @@ export class MoodleClient extends EventEmitter {
             })
             const parsed = JSON.parse(res.body)
             if (parsed.errorcode === 'invalidtoken') {
-                debug('Invalid token, requesting new token')
+                debug(`Invalid token on call [${callUID}], requesting new token`)
                 const logged = await loginManager.createLoginWindow()
-                if (logged) return await this.call(wsfunction, data, catchNetworkError)
+                if (logged) return await this.call(wsfunction, data, catchNetworkError, callUID)
             } else {
                 this.setConnected(true)
-                debug('API call success')
+                debug(`API call [${callUID}] success`)
                 return parsed
             }
         } catch (e) {
             delete e.timings    // useless info to log
-            debug(`Network error, catching: ${catchNetworkError}`)
+            debug(`Network error on call [${callUID}], catching: ${catchNetworkError}`)
             debug(e)
             this.setConnected(false)
             if (catchNetworkError) {
                 return await new Promise((resolve, reject) => {
                     const tryConnection = async () => {
                         try {
-                            debug('retring API call...')
-                            resolve(await this.call(wsfunction, data, false))
-                            debug('retry successful')
+                            debug(`Retring API call [${callUID}]...`)
+                            resolve(await this.call(wsfunction, data, false, callUID))
+                            debug(`Retry successful on call [${callUID}]`)
                         } catch (e) {
                             setTimeout(() => tryConnection(), 2000)
                         }

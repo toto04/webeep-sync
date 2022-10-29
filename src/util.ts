@@ -48,3 +48,12 @@ export function sanitizePath(str: string): string {
     str = str.replace(/ *\.? *\\ */g, '\\') // remove trailing/leading dots and spaces from Windows
     return str
 }
+
+/**
+ * generates a random 6-chars UID for api calls
+ */
+export function generateUID(): string {
+    let s = Math.random().toString(36).substring(2, 5)
+    s += Math.random().toString(36).substring(2, 5)
+    return s.toUpperCase()
+}
