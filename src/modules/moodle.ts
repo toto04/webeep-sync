@@ -354,8 +354,6 @@ export class MoodleClient extends EventEmitter {
                 read: n.read,
             }))
 
-            notifications[0].read = false
-
             this.cachedNotifications = notifications
             this.emit('notifications', notifications)
             return notifications
