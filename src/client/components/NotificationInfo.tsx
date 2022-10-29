@@ -19,6 +19,7 @@ const { format } = Intl.DateTimeFormat('it-IT', {
 export const NotificationInfo: FC<{
     notification: MoodleNotification
     toBeOpened: boolean
+    onShow?: () => void
 }> = props => {
     const { title, read, htmlbody, url, timecreated, id } = props.notification
     const [showing, setShowing] = useState(props.toBeOpened)
@@ -30,6 +31,10 @@ export const NotificationInfo: FC<{
     post.querySelectorAll('.header .picture').forEach(e => e.remove())
     post.querySelectorAll('.link').forEach(e => e.remove())
     post.querySelectorAll('.commands').forEach(e => e.remove())
+
+    useEffect(() => {
+        if (showing) props.onShow?.()
+    }, [showing])
 
     useEffect(() => {
         // when the innerhtml is set 

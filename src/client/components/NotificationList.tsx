@@ -75,6 +75,10 @@ export const NotificationList: FC = props => {
                 ? notifications.map((n, i) => <NotificationInfo
                     notification={n}
                     toBeOpened={toBeOpened === n.id}
+                    onShow={() => {
+                        // do not auto open twice
+                        if (toBeOpened === n.id) setToBeOpened(null)
+                    }}
                     key={'notification' + i}
                 />)
                 : <div className="no-notifications">{t('no_notifications')}</div>
