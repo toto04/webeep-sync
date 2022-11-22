@@ -184,13 +184,19 @@ module.exports = {
                 linuxReleases.forEach((release) => {
                     release.artifacts.forEach((art, i) => {
                         if (art.endsWith(".deb")) {
-                            const newName = "webeep-sync-debian.deb";
+                            const newName = path.resolve(
+                                path.dirname(art),
+                                "webeep-sync-debian.deb"
+                            );
                             console.log(`Renaming ${art} to ${newName}`);
                             fs.renameSync(art, newName);
                             linuxRelease.artifacts[i] = newName;
                         }
                         if (art.endsWith(".rpm")) {
-                            const newName = "webeep-sync-redhat.rpm";
+                            const newName = path.resolve(
+                                path.dirname(art),
+                                "webeep-sync-redhat.rpm"
+                            );
                             console.log(`Renaming ${art} to ${newName}`);
                             fs.renameSync(art, newName);
                             linuxRelease.artifacts[i] = newName;
