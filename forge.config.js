@@ -190,7 +190,7 @@ module.exports = {
                             );
                             console.log(`Renaming ${art} to ${newName}`);
                             fs.renameSync(art, newName);
-                            linuxRelease.artifacts[i] = newName;
+                            release.artifacts[i] = newName;
                         }
                         if (art.endsWith(".rpm")) {
                             const newName = path.resolve(
@@ -199,7 +199,7 @@ module.exports = {
                             );
                             console.log(`Renaming ${art} to ${newName}`);
                             fs.renameSync(art, newName);
-                            linuxRelease.artifacts[i] = newName;
+                            release.artifacts[i] = newName;
                         }
                     });
                 });
