@@ -1,13 +1,40 @@
 <div align="center">
-    <img src="https://i.imgur.com/8PJCiEk.png" width="128px" />
-    <h1>WeBeep Sync</h1>
+    <img src="./.github/resources/title.svg" width="512" />
 </div>
 
+<div align="center">
+    <a href="https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-x64.dmg">
+        <img src="./.github/resources/dflogos/macOS-intel.svg" />
+    </a>
+    <a href="https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.macOS-arm64.dmg">
+        <img src="./.github/resources/dflogos/macOS-m1.svg" />
+    </a>
+    <a href="https://github.com/toto04/webeep-sync/releases/latest/download/WeBeep.Sync.Windows.Setup.zip">
+        <img src="./.github/resources/dflogos/windows.svg" />
+    </a>
+    <a href="https://github.com/toto04/webeep-sync/releases/latest/download/webeep-sync-debian.deb">
+        <img src="./.github/resources/dflogos/debian.svg" />
+    </a>
+    <a href="https://github.com/toto04/webeep-sync/releases/latest/download/webeep-sync-redhat.rpm">
+        <img src="./.github/resources/dflogos/redhat.svg" />
+    </a>
+</div>
+
+<div align="center">
+    <a href="https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y">
+        <img src="./.github/resources/dflogos/paypal.svg" />
+    </a>
+</div>
+
+---
+
+![GitHub](https://img.shields.io/github/license/toto04/webeep-sync)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/toto04/webeep-sync)
+![GitHub all releases](https://img.shields.io/github/downloads/toto04/webeep-sync/total)
+![GitHub release (latest by date)](https://img.shields.io/github/downloads/toto04/webeep-sync/latest/total)
 [![donate](https://shields.io/badge/donate-paypal-blue)](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
 
 ### [🇬🇧 click here for English version](https://github.com/toto04/webeep-sync#english-version)
-
-### Vuoi solo scaricare l'app? Vai ai [Download](#Download) ⏬
 
 WeBeep Sync è una semplice app che serve per tenere sincronizzati tutti i tuoi file di WeBeep,
 User-Friendly e senza compromessi.
@@ -71,19 +98,18 @@ e dovrebbe tutto funzionare senza problemi
 
 ### Linux
 
-Per quanto riguarda linux, sto sviluppando l'app da solo e non uso un granché Linux desktop, quindi
-non ho (ancora) provato a fare un packaging, anche perché alcune delle funzioni di Electron sono OS
-specific, e non sarebbero supportate, ma il funzionamento core dell'app dovrebbe funzionare seguendo
-l'installazione manuale
+#### [.deb (Debian based, tipo Ubuntu)](https://github.com/toto04/webeep-sync/releases/latest/download/webeep-sync-debian.deb)
+
+#### [.rpm (RedHat based, tipo Fedora)](https://github.com/toto04/webeep-sync/releases/latest/download/webeep-sync-redhat.rpm)
 
 ### Installazione manuale (istruzioni di compilazione)
 
 Prerequisiti:
 
-- [git](https://git-scm.com)
-- [NodeJS](https://nodejs.org) (v16, consigliata fortemente l'installazione via
-  [nvm](https://github.com/nvm-sh/nvm))
-- [Yarn](https://yarnpkg.com/getting-started/install)
+-   [git](https://git-scm.com)
+-   [NodeJS](https://nodejs.org) (v18, consigliata fortemente l'installazione via
+    [nvm](https://github.com/nvm-sh/nvm))
+-   [Yarn](https://yarnpkg.com/getting-started/install)
 
 Per prima cosa scarica l'app
 
@@ -134,17 +160,17 @@ Grazie mille 🥺❤️
 
 ## Features
 
-- scarica tutti i file da WeBeep con un solo click nella cartella che preferisci
-- puoi rinominare le cartelle dei singoli corsi
-- puoi selezionare quali dei tuoi corsi sincronizzare
-- puoi configurare l'app per rimanere aperta in background, e impostare ogni quanto fare un autosync
-- puoi scegliere di avviare l'app al login, silenziosamente per assicurarti di avere sempre i file
-  aggiornati
-- puoi selezionare tra tema chiaro 🌞 e scuro 🌚
-- disponibile sia in Italiano 🇮🇹 che in Inglese 🇬🇧
-- voglio dire è un'app per scaricare dei file non so quante funzioni potrebbe mai avere
-- non so più cosa inventarmi come "features", cioè scaricala e vedi, al massimo la cancelli se non
-  ti piace idk, non pesa nemmeno poi molto dai
+-   scarica tutti i file da WeBeep con un solo click nella cartella che preferisci
+-   puoi rinominare le cartelle dei singoli corsi
+-   puoi selezionare quali dei tuoi corsi sincronizzare
+-   puoi configurare l'app per rimanere aperta in background, e impostare ogni quanto fare un autosync
+-   puoi scegliere di avviare l'app al login, silenziosamente per assicurarti di avere sempre i file
+    aggiornati
+-   puoi selezionare tra tema chiaro 🌞 e scuro 🌚
+-   disponibile sia in Italiano 🇮🇹 che in Inglese 🇬🇧
+-   voglio dire è un'app per scaricare dei file non so quante funzioni potrebbe mai avere
+-   non so più cosa inventarmi come "features", cioè scaricala e vedi, al massimo la cancelli se non
+    ti piace idk, non pesa nemmeno poi molto dai
 
 Ok ma cosa si scrive in fondo a un README? Cioè qualcuno legge anche fino in fondo?
 Ecco video di gattini come ricompensa per essere arrivato fin quaggiù:
@@ -156,13 +182,11 @@ Ecco video di gattini come ricompensa per essere arrivato fin quaggiù:
 
 [![donate](https://shields.io/badge/donate-paypal-blue)](https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y)
 
-### Just want to download the app? Go to the [Downloads](#Downloads) ⏬
-
 WeBeep Sync is a simple app that is used to keep all your WeBeep files synchronized,
 User-Friendly and uncompromising.
 
 I'm developing this app as a tool for personal use, but I thought it might be useful to
-other students, so it's completely opensource and free under [GPLv3 license](LICENSE).
+other students, so it's completely opensource and free under the [GPLv3 license](LICENSE).
 
 ### What is it exactly?
 
@@ -220,19 +244,18 @@ and everything should work without problems
 
 ### Linux
 
-As for linux, I'm developing the app by myself and I don't use much desktop Linux, so
-I haven't (yet) tried packaging it, also because some of Electron's features are OS
-specific, and would not be supported, but the core functionality of the app should work following
-manual installation
+#### [.deb (Debian based, like Ubuntu)](https://github.com/toto04/webeep-sync/releases/latest/download/webeep-sync-debian.deb)
+
+#### [.rpm (RedHat based, like Fedora)](https://github.com/toto04/webeep-sync/releases/latest/download/webeep-sync-redhat.rpm)
 
 ### Manual installation (compile instructions)
 
 Prerequisites:
 
-- [git](https://git-scm.com)
-- [NodeJS](https://nodejs.org) (v16, I strongly recommend to install it via
-  [nvm](https://github.com/nvm-sh/nvm))
-- [Yarn](https://yarnpkg.com/getting-started/install)
+-   [git](https://git-scm.com)
+-   [NodeJS](https://nodejs.org) (v18, I strongly recommend to install it via
+    [nvm](https://github.com/nvm-sh/nvm))
+-   [Yarn](https://yarnpkg.com/getting-started/install)
 
 First of all, download the app
 
@@ -282,17 +305,17 @@ Thank you very much 🥺❤️
 
 ## Features
 
-- download all the files from WeBeep with a single click in the folder you prefer
-- you can rename the folders of individual courses
-- you can select which of your courses to synchronize
-- you can configure the app to stay open in the background, and set how often to do an autosync
-- you can choose to start the app when you login, silently to make sure you always have the latest files
-  updated
-- you can select between light 🌞 and dark 🌚 theme
-- available in both Italian 🇮🇹 and English 🇬🇧.
-- I mean it's an app to download files I don't know how many functions it could possibly have.
-- I don't know what to come up with as "features" anymore, i.e. download it and see, at most delete it if you don't
-  you don't like idk, it doesn't even weigh that much.
+-   download all the files from WeBeep with a single click in the folder you prefer
+-   you can rename the folders of individual courses
+-   you can select which of your courses to synchronize
+-   you can configure the app to stay open in the background, and set how often to do an autosync
+-   you can choose to start the app when you login, silently to make sure you always have the latest files
+    updated
+-   you can select between light 🌞 and dark 🌚 theme
+-   available in both Italian 🇮🇹 and English 🇬🇧.
+-   I mean it's an app to download files I don't know how many functions it could possibly have.
+-   I don't know what to come up with as "features" anymore, i.e. download it and see, at most delete it if you don't
+    you don't like idk, it doesn't even weigh that much.
 
 Ok but what is written at the bottom of a README? I mean does anyone read all the way to the bottom?
 Here is a video of kittens as a reward for getting this far:

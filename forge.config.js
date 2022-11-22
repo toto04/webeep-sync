@@ -172,8 +172,27 @@ module.exports = {
                     }
                 });
                 winRelease.artifacts.push(zipPath);
-                return makeResults;
             }
+
+            const linuxRelease = makeResults.find(
+                (m) => m.platform === "linux"
+            );
+            if (linuxRelease) {
+                // rename the .deb and .rpm files to remove the version number
+                linuxRelease.artifacts.forEach((art, i) => {
+                    if (art.endsWith(".deb")) {
+                        const newName = "webeep-sync-debian.deb";
+                        fs.renameSync(art, newName);
+                        linuxRelease.artifacts[i] = newName;
+                    }
+                    if (art.endsWith(".rpm")) {
+                        const newName = "webeep-sync-redhat.rpm";
+                        fs.renameSync(art, newName);
+                        linuxRelease.artifacts[i] = newName;
+                    }
+                });
+            }
+            return makeResults;
         },
     },
 };
