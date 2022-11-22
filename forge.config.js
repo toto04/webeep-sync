@@ -179,14 +179,18 @@ module.exports = {
             );
             if (linuxRelease) {
                 // rename the .deb and .rpm files to remove the version number
+                console.log("Renaming linux packages...");
+                console.log("linuxRelease.artifacts: ", linuxRelease.artifacts);
                 linuxRelease.artifacts.forEach((art, i) => {
                     if (art.endsWith(".deb")) {
                         const newName = "webeep-sync-debian.deb";
+                        console.log(`Renaming ${art} to ${newName}`);
                         fs.renameSync(art, newName);
                         linuxRelease.artifacts[i] = newName;
                     }
                     if (art.endsWith(".rpm")) {
                         const newName = "webeep-sync-redhat.rpm";
+                        console.log(`Renaming ${art} to ${newName}`);
                         fs.renameSync(art, newName);
                         linuxRelease.artifacts[i] = newName;
                     }
