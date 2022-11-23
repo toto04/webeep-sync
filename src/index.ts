@@ -49,9 +49,10 @@ downloadManager.on('stop', () => {
 })
 
 const windowsLoginSettings = {
-    // path: path.resolve(path.dirname(process.execPath), '../Update.exe'),
+    path: path.resolve(path.dirname(process.execPath), '../Update.exe'),
     args: [
-        '--tray-only'
+        "--processStart", `"${path.basename(process.execPath)}"`,
+        "--process-start-args", `"--hidden --tray-only"`,
     ]
 }
 
