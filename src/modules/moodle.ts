@@ -199,20 +199,16 @@ export class MoodleClient extends EventEmitter {
      */
     async getCoursesWithoutCache(catchNetworkError = false): Promise<Course[]> {
         await storeIsReady()
+        const userid = this.userid ?? await this.getUserID()
 
         // once the store is initialized fetch and parse the courses
-        const res: {
-            courses: {
-                fullname: string,
-                id: number,
-                coursecategory: string,
-            }[]
-        } = await this.call('core_course_get_enrolled_courses_by_timeline_classification', { classification: "all" }, catchNetworkError)
-        const { courses } = res
+        const courses: {
+            fullname: string,
+            id: number
+        }[] = await this.call('core_enrol_get_users_courses', { userid }, catchNetworkError)
         const defaultNames = courses.map(c => getDefaultName(c.fullname))
         const c: Course[] = courses.map((c, i) => {
-            const { id, coursecategory } = c
-            const fullname = `${c.fullname} (${coursecategory})`
+            const { id, fullname } = c
 
             if (!store.data.persistence.courses[id]) {
                 // check if there are multiple courses that would be shortened to the same folder
