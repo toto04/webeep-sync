@@ -228,8 +228,7 @@ i18n.on('languageChanged', lng => send('language', {
 let updateAvailable = false
 
 autoUpdater.setFeedURL({
-    // TODO: change to production url
-    url: `https://update.electronjs.org/toto04/webeep-sync-releases/${process.platform}-${process.arch}/${app.getVersion()}`,
+    url: `https://update.electronjs.org/toto04/webeep-sync/${process.platform}-${process.arch}/${app.getVersion()}`,
 })
 
 async function checkForUpdates() {
@@ -477,7 +476,6 @@ ipcMain.handle('set-settings', async (e, newSettings) => {
     }
 
     // launch on stratup
-    // TODO: set path and args for autoupdate
     await setLoginItem(store.data.settings.openAtLogin)
     await store.write()
 })
