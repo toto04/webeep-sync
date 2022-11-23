@@ -352,17 +352,26 @@ export class MoodleClient extends EventEmitter {
                     contexturl: string,
                     timecreated: number,
                     read: boolean,
+                    customdata: string,
                 }[]
             } = await this.call('message_popup_get_popup_notifications', { useridto: 0, }, false)
 
-            const notifications = nots.notifications.map(n => ({
-                id: n.id,
-                title: n.subject,
-                htmlbody: n.fullmessagehtml,
-                timecreated: n.timecreated,
-                url: n.contexturl,
-                read: n.read,
-            }))
+            const notifications: MoodleNotification[] = nots.notifications.map(n => {
+                let courseid: string | undefined
+                try {
+                    courseid = JSON.parse(n.customdata).courseid
+                } catch (e) { /* no course id found */ }
+
+                return {
+                    id: n.id,
+                    title: n.subject,
+                    htmlbody: n.fullmessagehtml,
+                    timecreated: n.timecreated,
+                    url: n.contexturl,
+                    read: n.read,
+                    courseid,
+                }
+            })
 
             this.cachedNotifications = notifications
             this.emit('notifications', notifications)
