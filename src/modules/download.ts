@@ -326,10 +326,12 @@ export class DownloadManager extends EventEmitter {
                 try {
                     const stats = await fs.stat(absolutePath)
                     if (
-                        stats.mtime.getTime() / 1000 !== file.timemodified
-                        || stats.size !== file.filesize
+                        file.filesize !== 0 &&
+                        (stats.mtime.getTime() / 1000 !== file.timemodified
+                            || stats.size !== file.filesize)
                     ) {
-                        // if the file is there, but does not have the same size and last modified
+                        // if the file is there, the size on webeep is not 0 and 
+                        // it does not have the same size and last modified
                         // time as on webeep, download it again
                         file.updating = true
                         filesToDownload.push(file)
