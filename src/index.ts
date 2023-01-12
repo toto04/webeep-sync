@@ -367,11 +367,12 @@ ipcMain.handle('window-control', (e, command: string) => {
 })
 
 // a catch all event to send everything needed right when the frontend loads
-ipcMain.on('get-context', e => {
+ipcMain.on('get-context', async e => {
     e.reply('is-logged', loginManager.isLogged)
     e.reply('username', moodleClient.username)
     e.reply('syncing', downloadManager.syncing)
     e.reply('network_event', moodleClient.connected)
+    await storeIsReady()
     const lng = store.data.settings.language
     e.reply('language', {
         lng,
