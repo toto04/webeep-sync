@@ -325,6 +325,10 @@ export class DownloadManager extends EventEmitter {
 
                 try {
                     const stats = await fs.stat(absolutePath)
+
+                    // if the local file is newer than the file on webeep, skip it
+                    if (stats.mtime.getTime() / 1000 > file.timemodified) continue
+
                     if (
                         stats.mtime.getTime() / 1000 !== file.timemodified
                         || (file.filesize !== 0 && stats.size !== file.filesize)
