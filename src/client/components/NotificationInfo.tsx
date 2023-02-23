@@ -27,10 +27,14 @@ export const NotificationInfo: FC<{
     const contentRef = useRef<HTMLDivElement>(null)
 
     const elem = sanitize(htmlbody, { RETURN_DOM: true })
-    const post = elem.querySelector('.forumpost')
-    post.querySelectorAll('.header .picture').forEach(e => e.remove())
-    post.querySelectorAll('.link').forEach(e => e.remove())
-    post.querySelectorAll('.commands').forEach(e => e.remove())
+    const post = elem.querySelector('.forum-post')
+    try {
+        post.querySelectorAll('.header .picture').forEach(e => e.remove())
+        post.querySelectorAll('.link').forEach(e => e.remove())
+        post.querySelectorAll('.commands').forEach(e => e.remove())
+    } catch (e) {
+        console.error("Error while removing elements from notification")
+    }
 
     useEffect(() => {
         if (showing) props.onShow?.()
