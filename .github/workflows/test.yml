@@ -1,17 +1,18 @@
-name: test
+name: Test
 
 on:
-    push:
+  push:
 
 jobs:
-    lint:
-        name: Run linters
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@master
-            - uses: actions/setup-node@master
-              with:
-                  node-version: 18.x
-                  cache: "yarn"
-            - run: yarn install --frozen-lockfile --ignore-scripts
-            - run: yarn run lint
+  lint:
+    name: Run Linters and TSC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: 18.x
+          cache: "yarn"
+      - run: yarn install --immutable
+      - run: yarn run lint
+      - run: yarn run type-check

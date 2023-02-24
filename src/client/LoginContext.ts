@@ -1,14 +1,14 @@
-import { createContext } from 'react'
+import { createContext } from "react"
 
 interface ILoginContext {
-    isLogged: boolean
-    username?: string
-    syncing: boolean
-    connected: boolean
+  isLogged: boolean
+  username?: string
+  syncing: boolean
+  connected: boolean
 }
 
 export const LoginContext = createContext<ILoginContext>({
-    isLogged: false,
-    syncing: false,
-    connected: true
+  isLogged: false,
+  syncing: false,
+  connected: true,
 })

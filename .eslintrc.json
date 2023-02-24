@@ -1,40 +1,72 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true,
-        "node": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/recommended",
-        "plugin:import/electron",
-        "plugin:import/typescript"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "rules": {
-        "import/no-unresolved": [
-            2,
-            {
-                "ignore": [
-                    "got"
-                ]
-            }
-        ],
-        "import/no-named-as-default-member": "off",
-        "no-unsafe-finally": "off",
-        "@typescript-eslint/no-unused-vars": [
-            "error",
-            {
-                "args": "none"
-            }
-        ],
-        "prefer-const": [
-            "error",
-            {
-                "destructuring": "all"
-            }
-        ]
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
     }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/electron",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-extra-parens": [
+      "off"
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "quotes": [
+      "error",
+      "double"
+    ],
+    "react/prop-types": [
+      "off"
+    ],
+    "react/no-multi-comp": [
+      "error"
+    ],
+    "react/self-closing-comp": [
+      "error"
+    ],
+    "import/no-unresolved": [
+      2,
+      {
+        "ignore": [
+          "got"
+        ]
+      }
+    ],
+    "import/no-named-as-default-member": "off",
+    "no-unsafe-finally": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "none"
+      }
+    ],
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "all"
+      }
+    ]
+  }
 }

@@ -26,4 +26,4 @@
  * ```
  */
 
-import './client/App'
+import "./client/App"
