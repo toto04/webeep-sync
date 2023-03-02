@@ -88,10 +88,11 @@ export const NotificationList: FC = props => {
               <button
                 className="setAllRead"
                 onClick={() => {
-                  notifications.forEach(n => {
-                    if (!n.read)
+                  notifications
+                    .filter(n => !n.read)
+                    .forEach(n =>
                       ipcRenderer.invoke("mark-notification-read", n.id)
-                  })
+                    )
                 }}
               >
                 {t("setAllRead")}
