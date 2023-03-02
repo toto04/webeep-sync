@@ -83,17 +83,31 @@ export const NotificationList: FC = props => {
       {showingTooltip && (
         <div ref={wrapRef} className="notification-list">
           {notifications && notifications.length ? (
-            notifications.map((n, i) => (
-              <NotificationInfo
-                notification={n}
-                toBeOpened={toBeOpened === n.id}
-                onShow={() => {
-                  // do not auto open twice
-                  if (toBeOpened === n.id) setToBeOpened(null)
+            <div>
+              {" "}
+              <button
+                className="setAllRead"
+                onClick={() => {
+                  notifications.forEach(n => {
+                    if (!n.read)
+                      ipcRenderer.invoke("mark-notification-read", n.id)
+                  })
                 }}
-                key={"notification" + i}
-              />
-            ))
+              >
+                {t("setAllRead")}
+              </button>
+              {notifications.map((n, i) => (
+                <NotificationInfo
+                  notification={n}
+                  toBeOpened={toBeOpened === n.id}
+                  onShow={() => {
+                    // do not auto open twice
+                    if (toBeOpened === n.id) setToBeOpened(null)
+                  }}
+                  key={"notification" + i}
+                />
+              ))}
+            </div>
           ) : (
             <div className="no-notifications">{t("no_notifications")}</div>
           )}

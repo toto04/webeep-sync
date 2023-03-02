@@ -19,7 +19,8 @@
         "notConnected": "Not connected",
         "updateAvailable": "Update available, click to install",
         "notifications": {
-            "no_notifications": "Good news! No notifications ✨"
+            "no_notifications": "Good news! No notifications ✨",
+            "setAllRead": "Set all as read"
         }
     },
     "syncSettings": {

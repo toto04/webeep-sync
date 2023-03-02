@@ -19,7 +19,8 @@
         "notConnected": "Non connesso",
         "updateAvailable": "Aggiornamento disponibile, clicca per installare",
         "notifications": {
-            "no_notifications": "Buone notizie! Nessuna notifica ✨"
+            "no_notifications": "Buone notizie! Nessuna notifica ✨",
+            "setAllRead": "Segna tutte come lette"
         }
     },
     "syncSettings": {

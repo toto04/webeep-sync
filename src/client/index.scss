@@ -56,7 +56,8 @@ button,
     }
 }
 
-.confirm-button {
+
+.confirm-button, .setAllRead {
     cursor: pointer;
     box-sizing: border-box;
     margin: auto;
@@ -67,6 +68,11 @@ button,
     font-size: 0.9em;
     border-radius: 8px;
     box-shadow: 0px 0px 6px 3px $bright-less;
+}
+.setAllRead {
+    margin: 10px auto;
+    width: 100%;
+    padding: 10px 15px;
 }
 
 .discard-button {
@@ -499,7 +505,7 @@ $modal-anim-time: 0.15s;
                             color: $bright;
                         }
                     }
-                    .confirm-button {
+                    .confirm-button, .setAllRead {
                         color: white !important;
                     }
                 }
@@ -902,7 +908,7 @@ $modal-anim-time: 0.15s;
         h3 {
             margin: 0;
         }
-        .confirm-button {
+        .confirm-button, .setAllRead {
             margin-top: 6px;
             margin-bottom: 8px;
             color: white;
@@ -1095,7 +1101,7 @@ $modal-anim-time: 0.15s;
             opacity: 0.85;
         }
     }
-    .confirm-button {
+    .confirm-button, .setAllRead {
         box-shadow: 0px 0px 8px 4px $bright-less;
         &:hover {
             box-shadow: 0px 0px 10px 6px $bright-less;
