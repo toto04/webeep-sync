@@ -1,7 +1,9 @@
 import path from "path"
 import fs from "fs/promises"
+import { createWriteStream } from "fs"
+import stream from "stream/promises"
 import { EventEmitter } from "events"
-import got, { CancelableRequest, Response } from "got"
+import got from "got"
 
 import { createLogger } from "./logger"
 import { FileInfo, moodleClient } from "./moodle"
@@ -57,7 +59,7 @@ export class DownloadManager extends EventEmitter {
   private totalUntilNow = 0 // size of all completed downloads
 
   currentDownloads: {
-    request: CancelableRequest<Response<string>>
+    cancel: () => void
     progress: FileProgress
   }[] = []
 
@@ -92,7 +94,7 @@ export class DownloadManager extends EventEmitter {
   }
 
   private cancelAllRequests() {
-    for (const download of this.currentDownloads) download.request.cancel()
+    for (const download of this.currentDownloads) download.cancel()
   }
 
   /**
@@ -167,7 +169,8 @@ export class DownloadManager extends EventEmitter {
         const absolutePath = path.join(downloadPath, fullpath)
 
         // make the request to get the file
-        const request = got.get(file.fileurl, {
+        const reqAc = new AbortController()
+        const request = got.stream(file.fileurl, {
           searchParams: {
             token: loginManager.token, // for some god forsaken reason it's token and not wstoken
           },
@@ -176,7 +179,7 @@ export class DownloadManager extends EventEmitter {
         // prepare the download object, this is what will be pushed in the current downloads
         // to keep track of the progress
         const download: (typeof this.currentDownloads)[number] = {
-          request,
+          cancel: () => reqAc.abort(),
           progress: {
             absolutePath,
             filename: file.filename,
@@ -191,17 +194,22 @@ export class DownloadManager extends EventEmitter {
           download.progress.downloaded = transferred
         })
 
-        const res = await request
-
         try {
           await fs.mkdir(path.dirname(absolutePath), { recursive: true })
-          await fs.writeFile(absolutePath, res.rawBody)
+          await stream.pipeline(request, createWriteStream(absolutePath), {
+            signal: reqAc.signal,
+          })
           await fs.utimes(
             absolutePath,
             new Date(),
             new Date(file.timemodified * 1000)
           )
         } catch (e) {
+          if (e.name === "AbortError") {
+            debug(`Cancelled request for file ${fullpath}`)
+            return
+          }
+
           if (e.code === "EISDIR") {
             try {
               await fs.rm(e.path, { recursive: true, force: true })
