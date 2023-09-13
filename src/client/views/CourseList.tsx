@@ -9,7 +9,7 @@ export const CourseList: FC<{ courses: Course[] }> = props => {
 
   return (
     <div className="course-list section">
-      <div className={`course-header ${shadow ? "shadow" : undefined}`}>
+      <div className={`course-header ${shadow ? "shadow" : ""}`}>
         <h3>{t("courses")}</h3>
         <span>{t("courses_desc")}</span>
       </div>
@@ -21,7 +21,12 @@ export const CourseList: FC<{ courses: Course[] }> = props => {
         }}
       >
         {props.courses.map((course, i) => (
-          <CourseRow course={course} index={i} key={"courserow" + course.id} />
+          <CourseRow
+            course={course}
+            index={i}
+            length={props.courses.length}
+            key={"courserow" + course.id}
+          />
         ))}
       </div>
     </div>

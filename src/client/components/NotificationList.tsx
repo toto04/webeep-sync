@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { IoNotifications } from "react-icons/io5"
+import { IoCheckmarkDoneCircle, IoNotifications } from "react-icons/io5"
 import { MoodleNotification } from "../../modules/moodle"
 import useOnOutsideClick from "../hooks/useOnOutsideClick"
 import { NotificationInfo } from "./NotificationInfo"
@@ -21,6 +21,7 @@ export const NotificationList: FC = props => {
   const [notifications, setNotifications] = useState<MoodleNotification[]>([])
   const [toBeOpened, setToBeOpened] = useState<number | null>(null)
   const [unread, setUnread] = useState(0)
+  const [shadow, setShadow] = useState(false)
   const { t } = useTranslation("client", {
     keyPrefix: "mainView.notifications",
   })
@@ -81,22 +82,40 @@ export const NotificationList: FC = props => {
         <IoNotifications />
       </div>
       {showingTooltip && (
-        <div ref={wrapRef} className="notification-list">
+        <div
+          ref={wrapRef}
+          className="notification-list"
+          onScroll={e => {
+            if (e.currentTarget.scrollTop > 5 && !shadow) setShadow(true)
+            else if (e.currentTarget.scrollTop <= 5 && shadow) setShadow(false)
+          }}
+        >
+          <div
+            className={`notification-list-header modal-header ${
+              shadow ? "shadow" : ""
+            }`}
+          >
+            <span>Messaggi da WeBeep</span>
+            {notifications && notifications.filter(n => !n.read).length ? (
+              <div className="notification-read-all">
+                <span>{t("setAllRead")}</span>
+                <div
+                  className="clickable"
+                  onClick={() => {
+                    notifications
+                      .filter(n => !n.read)
+                      .forEach(n =>
+                        ipcRenderer.invoke("mark-notification-read", n.id)
+                      )
+                  }}
+                >
+                  <IoCheckmarkDoneCircle />
+                </div>
+              </div>
+            ) : null}
+          </div>
           {notifications && notifications.length ? (
-            <div>
-              {" "}
-              <button
-                className="setAllRead"
-                onClick={() => {
-                  notifications
-                    .filter(n => !n.read)
-                    .forEach(n =>
-                      ipcRenderer.invoke("mark-notification-read", n.id)
-                    )
-                }}
-              >
-                {t("setAllRead")}
-              </button>
+            <div className="notification-list-wrap">
               {notifications.map((n, i) => (
                 <NotificationInfo
                   notification={n}
