@@ -205,9 +205,14 @@ export class DownloadManager extends EventEmitter {
             new Date(file.timemodified * 1000)
           )
         } catch (e) {
-          if (e.name === "AbortError") {
-            debug(`Cancelled request for file ${fullpath}`)
-            return
+          switch (e.name) {
+            case "AbortError":
+              debug(`Cancelled request for file ${fullpath}`)
+              throw e
+            case "RequestError":
+            case "HTTPError":
+            case "TimeoutError":
+              throw e
           }
 
           if (e.code === "EISDIR") {
@@ -280,6 +285,7 @@ export class DownloadManager extends EventEmitter {
       this.cancelAllRequests()
       switch (e.name) {
         case "CancelError":
+        case "AbortError":
           return SyncResult.stopped
 
         case "RequestError":
