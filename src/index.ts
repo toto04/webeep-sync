@@ -75,12 +75,19 @@ async function setLoginItem(openAtLogin: boolean) {
   if (process.platform === "linux") return
 
   await app.whenReady()
-  debug(`Setting openAtLogin to ${openAtLogin}`)
-  app.setLoginItemSettings({
-    openAtLogin,
-    openAsHidden: true,
-    ...windowsLoginSettings,
-  })
+
+  const loginItemSettings = app.getLoginItemSettings(windowsLoginSettings)
+  // only set the login item if it's different from the current one
+  if (openAtLogin !== loginItemSettings.openAtLogin) {
+    debug(`Setting openAtLogin to ${openAtLogin}`)
+    app.setLoginItemSettings({
+      openAtLogin,
+      openAsHidden: true,
+      ...windowsLoginSettings,
+    })
+  } else {
+    debug(`openAtLogin is already ${openAtLogin}`)
+  }
 }
 
 loginManager.on("token", async () => {
