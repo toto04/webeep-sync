@@ -27,9 +27,6 @@ const { debug, log, error } = createLogger("APP")
 
 const DEV = process.argv.includes("--dev")
 
-// Increase the max heap size
-app.commandLine.appendSwitch("js-flags", "--max-old-space-size=4096")
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   // eslint-disable-line global-require
