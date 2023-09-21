@@ -450,13 +450,21 @@ $modal-anim-time: 0.15s;
             font-size: 0.8em;
             opacity: 0.8;
             display: flex;
-            justify-content: space-between;
+            justify-content: start;
+
+            .clickable {
+              transition: color 0.1s ease-in-out;
+            }
+            &:hover .clickable {
+              color: $bright;
+            }
 
             cursor: pointer;
             align-items: center;
             span {
               font-weight: normal;
               text-decoration: underline;
+              margin-right: 4px;
             }
           }
         }
