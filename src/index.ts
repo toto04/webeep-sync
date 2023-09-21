@@ -27,9 +27,6 @@ const { debug, log, error } = createLogger("APP")
 
 const DEV = process.argv.includes("--dev")
 
-// Increase the max heap size
-app.commandLine.appendSwitch("js-flags", "--max-old-space-size=8192")
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   // eslint-disable-line global-require
@@ -75,12 +72,19 @@ async function setLoginItem(openAtLogin: boolean) {
   if (process.platform === "linux") return
 
   await app.whenReady()
-  debug(`Setting openAtLogin to ${openAtLogin}`)
-  app.setLoginItemSettings({
-    openAtLogin,
-    openAsHidden: true,
-    ...windowsLoginSettings,
-  })
+
+  const loginItemSettings = app.getLoginItemSettings(windowsLoginSettings)
+  // only set the login item if it's different from the current one
+  if (openAtLogin !== loginItemSettings.openAtLogin) {
+    debug(`Setting openAtLogin to ${openAtLogin}`)
+    app.setLoginItemSettings({
+      openAtLogin,
+      openAsHidden: true,
+      ...windowsLoginSettings,
+    })
+  } else {
+    debug(`openAtLogin is already ${openAtLogin}`)
+  }
 }
 
 loginManager.on("token", async () => {
