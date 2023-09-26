@@ -96,23 +96,17 @@ export const NotificationList: FC = props => {
             }`}
           >
             <span>Messaggi da WeBeep</span>
-            {notifications && notifications.filter(n => !n.read).length ? (
-              <div className="notification-read-all">
-                <span>{t("setAllRead")}</span>
-                <div
-                  className="clickable"
-                  onClick={() => {
-                    notifications
-                      .filter(n => !n.read)
-                      .forEach(n =>
-                        ipcRenderer.invoke("mark-notification-read", n.id)
-                      )
-                  }}
-                >
-                  <IoCheckmarkDoneCircle />
-                </div>
+            <div
+              className="notification-read-all"
+              onClick={() => {
+                ipcRenderer.invoke("mark-all-notifications-read")
+              }}
+            >
+              <span>{t("setAllRead")}</span>
+              <div className="clickable">
+                <IoCheckmarkDoneCircle />
               </div>
-            ) : null}
+            </div>
           </div>
           {notifications && notifications.length ? (
             <div className="notification-list-wrap">

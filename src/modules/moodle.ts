@@ -443,5 +443,24 @@ export class MoodleClient extends EventEmitter {
       notificationid: notificationID,
     })
   }
+
+  /**
+   * Marks all notifications as read
+   * Same as {@link markNotificationAsRead} but for all notifications instead of just one
+   *
+   * this also marks every notification that isn't shown in webeep sync as read,
+   * like the ones for new materials uploaded.
+   */
+  async markAllNotificationsAsRead(): Promise<void> {
+    // update cache before call as optimistic update
+    this.cachedNotifications = this.cachedNotifications.map(n => {
+      n.read = true
+      return n
+    })
+    this.emit("notifications", this.cachedNotifications) // notify the frontend
+    await this.call("core_message_mark_all_notifications_as_read", {
+      useridto: this.userid,
+    })
+  }
 }
 export const moodleClient = new MoodleClient()
