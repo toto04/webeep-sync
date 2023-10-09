@@ -592,3 +592,7 @@ ipcMain.handle("notification-to-be-opened", async () => {
 ipcMain.handle("mark-notification-read", async (e, id: number) => {
   await moodleClient.markNotificationAsRead(id)
 })
+
+ipcMain.handle("mark-all-notifications-read", async () => {
+  await moodleClient.markAllNotificationsAsRead()
+})

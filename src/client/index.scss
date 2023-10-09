@@ -18,1120 +18,1162 @@ $very-dark-gray: #1a1a1a;
 $headbar-height: 30px;
 
 body {
-    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Helvetica, Arial, sans-serif;
-    margin: 0px;
-    background-color: $almost-white;
-    user-select: none;
+  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  margin: 0px;
+  background-color: $almost-white;
+  user-select: none;
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
-    border: 12px solid transparent;
+  width: 12px;
+  border: 12px solid transparent;
 }
 
 ::-webkit-scrollbar-track {
-    width: 8px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    border-radius: 8px;
-    background-color: #7777;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+  background-color: #7777;
 }
 
 h3 {
-    font-size: 1.1em;
-    font-family: "Poppins", sans-serif;
-    margin: 0;
+  font-size: 1.1em;
+  font-family: "Poppins", sans-serif;
+  margin: 0;
 }
 
 button,
 .button {
-    transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89),
-        box-shadow 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
-    &:hover {
-        filter: brightness(90%);
-    }
+  transition: filter 0.15s cubic-bezier(0.42, 0, 0.52, 0.89),
+    box-shadow 0.15s cubic-bezier(0.42, 0, 0.52, 0.89);
+  &:hover {
+    filter: brightness(90%);
+  }
 }
 
-.confirm-button {
-    cursor: pointer;
-    box-sizing: border-box;
-    margin: auto;
-    background-color: $bright;
-    color: white;
-    border: 0;
-    padding: 6px 15px;
-    font-size: 0.9em;
-    border-radius: 8px;
-    box-shadow: 0px 0px 6px 3px $bright-less;
+.confirm-button,
+.setAllRead {
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: auto;
+  background-color: $bright;
+  color: white;
+  border: 0;
+  padding: 6px 15px;
+  font-size: 0.9em;
+  border-radius: 8px;
+  box-shadow: 0px 0px 6px 3px $bright-less;
+}
+.setAllRead {
+  margin: 10px auto;
+  width: 100%;
+  padding: 10px 15px;
 }
 
 .discard-button {
-    cursor: pointer;
-    box-sizing: border-box;
-    margin: auto;
-    background-color: $almost-white;
-    color: black;
-    border: 0;
-    padding: 6px 15px;
-    font-size: 0.9em;
-    border-radius: 8px;
-    box-shadow: 0px 0px 6px 3px #0002;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: auto;
+  background-color: $almost-white;
+  color: black;
+  border: 0;
+  padding: 6px 15px;
+  font-size: 0.9em;
+  border-radius: 8px;
+  box-shadow: 0px 0px 6px 3px #0002;
 }
 
 .danger-button {
-    cursor: pointer;
-    box-sizing: border-box;
-    margin: auto;
-    background-color: $danger;
-    color: white;
-    border: 0;
-    padding: 6px 15px;
-    font-size: 0.9em;
-    border-radius: 8px;
-    box-shadow: 0px 0px 6px 3px $danger-less;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: auto;
+  background-color: $danger;
+  color: white;
+  border: 0;
+  padding: 6px 15px;
+  font-size: 0.9em;
+  border-radius: 8px;
+  box-shadow: 0px 0px 6px 3px $danger-less;
 }
 
 .text-button {
-    cursor: pointer;
-    text-decoration: none;
-    color: $system-blue;
+  cursor: pointer;
+  text-decoration: none;
+  color: $system-blue;
 }
 
 .clickable {
-    border-radius: 15%;
-    cursor: pointer;
-    padding: 2px;
-    min-width: 24px;
-    min-height: 24px;
-    transition: backdrop-filter 0.1s ease-in-out;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    svg {
-        width: 24px;
-        height: 24px;
-    }
-    span {
-        font-size: 10px;
-    }
-    &:hover,
-    &.clicked {
-        backdrop-filter: brightness(90%);
-    }
-    &.danger {
-        color: $danger;
-    }
-    &.positive {
-        color: $positive;
-    }
-    &.close {
-        position: absolute;
-        color: $very-dark-gray;
-        top: 10px;
-        right: 10px;
-    }
+  border-radius: 15%;
+  cursor: pointer;
+  padding: 2px;
+  min-width: 24px;
+  min-height: 24px;
+  transition: backdrop-filter 0.1s ease-in-out;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+  span {
+    font-size: 10px;
+  }
+  &:hover,
+  &.clicked {
+    backdrop-filter: brightness(90%);
+  }
+  &.danger {
+    color: $danger;
+  }
+  &.positive {
+    color: $positive;
+  }
+  &.close {
+    position: absolute;
+    color: $very-dark-gray;
+    top: 10px;
+    right: 10px;
+  }
 }
 
 svg.warning {
-    padding-right: 4px;
-    width: 20px;
-    height: 20px;
-    color: $warning;
+  padding-right: 4px;
+  width: 20px;
+  height: 20px;
+  color: $warning;
 }
 
 .checkbox {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    svg {
-        &.active {
-            color: $bright;
-        }
-        cursor: pointer;
-        height: 22px;
-        width: 22px;
-        path:hover {
-            box-shadow: 0px 0px 5px 2px #0002;
-        }
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  svg {
+    &.active {
+      color: $bright;
     }
+    cursor: pointer;
+    height: 22px;
+    width: 22px;
+    path:hover {
+      box-shadow: 0px 0px 5px 2px #0002;
+    }
+  }
 }
 
 .progress-bar {
-    height: 8px;
-    border-radius: 4px;
-    overflow: hidden;
-    width: 100%;
-    background-color: $very-light-gray;
-    margin-bottom: 6px;
-    .progress-bar-inside {
-        @keyframes progressbar {
-            0% {
-                background-position: 400% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        animation: progressbar 8s linear infinite;
-        height: 100%;
-        background-image: linear-gradient(
-            300deg,
-            #40c8e0,
-            $system-blue,
-            #40c8e0
-        );
-        background-size: 400% 200%;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+  background-color: $very-light-gray;
+  margin-bottom: 6px;
+  .progress-bar-inside {
+    @keyframes progressbar {
+      0% {
+        background-position: 400% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
+    animation: progressbar 8s linear infinite;
+    height: 100%;
+    background-image: linear-gradient(300deg, #40c8e0, $system-blue, #40c8e0);
+    background-size: 400% 200%;
+  }
 }
 
 .App {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .headbar {
-    font-family: "Poppins", sans-serif;
-    padding: 6px;
-    height: $headbar-height;
-    box-sizing: border-box;
-    -webkit-app-region: drag;
-    user-select: none;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 0.9em;
-    font-weight: bold;
+  font-family: "Poppins", sans-serif;
+  padding: 6px;
+  height: $headbar-height;
+  box-sizing: border-box;
+  -webkit-app-region: drag;
+  user-select: none;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.9em;
+  font-weight: bold;
 }
 
 .windows-control-buttons {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 138px;
-    display: flex;
-    -webkit-app-region: no-drag;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 138px;
+  display: flex;
+  -webkit-app-region: no-drag;
 
-    .windows {
-        transition: background-color 0.1s ease-in-out;
-        height: 32px;
-        width: 46px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        background-color: transparent;
-        &:hover {
-            background-color: #7f7f7f2d;
-        }
-        &:active {
-            background-color: #7f7f7f40;
-        }
-        &.close {
-            svg {
-                width: 20px;
-            }
-            &:hover {
-                background-color: #e81123;
-                color: white;
-            }
-            &:active {
-                background-color: #b81522;
-                color: white;
-            }
-        }
-        svg {
-            height: auto;
-        }
+  .windows {
+    transition: background-color 0.1s ease-in-out;
+    height: 32px;
+    width: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    &:hover {
+      background-color: #7f7f7f2d;
     }
+    &:active {
+      background-color: #7f7f7f40;
+    }
+    &.close {
+      svg {
+        width: 20px;
+      }
+      &:hover {
+        background-color: #e81123;
+        color: white;
+      }
+      &:active {
+        background-color: #b81522;
+        color: white;
+      }
+    }
+    svg {
+      height: auto;
+    }
+  }
 }
 
 $modal-anim-time: 0.15s;
 .modal-container {
-    @keyframes modal-backdrop {
-        0% {
-            backdrop-filter: blur(0px) brightness(100%);
-        }
-        100% {
-            backdrop-filter: blur(3px) brightness(95%);
-        }
+  @keyframes modal-backdrop {
+    0% {
+      backdrop-filter: blur(0px) brightness(100%);
     }
+    100% {
+      backdrop-filter: blur(3px) brightness(95%);
+    }
+  }
 
-    outline: 0;
-    z-index: 10;
-    position: fixed;
-    top: $headbar-height;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: calc(100vh - $headbar-height);
-    animation: modal-backdrop $modal-anim-time cubic-bezier(0.5, 0.5, 0, 1);
-    backdrop-filter: blur(3px) brightness(95%);
-    .modal {
-        @keyframes modal-opacity {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-        position: relative;
-        background-color: $almost-white;
-        animation: modal-opacity $modal-anim-time cubic-bezier(0.5, 0.5, 0, 1);
-        border-radius: 12px;
-        box-shadow: 0px 0px 10px 5px #0002;
-        overflow: hidden;
-        max-height: 90vh;
-        margin: 32px;
-        .close {
-            z-index: 1;
-        }
-        .modal-header {
-            position: absolute;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 1;
-            transition: box-shadow 0.2s ease-in-out;
-            &.shadow {
-                box-shadow: 0px 0px 8px 5px #0001;
-            }
-            h3 {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                margin-right: 32px;
-                font-size: 1.17em;
-            }
-        }
-        .modal-content {
-            margin-top: 50px;
-            max-height: calc(90vh - 50px - 8px);
-            margin-bottom: 8px;
-            overflow: hidden auto;
-        }
+  outline: 0;
+  z-index: 10;
+  position: fixed;
+  top: $headbar-height;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: calc(100vh - $headbar-height);
+  animation: modal-backdrop $modal-anim-time cubic-bezier(0.5, 0.5, 0, 1);
+  backdrop-filter: blur(3px) brightness(95%);
+  .modal {
+    @keyframes modal-opacity {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
     }
+    position: relative;
+    background-color: $almost-white;
+    animation: modal-opacity $modal-anim-time cubic-bezier(0.5, 0.5, 0, 1);
+    border-radius: 12px;
+    box-shadow: 0px 0px 10px 5px #0002;
+    overflow: hidden;
+    max-height: 90vh;
+    margin: 32px;
+    .close {
+      z-index: 1;
+    }
+    .modal-header {
+      position: absolute;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 1;
+      transition: box-shadow 0.2s ease-in-out;
+      &.shadow {
+        box-shadow: 0px 0px 8px 5px #0001;
+      }
+      h3 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 32px;
+        font-size: 1.17em;
+      }
+    }
+    .modal-content {
+      margin-top: 50px;
+      max-height: calc(90vh - 50px - 8px);
+      margin-bottom: 8px;
+      overflow: hidden auto;
+    }
+  }
 }
 
 .section {
-    margin: 8px;
-    margin-top: 0;
-    border-radius: 8px;
-    background-color: white;
-    padding: 8px;
-    box-sizing: border-box;
+  margin: 8px;
+  margin-top: 0;
+  border-radius: 8px;
+  background-color: white;
+  padding: 8px;
+  box-sizing: border-box;
 }
 
 .main-view {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 4px;
-    .last-synced {
-        h1 {
-            font-family: "Poppins";
-            margin: 0;
-        }
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 4px;
+  .last-synced {
+    h1 {
+      font-family: "Poppins";
+      margin: 0;
     }
-    .sync-now {
+  }
+  .sync-now {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    padding: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 35%;
+    width: 60px;
+    height: 60px;
+    background-clip: padding-box;
+    z-index: 0;
+
+    &.discard-button {
+      --bgrotation: 0deg;
+      background-image: conic-gradient(
+        from var(--bgrotation),
+        transparent 30%,
+        hsl(0, 100%, 50%),
+        hsl(40, 100%, 50%),
+        hsl(80, 100%, 50%),
+        hsl(120, 100%, 50%),
+        hsl(160, 100%, 50%),
+        hsl(200, 100%, 50%),
+        hsl(240, 100%, 50%),
+        hsl(280, 100%, 50%),
+        transparent
+      );
+      animation: syncnow-bgrotation 1.5s infinite;
+      &::before {
+        content: "";
         position: absolute;
-        text-align: center;
-        font-weight: bold;
-        top: 50%;
-        left: 50%;
-        padding: 0;
-        transform: translate(-50%, -50%);
+        top: 1px;
+        bottom: 1px;
+        left: 1px;
+        right: 1px;
+        z-index: -1;
+        // background-image: linear-gradient(45deg, white, black);
+        background-color: #fffffff5;
         border-radius: 35%;
-        width: 60px;
-        height: 60px;
-        background-clip: padding-box;
-        z-index: 0;
-
-        &.discard-button {
-            --bgrotation: 0deg;
-            background-image: conic-gradient(
-                from var(--bgrotation),
-                transparent 30%,
-                hsl(0, 100%, 50%),
-                hsl(40, 100%, 50%),
-                hsl(80, 100%, 50%),
-                hsl(120, 100%, 50%),
-                hsl(160, 100%, 50%),
-                hsl(200, 100%, 50%),
-                hsl(240, 100%, 50%),
-                hsl(280, 100%, 50%),
-                transparent
-            );
-            animation: syncnow-bgrotation 1.5s infinite;
-            &::before {
-                content: "";
-                position: absolute;
-                top: 1px;
-                bottom: 1px;
-                left: 1px;
-                right: 1px;
-                z-index: -1;
-                // background-image: linear-gradient(45deg, white, black);
-                background-color: #fffffff5;
-                border-radius: 35%;
-            }
-        }
+      }
     }
-    .user-status {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        justify-content: space-between;
-        .login-info {
+  }
+  .user-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    .login-info {
+      display: flex;
+      align-items: center;
+    }
+    .status-icons {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 6px;
+      align-items: flex-start;
+      .new-update {
+        color: $bright;
+      }
+    }
+    span {
+      display: inline-flex;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    .notification-icon {
+      position: relative;
+      outline: 0;
+
+      .notification-list {
+        position: absolute;
+        top: 36px;
+        right: 0;
+
+        z-index: 15;
+        max-height: 300px;
+        width: 260px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        box-sizing: border-box;
+
+        border-radius: 8px;
+        background-color: $almost-white;
+        box-shadow: 0px 2px 8px 4px #0002;
+
+        .notification-list-header {
+          position: sticky;
+          top: 0;
+          left: 0;
+          z-index: 2;
+          padding: 10px 6px 0px;
+          background-color: inherit;
+          overflow: hidden;
+          transition: box-shadow 0.2s ease-in-out;
+          &.shadow {
+            box-shadow: 0px 0px 8px 5px #0001;
+          }
+
+          .notification-read-all {
+            color: #888;
+            font-size: 0.8em;
+            opacity: 0.8;
             display: flex;
+            justify-content: start;
+
+            .clickable {
+              transition: color 0.1s ease-in-out;
+            }
+            &:hover .clickable {
+              color: $bright;
+            }
+
+            cursor: pointer;
             align-items: center;
-        }
-        .status-icons {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-end;
-            gap: 6px;
-            align-items: flex-start;
-            .new-update {
-                color: $bright;
+            span {
+              font-weight: normal;
+              text-decoration: underline;
+              margin-right: 4px;
             }
-        }
-        span {
-            display: inline-flex;
-            font-size: 1.1em;
-            font-weight: bold;
+          }
         }
 
-        .notification-icon {
-            position: relative;
-            outline: 0;
+        .notification-list-wrap {
+          padding: 6px;
+          .notification {
+            &:not(:last-child) {
+              margin-bottom: 4px;
+            }
+            p {
+              margin: 0;
+            }
 
-            .notification-list {
+            .notification-content {
+              position: relative;
+              background-color: white;
+              display: flex;
+              cursor: pointer;
+              overflow: hidden;
+              border-radius: 4px;
+              transition: all 0.1s ease-in-out;
+              padding-right: 8px;
+
+              &:hover {
+                box-shadow: 0px 0px 6px 4px #0001;
+              }
+              .unread-badge {
                 position: absolute;
-                top: 36px;
-                right: 0;
-
-                z-index: 15;
-                max-height: 300px;
-                width: 260px;
-                overflow-x: hidden;
-                overflow-y: auto;
-                box-sizing: border-box;
-
-                padding: 6px;
-                border-radius: 8px;
-                background-color: $almost-white;
-                box-shadow: 0px 2px 8px 4px #0002;
-
-                // display: flex;
-                // flex-direction: column;
-                // justify-content: stretch;
-                // align-items: center;
-
-                .notification {
-                    &:not(:last-child) {
-                        margin-bottom: 4px;
-                    }
-                    p {
-                        margin: 0;
-                    }
-
-                    .notification-content {
-                        position: relative;
-                        background-color: white;
-                        display: flex;
-                        cursor: pointer;
-                        overflow: hidden;
-                        border-radius: 4px;
-                        transition: all 0.1s ease-in-out;
-                        padding-right: 8px;
-
-                        &:hover {
-                            box-shadow: 0px 0px 6px 4px #0001;
-                        }
-                        .unread-badge {
-                            position: absolute;
-                            right: 0px;
-                            width: 6px;
-                            height: 100%;
-                            background-color: $bright;
-                        }
-                        .notification-brief {
-                            padding: 4px;
-                            display: flex;
-                            flex-direction: column;
-                            p {
-                                font-weight: bold;
-                                font-size: 0.9em;
-                            }
-                            span {
-                                font-weight: normal;
-                                color: #888;
-                                opacity: 0.8;
-                                font-size: 0.8em;
-                                text-align: end;
-                                align-self: flex-end;
-                            }
-                        }
-                    }
-                    .notification-info {
-                        margin: 0 8px;
-                        padding: 8px;
-                        padding-bottom: 12px;
-                        border-radius: 8px;
-                        max-width: 700px;
-                        display: flex;
-                        flex-direction: column;
-                        background-color: white;
-                        div {
-                            user-select: text;
-                        }
-                        a {
-                            color: $bright;
-                        }
-                    }
-                    .confirm-button {
-                        color: white !important;
-                    }
+                right: 0px;
+                width: 6px;
+                height: 100%;
+                background-color: $bright;
+              }
+              .notification-brief {
+                padding: 4px;
+                display: flex;
+                flex-direction: column;
+                p {
+                  font-weight: bold;
+                  font-size: 0.9em;
                 }
-
-                .no-notifications {
-                    font-size: 0.9em;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    border-radius: 4px;
-                    opacity: 0.8;
-                    color: #888;
+                span {
+                  font-weight: normal;
+                  color: #888;
+                  opacity: 0.8;
+                  font-size: 0.8em;
+                  text-align: end;
+                  align-self: flex-end;
                 }
+              }
             }
+            .notification-info {
+              margin: 0 8px;
+              padding: 8px;
+              padding-bottom: 12px;
+              border-radius: 8px;
+              max-width: 700px;
+              display: flex;
+              flex-direction: column;
+              background-color: white;
+              div {
+                user-select: text;
+              }
+              a {
+                color: $bright;
+              }
+            }
+            .confirm-button,
+            .setAllRead {
+              color: white !important;
+            }
+          }
         }
-    }
-    .clickable.badge {
-        position: relative;
-        &::before {
-            content: "";
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: $danger;
-            position: absolute;
-            right: 2px;
-            top: 2px;
-            box-shadow: 0 2px 5px 2px #0002;
+
+        .no-notifications {
+          font-size: 0.9em;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 4px;
+          margin: 12px 4px;
+          opacity: 0.8;
+          color: #888;
         }
+      }
     }
+  }
+  .clickable.badge {
+    position: relative;
+    &::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: $danger;
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      box-shadow: 0 2px 5px 2px #0002;
+    }
+  }
 }
 
 .sync-progress {
+  display: flex;
+  flex-direction: column;
+  height: 130px;
+
+  .sync-progress-idle {
     display: flex;
     flex-direction: column;
-    height: 130px;
-
-    .sync-progress-idle {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        border-radius: 6px;
-        flex: 1;
-        .new-files {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 8px;
-        }
-        h3 {
-            max-width: 450px;
-            text-align: center;
-            &.error {
-                padding: 8px;
-                border-radius: 8px;
-                background-color: $very-light-gray;
-                color: $danger;
-            }
-        }
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex: 1;
+    .new-files {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 8px;
     }
-    .sync-progress-wrap {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        border-radius: 6px;
-        position: relative;
-
-        .progress-container {
-            display: flex;
-            flex: 1;
-            justify-content: space-between;
-            margin-bottom: 6px;
-            min-height: 52px;
-            .right {
-                align-self: flex-end;
-            }
-        }
-        .right {
-            float: right;
-        }
-        h3 {
-            display: inline;
-            font-size: 1em;
-        }
-
-        .fileinfo {
-            max-width: 80%;
-            display: inline;
-        }
+    h3 {
+      max-width: 450px;
+      text-align: center;
+      &.error {
+        padding: 8px;
+        border-radius: 8px;
+        background-color: $very-light-gray;
+        color: $danger;
+      }
     }
+  }
+  .sync-progress-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 6px;
+    position: relative;
 
-    .sync-progress-list {
-        position: absolute;
-        top: 0;
-        right: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        .progress-ellipses {
-            cursor: default;
-        }
-
-        .tooltip {
-            z-index: 15;
-            max-height: 300px;
-            width: 300px;
-            overflow-x: hidden;
-            overflow-y: auto;
-            box-sizing: border-box;
-
-            padding: 6px;
-            border-radius: 8px;
-            background-color: $almost-white;
-            box-shadow: 0px 2px 8px 4px #0002;
-
-            .file-progress {
-                background-color: white;
-                padding: 4px;
-                border-radius: 4px;
-                &:not(:last-child) {
-                    margin-bottom: 6px;
-                }
-                span {
-                    display: block;
-                    margin: 0;
-                }
-                .filename {
-                    font-family: "Poppins", sans-serif;
-                    font-size: 13px;
-                    font-weight: bold;
-                }
-                .filepath {
-                    font-size: 10px;
-                    margin-bottom: 2px;
-                }
-                .file-size-info {
-                    font-size: 12px;
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 2px;
-                }
-                .progress-bar {
-                    height: 6px;
-                }
-            }
-        }
+    .progress-container {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      min-height: 52px;
+      .right {
+        align-self: flex-end;
+      }
+    }
+    .right {
+      float: right;
+    }
+    h3 {
+      display: inline;
+      font-size: 1em;
     }
 
     .fileinfo {
-        flex: 1;
+      max-width: 80%;
+      display: inline;
+    }
+  }
+
+  .sync-progress-list {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    .progress-ellipses {
+      cursor: default;
+    }
+
+    .tooltip {
+      z-index: 15;
+      max-height: 300px;
+      width: 300px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      box-sizing: border-box;
+
+      padding: 6px;
+      border-radius: 8px;
+      background-color: $almost-white;
+      box-shadow: 0px 2px 8px 4px #0002;
+
+      .file-progress {
+        background-color: white;
+        padding: 4px;
+        border-radius: 4px;
+        &:not(:last-child) {
+          margin-bottom: 6px;
+        }
         span {
-            display: block;
+          display: block;
+          margin: 0;
         }
         .filename {
-            font-family: "Poppins", sans-serif;
-            font-weight: bold;
+          font-family: "Poppins", sans-serif;
+          font-size: 13px;
+          font-weight: bold;
         }
         .filepath {
-            font-size: 11px;
+          font-size: 10px;
+          margin-bottom: 2px;
         }
+        .file-size-info {
+          font-size: 12px;
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 2px;
+        }
+        .progress-bar {
+          height: 6px;
+        }
+      }
     }
-    .modal {
-        background-color: white;
+  }
+
+  .fileinfo {
+    flex: 1;
+    span {
+      display: block;
     }
+    .filename {
+      font-family: "Poppins", sans-serif;
+      font-weight: bold;
+    }
+    .filepath {
+      font-size: 11px;
+    }
+  }
+  .modal {
+    background-color: white;
+  }
 }
 
 .sync-settings {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0;
+  background-color: transparent !important;
+  padding: 0;
+  gap: 8px;
+  div {
+    margin: 0;
+  }
+  .download-path {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
-    margin-top: 0;
-    background-color: transparent !important;
-    padding: 0;
-    gap: 8px;
-    div {
-        margin: 0;
+    align-items: center;
+    .path {
+      font-size: 0.8em;
+      display: block;
     }
-    .download-path {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        .path {
-            font-size: 0.8em;
-            display: block;
-        }
-        .clickable {
-            margin-left: 6px;
-        }
+    .clickable {
+      margin-left: 6px;
     }
-    .autosync {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 4px;
-        justify-content: center;
-        min-width: 200px;
-        .autosync-row {
-            display: flex;
-            justify-content: space-between;
-            border-radius: 4px;
-            &.disabled {
-                cursor: not-allowed;
-                color: #888;
-            }
-        }
-        select {
-            border: hidden;
-            background-color: $very-light-gray;
-            padding: 2px;
-            border-radius: 4px;
-            margin-left: 4px;
-            &:disabled {
-                cursor: not-allowed;
-            }
-        }
-        span {
-            vertical-align: middle;
-            font-size: 1em;
-        }
-        .clickable {
-            margin-left: 4px;
-        }
+  }
+  .autosync {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    justify-content: center;
+    min-width: 200px;
+    .autosync-row {
+      display: flex;
+      justify-content: space-between;
+      border-radius: 4px;
+      &.disabled {
+        cursor: not-allowed;
+        color: #888;
+      }
     }
+    select {
+      border: hidden;
+      background-color: $very-light-gray;
+      padding: 2px;
+      border-radius: 4px;
+      margin-left: 4px;
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+    span {
+      vertical-align: middle;
+      font-size: 1em;
+    }
+    .clickable {
+      margin-left: 4px;
+    }
+  }
 }
 
 .course-list {
-    flex: 1;
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+  .course-header {
+    height: 45px;
+    padding: 8px;
+    transition: box-shadow 0.2s ease-in-out;
+    &.shadow {
+      box-shadow: 0px 0px 8px 5px #0001;
+    }
+  }
+  .course-container {
+    padding: 8px 4px;
+    padding-top: 0px;
+    box-sizing: border-box;
+    max-height: calc(100% - 45px - 16px);
+    overflow: auto;
+  }
+  .course-row {
+    display: flex;
+    position: relative;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 4px;
+    border-radius: 6px;
     overflow: hidden;
-    padding: 0;
-    .course-header {
-        height: 45px;
-        padding: 8px;
-        transition: box-shadow 0.2s ease-in-out;
-        &.shadow {
-            box-shadow: 0px 0px 8px 5px #0001;
+    .checkbox {
+      height: auto;
+      align-self: stretch;
+      padding: 1px;
+      svg {
+        color: white;
+        width: 20px;
+        &.active {
+          filter: drop-shadow(2px 2px 2px #0002);
         }
+      }
     }
-    .course-container {
-        padding: 8px 4px;
-        padding-top: 0px;
+    &:not(:last-child)::before {
+      $bar-offset-left: 30px;
+      content: "";
+      position: absolute;
+      box-sizing: border-box;
+      left: $bar-offset-left;
+      width: calc(98% - $bar-offset-left);
+      bottom: 0px;
+      border-bottom: 1px solid $very-light-gray;
+    }
+    .checkbox svg:not(.active) {
+      filter: brightness(90%) saturate(80%);
+    }
+    .course-folder-info {
+      flex: 1;
+      margin-left: 4px;
+      padding: 2px 0px;
+      span {
+        display: block;
+        font-size: 11px;
+        padding-left: 3px; // compensate input padding
+      }
+      input {
+        font-size: 1.1em;
+        font-family: "Poppins", sans-serif;
+        font-weight: bold;
         box-sizing: border-box;
-        max-height: calc(100% - 45px - 16px);
-        overflow: auto;
+        border: none;
+        margin: 0;
+        padding: 0 2px;
+        width: 100%;
+        background-color: transparent;
+        color: inherit;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        transition: all 0.1s ease-in-out;
+        &:focus-visible {
+          outline: none;
+          border-color: $bright;
+        }
+        &.editing {
+          background-color: $very-light-gray;
+        }
+      }
     }
-    .course-row {
-        display: flex;
-        position: relative;
-        align-items: center;
-        box-sizing: border-box;
-        margin: 4px;
-        border-radius: 6px;
-        overflow: hidden;
-        .checkbox {
-            height: auto;
-            align-self: stretch;
-            padding: 1px;
-            svg {
-                color: white;
-                width: 20px;
-                &.active {
-                    filter: drop-shadow(2px 2px 2px #0002);
-                }
-            }
-        }
-        &:not(:last-child)::before {
-            $bar-offset-left: 30px;
-            content: "";
-            position: absolute;
-            box-sizing: border-box;
-            left: $bar-offset-left;
-            width: calc(98% - $bar-offset-left);
-            bottom: 0px;
-            border-bottom: 1px solid $very-light-gray;
-        }
-        .checkbox svg:not(.active) {
-            filter: brightness(90%) saturate(80%);
-        }
-        .course-folder-info {
-            flex: 1;
-            margin-left: 4px;
-            padding: 2px 0px;
-            span {
-                display: block;
-                font-size: 11px;
-                padding-left: 3px; // compensate input padding
-            }
-            input {
-                font-size: 1.1em;
-                font-family: "Poppins", sans-serif;
-                font-weight: bold;
-                box-sizing: border-box;
-                border: none;
-                margin: 0;
-                padding: 0 2px;
-                width: 100%;
-                background-color: transparent;
-                color: inherit;
-                border-radius: 4px;
-                border: 1px solid transparent;
-                transition: all 0.1s ease-in-out;
-                &:focus-visible {
-                    outline: none;
-                    border-color: $bright;
-                }
-                &.editing {
-                    background-color: $very-light-gray;
-                }
-            }
-        }
-        .editing-icons {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-end;
-            align-self: flex-end;
-            margin-bottom: 2px;
-            .clickable {
-                height: 100%;
-                margin-left: 4px;
-            }
-        }
+    .editing-icons {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      align-self: flex-end;
+      margin-bottom: 2px;
+      .clickable {
+        height: 100%;
+        margin-left: 4px;
+      }
     }
+  }
 }
 
 .new-files-modal {
-    position: relative;
-    padding: 10px;
-    padding-top: 0px;
-    background-color: white;
+  position: relative;
+  padding: 10px;
+  padding-top: 0px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 500px;
+  max-width: 700px;
+  h3 {
+    margin-bottom: 4px;
+  }
+  h4 {
+    cursor: pointer;
+    font-size: 1.05em;
     display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 500px;
-    max-width: 700px;
-    h3 {
-        margin-bottom: 4px;
+    align-items: center;
+    margin: 8px 0 0;
+    padding: 4px;
+    border-radius: 8px;
+    transition: background-color 0.1s ease-in-out;
+    &:hover {
+      background-color: $very-light-gray;
     }
-    h4 {
-        cursor: pointer;
-        font-size: 1.05em;
-        display: flex;
-        align-items: center;
-        margin: 8px 0 0;
-        padding: 4px;
-        border-radius: 8px;
-        transition: background-color 0.1s ease-in-out;
-        &:hover {
-            background-color: $very-light-gray;
-        }
-        svg {
-            color: $bright;
-            margin-right: 4px;
-        }
+    svg {
+      color: $bright;
+      margin-right: 4px;
     }
-    .new-file {
-        margin-left: 12px;
-        padding: 4px;
-        padding-left: 8px;
-        border-left: 1px solid $bright;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        transition: background-color 0.1s ease-in-out;
-        border-radius: 0 8px 8px 0;
-        &:hover {
-            background-color: $almost-white;
-        }
-        &.updated {
-            border-color: $warning;
-        }
-        .filesize {
-            font-family: "Poppins", sans-serif;
-            font-weight: bold;
-            font-size: 0.8em;
-            width: 55px;
-            text-align: right;
-        }
+  }
+  .new-file {
+    margin-left: 12px;
+    padding: 4px;
+    padding-left: 8px;
+    border-left: 1px solid $bright;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background-color 0.1s ease-in-out;
+    border-radius: 0 8px 8px 0;
+    &:hover {
+      background-color: $almost-white;
     }
+    &.updated {
+      border-color: $warning;
+    }
+    .filesize {
+      font-family: "Poppins", sans-serif;
+      font-weight: bold;
+      font-size: 0.8em;
+      width: 55px;
+      text-align: right;
+    }
+  }
 }
 
 .settings {
-    padding: 10px;
-    padding-top: 0px;
-    background-color: $almost-white;
+  padding: 10px;
+  padding-top: 0px;
+  background-color: $almost-white;
+  display: flex;
+  flex-direction: column;
+  width: 450px;
+  padding-bottom: 30px;
+  h3 {
+    font-size: 1.17em;
+    margin-bottom: 10px;
+  }
+  .update {
     display: flex;
     flex-direction: column;
-    width: 450px;
-    padding-bottom: 30px;
+    align-items: center;
+    justify-content: center;
     h3 {
-        font-size: 1.17em;
-        margin-bottom: 10px;
+      margin: 0;
     }
-    .update {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        h3 {
-            margin: 0;
-        }
-        .confirm-button {
-            margin-top: 6px;
-            margin-bottom: 8px;
-            color: white;
-        }
-        .ignore {
-            opacity: 0.8;
-        }
+    .confirm-button,
+    .setAllRead {
+      margin-top: 6px;
+      margin-bottom: 8px;
+      color: white;
     }
-    .setting-warn {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 8px 0;
-        svg {
-            color: $warning;
-            min-width: 20px;
-            min-height: 20px;
-        }
-        span {
-            opacity: 0.8;
-            font-size: 0.7em;
-        }
+    .ignore {
+      opacity: 0.8;
     }
-    .setting-section {
-        border-radius: 8px;
-        padding: 8px;
-        background-color: white;
-        margin-bottom: 16px;
+  }
+  .setting-warn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+    svg {
+      color: $warning;
+      min-width: 20px;
+      min-height: 20px;
     }
-    .setting {
-        position: relative;
-        display: grid;
-        align-items: center;
-        justify-content: space-between;
-        grid-template:
-            "title interface" auto
-            "desc desc" auto / 300px auto;
-        .switch {
-            justify-self: end;
-        }
-        &.disabled {
-            .react-switch-bg {
-                cursor: not-allowed !important;
-            }
-            span {
-                opacity: 0.6;
-            }
-        }
-        &:not(:nth-last-of-type(1))::before {
-            content: "";
-            position: absolute;
-            box-sizing: border-box;
-            left: 4%;
-            width: 92%;
-            bottom: -7px;
-            border-bottom: 1px solid $very-light-gray;
-        }
-        &:not(:last-child) {
-            margin-bottom: 12px;
-        }
-        span {
-            transition: opacity 0.1s ease-in-out;
-            &:not(.desc) {
-                max-width: 300px;
-                font-weight: bold;
-                font-family: "Poppins", sans-serif;
-            }
-            &.desc {
-                padding-top: 4px;
-                opacity: 0.8;
-                font-size: 0.9em;
-                grid-area: desc;
-            }
-        }
-        select,
-        input,
-        .checkbox {
-            border: hidden;
-            background-color: $very-light-gray;
-            padding: 2px;
-            border-radius: 4px;
-        }
-        input[type="number"] {
-            width: 50px;
-            justify-self: flex-end;
-            padding: 3px;
-        }
-        .checkbox {
-            padding: 0;
-        }
+    span {
+      opacity: 0.8;
+      font-size: 0.7em;
     }
-    .credits {
-        display: block;
+  }
+  .setting-section {
+    border-radius: 8px;
+    padding: 8px;
+    background-color: white;
+    margin-bottom: 16px;
+  }
+  .setting {
+    position: relative;
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    grid-template:
+      "title interface" auto
+      "desc desc" auto / 300px auto;
+    .switch {
+      justify-self: end;
+    }
+    &.disabled {
+      .react-switch-bg {
+        cursor: not-allowed !important;
+      }
+      span {
+        opacity: 0.6;
+      }
+    }
+    &:not(:nth-last-of-type(1))::before {
+      content: "";
+      position: absolute;
+      box-sizing: border-box;
+      left: 4%;
+      width: 92%;
+      bottom: -7px;
+      border-bottom: 1px solid $very-light-gray;
+    }
+    &:not(:last-child) {
+      margin-bottom: 12px;
+    }
+    span {
+      transition: opacity 0.1s ease-in-out;
+      &:not(.desc) {
+        max-width: 300px;
+        font-weight: bold;
+        font-family: "Poppins", sans-serif;
+      }
+      &.desc {
+        padding-top: 4px;
         opacity: 0.8;
-        font-size: 0.75em;
-        margin: 16px;
-        color: #888;
-        text-align: center;
+        font-size: 0.9em;
+        grid-area: desc;
+      }
     }
-    a {
-        cursor: pointer;
-        color: $bright;
+    select,
+    input,
+    .checkbox {
+      border: hidden;
+      background-color: $very-light-gray;
+      padding: 2px;
+      border-radius: 4px;
     }
+    input[type="number"] {
+      width: 50px;
+      justify-self: flex-end;
+      padding: 3px;
+    }
+    .checkbox {
+      padding: 0;
+    }
+  }
+  .credits {
+    display: block;
+    opacity: 0.8;
+    font-size: 0.75em;
+    margin: 16px;
+    color: #888;
+    text-align: center;
+  }
+  a {
+    cursor: pointer;
+    color: $bright;
+  }
 }
 
 .button-line-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-end;
-    gap: 8px;
-    margin-top: 12px;
-    position: absolute;
-    bottom: 10px;
-    right: 12px;
-    button {
-        margin: 0;
-    }
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  button {
+    margin: 0;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-    body {
-        color: $very-light-gray;
-        background-color: $very-dark-gray;
+  body {
+    color: $very-light-gray;
+    background-color: $very-dark-gray;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: white;
+  }
+  .modal-container {
+    .modal {
+      background-color: $very-dark-gray;
+      .modal-header.shadow {
+        box-shadow: 0px 0px 8px 5px #0002;
+      }
     }
-    h1,
-    h2,
-    h3,
-    h4 {
-        color: white;
+  }
+  .section {
+    background-color: $almost-black;
+  }
+  .course-list {
+    .course-header.shadow {
+      box-shadow: 0px 0px 8px 5px #0002;
     }
-    .modal-container {
-        .modal {
-            background-color: $very-dark-gray;
-            .modal-header.shadow {
-                box-shadow: 0px 0px 8px 5px #0002;
-            }
-        }
-    }
-    .section {
-        background-color: $almost-black;
-    }
-    .course-list {
-        .course-header.shadow {
-            box-shadow: 0px 0px 8px 5px #0002;
-        }
-        .course-row {
-            input.editing {
-                background-color: $very-dark-gray !important;
-            }
-            &:not(:last-child)::before {
-                border-color: $very-dark-gray !important;
-            }
-        }
-    }
-    .clickable {
-        &:hover,
-        &.clicked {
-            backdrop-filter: brightness(400%);
-        }
-        &.close {
-            color: $very-light-gray;
-        }
-    }
-    .settings {
-        background-color: $very-dark-gray;
-        .setting-section {
-            background-color: $almost-black;
-        }
-        .setting:not(:nth-last-of-type(1))::before {
-            border-color: $very-dark-gray;
-        }
-    }
-    .sync-progress .sync-progress-idle h3.error {
-        background-color: $very-dark-gray;
-    }
-    .new-files-modal {
-        background-color: $very-dark-gray;
-        .new-file:hover,
-        h4:hover {
-            background-color: $almost-black;
-        }
-    }
-    .sync-now.discard-button {
-        color: white;
-        background-color: $almost-black;
-        box-shadow: 0px 0px 10px 6px $very-dark-gray;
-        &::before {
-            background-color: $very-dark-gray !important;
-            opacity: 0.85;
-        }
-    }
-    .confirm-button {
-        box-shadow: 0px 0px 8px 4px $bright-less;
-        &:hover {
-            box-shadow: 0px 0px 10px 6px $bright-less;
-        }
-    }
-    button:hover {
-        filter: brightness(80%);
-    }
-    .progress-bar {
-        background-color: $very-dark-gray;
-    }
-    .windows-control-buttons {
-        .windows {
-            svg {
-                color: $almost-white;
-            }
-            &:hover {
-                svg {
-                    color: white;
-                }
-            }
-        }
-    }
-    .tooltip {
+    .course-row {
+      input.editing {
         background-color: $very-dark-gray !important;
-        .file-progress {
-            background-color: $almost-black !important;
-        }
+      }
+      &:not(:last-child)::before {
+        border-color: $very-dark-gray !important;
+      }
     }
-    .notification-list {
-        background-color: $very-dark-gray !important;
-        .notification-content {
-            background-color: $almost-black !important;
-        }
-        .notification-info {
-            background-color: $almost-black !important;
-        }
+  }
+  .clickable {
+    &:hover,
+    &.clicked {
+      backdrop-filter: brightness(400%);
     }
+    &.close {
+      color: $very-light-gray;
+    }
+  }
+  .settings {
+    background-color: $very-dark-gray;
+    .setting-section {
+      background-color: $almost-black;
+    }
+    .setting:not(:nth-last-of-type(1))::before {
+      border-color: $very-dark-gray;
+    }
+  }
+  .sync-progress .sync-progress-idle h3.error {
+    background-color: $very-dark-gray;
+  }
+  .new-files-modal {
+    background-color: $very-dark-gray;
+    .new-file:hover,
+    h4:hover {
+      background-color: $almost-black;
+    }
+  }
+  .sync-now.discard-button {
+    color: white;
+    background-color: $almost-black;
+    box-shadow: 0px 0px 10px 6px $very-dark-gray;
+    &::before {
+      background-color: $very-dark-gray !important;
+      opacity: 0.85;
+    }
+  }
+  .confirm-button,
+  .setAllRead {
+    box-shadow: 0px 0px 8px 4px $bright-less;
+    &:hover {
+      box-shadow: 0px 0px 10px 6px $bright-less;
+    }
+  }
+  button:hover {
+    filter: brightness(80%);
+  }
+  .progress-bar {
+    background-color: $very-dark-gray;
+  }
+  .windows-control-buttons {
+    .windows {
+      svg {
+        color: $almost-white;
+      }
+      &:hover {
+        svg {
+          color: white;
+        }
+      }
+    }
+  }
+  .tooltip {
+    background-color: $very-dark-gray !important;
+    .file-progress {
+      background-color: $almost-black !important;
+    }
+  }
+  .notification-list {
+    background-color: $very-dark-gray !important;
+    &.shadow {
+      box-shadow: 0px 0px 8px 5px #0002;
+    }
+    .notification-content {
+      background-color: $almost-black !important;
+    }
+    .notification-info {
+      background-color: $almost-black !important;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { IoNotifications } from "react-icons/io5"
+import { IoCheckmarkDoneCircle, IoNotifications } from "react-icons/io5"
 import { MoodleNotification } from "../../modules/moodle"
 import useOnOutsideClick from "../hooks/useOnOutsideClick"
 import { NotificationInfo } from "./NotificationInfo"
@@ -21,6 +21,7 @@ export const NotificationList: FC = props => {
   const [notifications, setNotifications] = useState<MoodleNotification[]>([])
   const [toBeOpened, setToBeOpened] = useState<number | null>(null)
   const [unread, setUnread] = useState(0)
+  const [shadow, setShadow] = useState(false)
   const { t } = useTranslation("client", {
     keyPrefix: "mainView.notifications",
   })
@@ -81,19 +82,46 @@ export const NotificationList: FC = props => {
         <IoNotifications />
       </div>
       {showingTooltip && (
-        <div ref={wrapRef} className="notification-list">
+        <div
+          ref={wrapRef}
+          className="notification-list"
+          onScroll={e => {
+            if (e.currentTarget.scrollTop > 5 && !shadow) setShadow(true)
+            else if (e.currentTarget.scrollTop <= 5 && shadow) setShadow(false)
+          }}
+        >
+          <div
+            className={`notification-list-header modal-header ${
+              shadow ? "shadow" : ""
+            }`}
+          >
+            <span>Messaggi da WeBeep</span>
+            <div
+              className="notification-read-all"
+              onClick={() => {
+                ipcRenderer.invoke("mark-all-notifications-read")
+              }}
+            >
+              <span>{t("setAllRead")}</span>
+              <div className="clickable">
+                <IoCheckmarkDoneCircle />
+              </div>
+            </div>
+          </div>
           {notifications && notifications.length ? (
-            notifications.map((n, i) => (
-              <NotificationInfo
-                notification={n}
-                toBeOpened={toBeOpened === n.id}
-                onShow={() => {
-                  // do not auto open twice
-                  if (toBeOpened === n.id) setToBeOpened(null)
-                }}
-                key={"notification" + i}
-              />
-            ))
+            <div className="notification-list-wrap">
+              {notifications.map((n, i) => (
+                <NotificationInfo
+                  notification={n}
+                  toBeOpened={toBeOpened === n.id}
+                  onShow={() => {
+                    // do not auto open twice
+                    if (toBeOpened === n.id) setToBeOpened(null)
+                  }}
+                  key={"notification" + i}
+                />
+              ))}
+            </div>
           ) : (
             <div className="no-notifications">{t("no_notifications")}</div>
           )}

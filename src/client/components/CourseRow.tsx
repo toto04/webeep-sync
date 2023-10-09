@@ -6,7 +6,11 @@ import { IoClose, IoAddCircleOutline, IoCheckmarkCircle } from "react-icons/io5"
 import { HiCheck } from "react-icons/hi"
 import { useTranslation } from "react-i18next"
 
-export const CourseRow: FC<{ course: Course; index: number }> = props => {
+export const CourseRow: FC<{
+  course: Course
+  index: number
+  length: number
+}> = props => {
   const [input, setInput] = useState<HTMLInputElement>()
   const [checked, setChecked] = useState(props.course.shouldSync)
   const [folder, setFolder] = useState(props.course.name)
