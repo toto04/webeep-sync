@@ -43,7 +43,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "dotenv": "^16.0.3",
-    "electron": "^22.3.24",
+    "electron": "^22.3.25",
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.20.0",
