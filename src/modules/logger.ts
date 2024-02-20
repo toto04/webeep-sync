@@ -37,13 +37,13 @@ class Logger extends EventEmitter {
       fs.mkdir(logFolderPath, { recursive: true }).then(async () => {
         const logPath = path.join(
           logFolderPath,
-          `${timeStamp()}.log`.replace(/:/g, ".")
+          `${timeStamp()}.log`.replace(/:/g, "."),
         )
         this.logFile = await fs.open(logPath, "w")
         this.writeToFile(
           `-- WeBeep Sync LOG BEGIN --\nLog Level: ${
             LogLevel[this.logLevel]
-          }\n\n`
+          }\n\n`,
         )
 
         this.ready = true
@@ -116,7 +116,7 @@ class Logger extends EventEmitter {
 const logger = new Logger()
 export default logger
 export const createLogger = (
-  moduleName: string
+  moduleName: string,
 ): ReturnType<typeof logger.createLogger> => {
   return logger.createLogger(moduleName)
 }

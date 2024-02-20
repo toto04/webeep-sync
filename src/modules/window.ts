@@ -8,7 +8,7 @@ import { __static } from "../util"
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 const iconImg = nativeImage.createFromPath(
-  path.join(__static, "/icons/icon.ico")
+  path.join(__static, "/icons/icon.ico"),
 )
 
 const { debug } = createLogger("WINDOW")

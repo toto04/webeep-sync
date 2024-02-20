@@ -18,7 +18,7 @@ export const SyncSettings: FC = props => {
     ipcRenderer.on("download-path", (e, path: string) => setPath(path))
     ipcRenderer.on("autosync", (e, sync: boolean) => setAutosync(sync))
     ipcRenderer.on("autosync-interval", (e, interval: number) =>
-      setSyncInterval(interval)
+      setSyncInterval(interval),
     )
 
     ipcRenderer.send("sync-settings")
@@ -68,7 +68,7 @@ export const SyncSettings: FC = props => {
             onChange={e => {
               ipcRenderer.send(
                 "set-autosync-interval",
-                parseInt(e.target.value) * hour
+                parseInt(e.target.value) * hour,
               )
             }}
           >

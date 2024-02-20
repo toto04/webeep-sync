@@ -96,7 +96,7 @@ moodleClient.on("network_event", conn => send("network_event", conn))
 moodleClient.on("username", username => send("username", username))
 if (moodleClient.username) send("username", moodleClient.username)
 
-let sendProgressInterval: NodeJS.Timer
+let sendProgressInterval: NodeJS.Timeout
 
 downloadManager.on("sync", () => send("syncing", true))
 downloadManager.on("stop", result => {
@@ -210,7 +210,7 @@ moodleClient.on("notifications", async notifications => {
         !notifications.find(n => n.id === parseInt(id))
       )
         delete store.data.persistence.sentMessageNotifications[id]
-    }
+    },
   )
 
   // filter the new notifications
@@ -224,7 +224,7 @@ moodleClient.on("notifications", async notifications => {
     n =>
       (store.data.persistence.sentMessageNotifications[n.id] = {
         sentTimestamp: Date.now(),
-      })
+      }),
   )
   store.write()
 
@@ -242,7 +242,7 @@ i18n.on("languageChanged", lng =>
   send("language", {
     lng,
     bundle: i18n.getResourceBundle(lng, "client"),
-  })
+  }),
 )
 
 let updateAvailable = false
@@ -267,9 +267,12 @@ async function checkForUpdates() {
 }
 
 // check for updates every hour
-setInterval(() => {
-  checkForUpdates()
-}, 60 * 60 * 1000)
+setInterval(
+  () => {
+    checkForUpdates()
+  },
+  60 * 60 * 1000,
+)
 
 autoUpdater.on("error", err => {
   const { error } = createLogger("UPDATE")
@@ -354,7 +357,7 @@ app.on("ready", async () => {
   if (disable) {
     store.data.settings.openAtLogin = false
     debug(
-      "openAtLogin was disabled from Task Manager, settings updated accordingly"
+      "openAtLogin was disabled from Task Manager, settings updated accordingly",
     )
     await store.write()
   }
@@ -429,7 +432,7 @@ ipcMain.on(
     await storeIsReady()
     store.data.persistence.courses[courseid].shouldSync = shouldSync
     await store.write()
-  }
+  },
 )
 
 ipcMain.on("sync-start", e => downloadManager.sync())
@@ -535,7 +538,7 @@ ipcMain.handle("rename-course", async (e, id: number, newName: string) => {
     // try to rename the folder, if the folder doesn't exist just ignore it
     const oldPath = path.resolve(
       store.data.settings.downloadPath,
-      store.data.persistence.courses[id].name
+      store.data.persistence.courses[id].name,
     )
     const newPath = path.resolve(store.data.settings.downloadPath, newName)
     debug(`Renamed course ${id} to ${newName}`)
@@ -546,7 +549,7 @@ ipcMain.handle("rename-course", async (e, id: number, newName: string) => {
     if (err.code !== "ENOENT") {
       success = false
       error(
-        `An error occoured while renaming a course folder ${id} to ${newName}, was a file inside it open? err: ${err.code}`
+        `An error occoured while renaming a course folder ${id} to ${newName}, was a file inside it open? err: ${err.code}`,
       )
       error(err)
     }

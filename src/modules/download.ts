@@ -68,18 +68,21 @@ export class DownloadManager extends EventEmitter {
   constructor() {
     super()
     storeIsReady().then(() => {
-      setTimeout(() => {
-        const autosync = () => {
-          if (!store.data.settings.autosyncEnabled) return
-          const dt = Date.now() - (store.data.persistence.lastSynced ?? 0)
-          if (dt > store.data.settings.autosyncInterval && !this.syncing) {
-            log("Scheduled autosync beginning!")
-            this.sync()
+      setTimeout(
+        () => {
+          const autosync = () => {
+            if (!store.data.settings.autosyncEnabled) return
+            const dt = Date.now() - (store.data.persistence.lastSynced ?? 0)
+            if (dt > store.data.settings.autosyncInterval && !this.syncing) {
+              log("Scheduled autosync beginning!")
+              this.sync()
+            }
           }
-        }
-        setInterval(() => autosync(), 60000) // try autosync every minute
-        autosync()
-      }, 60000 - (Date.now() % 60000)) // align the timer with the tick of the minute
+          setInterval(() => autosync(), 60000) // try autosync every minute
+          autosync()
+        },
+        60000 - (Date.now() % 60000),
+      ) // align the timer with the tick of the minute
     })
   }
 
@@ -171,7 +174,7 @@ export class DownloadManager extends EventEmitter {
         // make the request to get the file
         const reqAc = new AbortController()
         const request = got.stream(file.fileurl, {
-          searchParams: {
+          query: {
             token: loginManager.token, // for some god forsaken reason it's token and not wstoken
           },
         })
@@ -202,7 +205,7 @@ export class DownloadManager extends EventEmitter {
           await fs.utimes(
             absolutePath,
             new Date(),
-            new Date(file.timemodified * 1000)
+            new Date(file.timemodified * 1000),
           )
         } catch (e) {
           switch (e.name) {
@@ -223,10 +226,10 @@ export class DownloadManager extends EventEmitter {
             } catch (e) {
               error("\n")
               error(
-                "Error while removing a folder that shouldnt exist! That shouldn't happen :c"
+                "Error while removing a folder that shouldnt exist! That shouldn't happen :c",
               )
               error(
-                "If you see this error just manually delete the download folder"
+                "If you see this error just manually delete the download folder",
               )
               error(e)
               error(`Path: ${e.path}`)
@@ -265,7 +268,7 @@ export class DownloadManager extends EventEmitter {
       concurrentDownloads = Math.min(concurrentDownloads, files.length)
 
       debug(
-        `Beginning download with ${concurrentDownloads} concurrent downloads`
+        `Beginning download with ${concurrentDownloads} concurrent downloads`,
       )
       for (let i = 0; i < concurrentDownloads; i++) {
         requests.push(pushNewRequest())
@@ -316,7 +319,7 @@ export class DownloadManager extends EventEmitter {
       total: this.total,
       downloaded: this.currentDownloads.reduce(
         (t, d) => t + d.progress.downloaded,
-        this.totalUntilNow
+        this.totalUntilNow,
       ),
       files: this.currentDownloads.map(d => d.progress),
     }
@@ -341,7 +344,7 @@ export class DownloadManager extends EventEmitter {
     // get files for all courses in parallel, otherwise it takes a shit ton of time
     const syncableCourses = cs.filter(c => courses[c.id].shouldSync)
     const courseFiles = await Promise.all(
-      syncableCourses.map(c => moodleClient.getFileInfos(c))
+      syncableCourses.map(c => moodleClient.getFileInfos(c)),
     )
 
     // honestly, this takes around 20ms total, it's not even worth to do in parallel
