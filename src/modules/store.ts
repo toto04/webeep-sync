@@ -2,8 +2,11 @@ import path from "path"
 import fs from "fs/promises"
 import { nativeTheme, app } from "electron"
 import { EventEmitter } from "events"
-import { Low } from "lowdb/lib"
-import { JSONFile } from "lowdb/lib/node"
+/* eslint-disable import/no-unresolved */
+// for some reason, eslint complains about lowdb and i dont know how to fix it
+import { Low } from "lowdb"
+import { JSONFile } from "lowdb/node"
+/* eslint-enable import/no-unresolved */
 
 import { createLogger } from "./logger"
 const { log } = createLogger("Store")
