@@ -152,8 +152,7 @@ export class MoodleClient extends EventEmitter {
         "https://webeep.polimi.it/webservice/rest/server.php",
         {
           timeout: { request: 10000 },
-          form: true,
-          body: {
+          form: {
             wstoken: loginManager.token,
             wsfunction,
             moodlewsrestformat: "json",

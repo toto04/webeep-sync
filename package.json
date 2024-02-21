@@ -33,7 +33,6 @@
     "@electron-forge/publisher-github": "^7.2.0",
     "@svgr/webpack": "^8.1.0",
     "@types/dompurify": "^3.0.5",
-    "@types/got": "^9.6.12",
     "@types/i18next-fs-backend": "^1.1.5",
     "@types/node": "^20.11.19",
     "@types/react": "^18.2.57",
@@ -63,7 +62,7 @@
   "dependencies": {
     "dompurify": "^3.0.9",
     "electron-squirrel-startup": "^1.0.0",
-    "got": "^14.2.0",
+    "got": "^12.6.1",
     "i18next": "^23.9.0",
     "i18next-fs-backend": "^2.3.1",
     "lowdb": "^7.0.1",

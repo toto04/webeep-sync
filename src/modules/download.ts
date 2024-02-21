@@ -174,7 +174,7 @@ export class DownloadManager extends EventEmitter {
         // make the request to get the file
         const reqAc = new AbortController()
         const request = got.stream(file.fileurl, {
-          query: {
+          searchParams: {
             token: loginManager.token, // for some god forsaken reason it's token and not wstoken
           },
         })
