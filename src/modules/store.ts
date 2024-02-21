@@ -2,13 +2,16 @@ import path from "path"
 import fs from "fs/promises"
 import { nativeTheme, app } from "electron"
 import { EventEmitter } from "events"
-// eslint-disable-next-line import/no-unresolved
-import { Low, JSONFile } from "lowdb"
+/* eslint-disable import/no-unresolved */
+// for some reason, eslint complains about lowdb and i dont know how to fix it
+import { Low } from "lowdb"
+import { JSONFile } from "lowdb/node"
+/* eslint-enable import/no-unresolved */
 
 import { createLogger } from "./logger"
 const { log } = createLogger("Store")
 
-/**
+/***
  * store.json manifest version, to be increased when breaking changes are made so that a correct
  * fixes for the change can be implemented in the {@link updateManifestVersion} function
  */
@@ -71,7 +74,13 @@ export const defaultSettings: Required<Settings> = {
 }
 
 const storePath = path.join(app.getPath("userData"), "store.json")
-export const store = new Low<Store>(new JSONFile(storePath))
+export const store = new Low<Store>(new JSONFile(storePath), {
+  settings: {},
+  persistence: {
+    courses: {},
+    sentMessageNotifications: {},
+  },
+})
 
 let initialized = false
 let initializing = false
@@ -124,7 +133,7 @@ async function updateManifestVersion() {
   const ver = store.data.manifestVersion ?? 0
   if (ver === CURRENT_MANIFEST_VERSION) return
   log(
-    `applying fixes for outdated manifest version: ${ver} / ${CURRENT_MANIFEST_VERSION}`
+    `applying fixes for outdated manifest version: ${ver} / ${CURRENT_MANIFEST_VERSION}`,
   )
 
   // add here checks to mutate from old version
@@ -136,11 +145,11 @@ async function updateManifestVersion() {
         if (trimmed !== store.data.persistence.courses[id].name) {
           const oldPath = path.resolve(
             store.data.settings.downloadPath,
-            store.data.persistence.courses[id].name
+            store.data.persistence.courses[id].name,
           )
           const newPath = path.resolve(
             store.data.settings.downloadPath,
-            trimmed
+            trimmed,
           )
           store.data.persistence.courses[id].name = trimmed
           log(`Trimmed course ${id} folder: ${trimmed}`)
@@ -178,7 +187,7 @@ export async function storeIsReady(): Promise<void> {
     store.data.settings = Object.assign(
       {},
       defaultSettings,
-      store.data.settings
+      store.data.settings,
     )
     await updateManifestVersion()
 

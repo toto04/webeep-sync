@@ -49,7 +49,7 @@ class LoginManager extends EventEmitter {
             redirectURL:
               "https://webeep.polimi.it/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=12345",
           })
-        }
+        },
       )
 
       // the moodlemobile:// protocol gets intercepted and the token is extracted from the response
@@ -113,7 +113,7 @@ class LoginManager extends EventEmitter {
         })
         // load the login entry point of WeBeep
         this.loginWindow.loadURL(
-          "http://webeep.polimi.it/auth/shibboleth/index.php"
+          "http://webeep.polimi.it/auth/shibboleth/index.php",
         )
         this.loginWindow.once("closed", () => {
           this.loginWindow = undefined

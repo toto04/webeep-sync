@@ -53,7 +53,7 @@ export const NotificationInfo: FC<{
       try {
         // slightly modify margins
         contentRef.current.querySelector<HTMLDivElement>(
-          ".content"
+          ".content",
         ).style.marginBottom = "0"
       } catch (e) {
         /** fail silenty if elements are not found */

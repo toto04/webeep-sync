@@ -42,7 +42,7 @@ const App: FC = () => {
       (e, success: boolean, username?: string, exp?: boolean) => {
         setSetting(false)
         setLogged(success)
-      }
+      },
     )
     ipcRenderer.send("get-context")
 
@@ -56,7 +56,7 @@ const App: FC = () => {
         if (!i18next.hasResourceBundle(p.lng, "client"))
           i18next.addResourceBundle(p.lng, "client", p.bundle)
         await i18next.changeLanguage(p.lng)
-      }
+      },
     )
   }, [])
 

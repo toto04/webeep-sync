@@ -8,7 +8,7 @@ import { i18n } from "./i18next"
 import { focus } from "./window"
 
 const trayImg = nativeImage.createFromPath(
-  path.join(__static, "/icons/tray.png")
+  path.join(__static, "/icons/tray.png"),
 )
 
 const { debug } = createLogger("TRAY")
@@ -60,6 +60,6 @@ export async function updateTrayContext() {
       },
       { type: "separator" },
       { label: t("quit"), role: "quit" },
-    ])
+    ]),
   )
 }

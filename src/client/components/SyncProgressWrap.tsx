@@ -36,7 +36,7 @@ export const SyncProgressWrap: FC<{ progress: Progress }> = props => {
           </div>
           <span className="right">
             {`${formatSize(progress.files[0].downloaded)} / ${formatSize(
-              progress.files[0].total
+              progress.files[0].total,
             )} (${Math.floor(filePercentage * 100)}%)`}
           </span>
         </div>
@@ -47,7 +47,7 @@ export const SyncProgressWrap: FC<{ progress: Progress }> = props => {
         <h3>{t("total")}</h3>
         <span className="right">
           {`${formatSize(progress.downloaded)} / ${formatSize(
-            progress.total
+            progress.total,
           )} (${Math.floor(percentage * 100)}%)`}
         </span>
         <PrograssBar progress={percentage} />

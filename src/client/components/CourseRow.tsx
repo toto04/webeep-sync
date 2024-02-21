@@ -42,7 +42,7 @@ export const CourseRow: FC<{
       const success = await ipcRenderer.invoke(
         "rename-course",
         props.course.id,
-        folder.trim()
+        folder.trim(),
       )
       if (success) {
         // if the folder was renamed successfully, exit editing and unfocus the input

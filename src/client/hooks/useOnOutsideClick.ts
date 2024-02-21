@@ -7,7 +7,7 @@ import { MutableRefObject, useEffect } from "react"
  */
 export default function useOnOutsideClick(
   ref: MutableRefObject<Element>,
-  callback: () => void
+  callback: () => void,
 ): void {
   useEffect(() => {
     // handler that checks for the click outside of the element

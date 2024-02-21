@@ -74,7 +74,7 @@ export declare interface MoodleClient {
   on(event: "courses", listener: (courses: Course[]) => void): this
   on(
     event: "notifications",
-    listener: (notifications: MoodleNotification[]) => void
+    listener: (notifications: MoodleNotification[]) => void,
   ): this
 }
 export class MoodleClient extends EventEmitter {
@@ -93,9 +93,12 @@ export class MoodleClient extends EventEmitter {
         this.getUserID().then(() => {
           // update the notification cache every 2 minutes
           this.getNotifications()
-          setInterval(() => {
-            this.getNotifications()
-          }, 1000 * 60 * 2)
+          setInterval(
+            () => {
+              this.getNotifications()
+            },
+            1000 * 60 * 2,
+          )
         })
     })
   }
@@ -134,7 +137,7 @@ export class MoodleClient extends EventEmitter {
     /**
      * UUID for logging, if not specified a new one will be generated, passed only when retrying
      */
-    callUID = generateUID()
+    callUID = generateUID(),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     debug(`API call [${callUID}] to function: ${wsfunction}`)
@@ -157,7 +160,7 @@ export class MoodleClient extends EventEmitter {
             moodlewssettinglang: "it", // TODO: to be changed for multilanguage
             ...data,
           },
-        }
+        },
       )
       const parsed = JSON.parse(res.body)
       if (parsed.errorcode === "invalidtoken") {
@@ -173,7 +176,7 @@ export class MoodleClient extends EventEmitter {
     } catch (e) {
       delete e.timings // useless info to log
       debug(
-        `Network error on call [${callUID}], catching: ${catchNetworkError}`
+        `Network error on call [${callUID}], catching: ${catchNetworkError}`,
       )
       debug(e)
       this.setConnected(false)
@@ -227,7 +230,7 @@ export class MoodleClient extends EventEmitter {
     }[] = await this.call(
       "core_enrol_get_users_courses",
       { userid },
-      catchNetworkError
+      catchNetworkError,
     )
     const defaultNames = courses.map(c => getDefaultName(c.fullname))
     const c: Course[] = courses.map((c, i) => {
@@ -290,7 +293,7 @@ export class MoodleClient extends EventEmitter {
     const contents: Contents = await this.call(
       "core_course_get_contents",
       { courseid: course.id },
-      false
+      false,
     )
     const files: FileInfo[] = []
 
@@ -392,7 +395,7 @@ export class MoodleClient extends EventEmitter {
       } = await this.call(
         "message_popup_get_popup_notifications",
         { useridto: 0 },
-        false
+        false,
       )
 
       const notifications: MoodleNotification[] = nots.notifications

@@ -1,6 +1,7 @@
-name: build
+name: Build Beta
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - beta
@@ -14,22 +15,25 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: 18.x
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Import macOS Certs
         if: matrix.os == 'macos-latest'
-        uses: apple-actions/import-codesign-certs@v1
+        uses: apple-actions/import-codesign-certs@v2
         with:
           p12-file-base64: ${{ secrets.MACOS_CERT_BASE64 }}
           p12-password: ${{ secrets.MACOS_CERT_PWD }}
       - name: see directory
         run: ls
       - name: install dependecies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Build packages
-        run: yarn run publish
+        run: pnpm run publish
         env:
           APPLEID: ${{ secrets.APPLEID }}
           APPLEPWD: ${{ secrets.APPLEPWD }}
@@ -38,7 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build for M1
         if: matrix.os == 'macos-latest'
-        run: yarn run publish --arch=arm64
+        run: pnpm run publish --arch=arm64
         env:
           APPLEID: ${{ secrets.APPLEID }}
           APPLEPWD: ${{ secrets.APPLEPWD }}

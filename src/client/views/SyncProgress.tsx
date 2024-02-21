@@ -22,7 +22,7 @@ export const SyncProgress: FC = props => {
 
   const [progress, setProgress] = useState<Progress>()
   const [downloadState, setDownloadState] = useState<DownloadState>(
-    DownloadState.idle
+    DownloadState.idle,
   )
   const [syncResult, setSyncResult] = useState<SyncResult>()
 
@@ -40,13 +40,13 @@ export const SyncProgress: FC = props => {
 
     ipcRenderer.on("progress", (e, progress: Progress) => setProgress(progress))
     ipcRenderer.on("download-state", (e, state: DownloadState) =>
-      setDownloadState(state)
+      setDownloadState(state),
     )
     ipcRenderer.on("sync-result", (e, result: SyncResult) =>
-      setSyncResult(result)
+      setSyncResult(result),
     )
     ipcRenderer.on("new-files", (e, files: NewFilesList) =>
-      setNewFilesList(files)
+      setNewFilesList(files),
     )
   }, [])
 
