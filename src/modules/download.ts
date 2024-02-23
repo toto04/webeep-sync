@@ -334,6 +334,7 @@ export class DownloadManager extends EventEmitter {
    */
   async getFilesToDownload(): Promise<FileInfo[]> {
     this.updateState(DownloadState.fetchingCourses)
+    // 800ms for the single call
     const [cs] = await Promise.all([
       moodleClient.getCoursesWithoutCache(),
       modifiedDateFileStore.read(),
@@ -347,12 +348,14 @@ export class DownloadManager extends EventEmitter {
     this.updateState(DownloadState.fetchingFiles)
 
     // get files for all courses in parallel, otherwise it takes a shit ton of time
+    // this way it takes about 4 seconds in my testings
     const syncableCourses = cs.filter(c => courses[c.id].shouldSync)
     const courseFiles = await Promise.all(
       syncableCourses.map(c => moodleClient.getFileInfos(c)),
     )
 
     // honestly, this takes around 20ms total, it's not even worth to do in parallel
+    // update as of Feb 2024: it now takes around 200ms total, still not worth it tho
     for (const files of courseFiles)
       for (const file of files) {
         let fullpath = path.join(file.filepath, file.filename)
