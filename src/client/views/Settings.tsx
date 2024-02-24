@@ -196,6 +196,16 @@ export const SettingsModal: FC<{ onClose: () => void }> = props => {
               />
               <span className="desc">{t("concurrentDownloads_desc")}</span>
             </div>
+            <div className="setting">
+              <span>{t("downloadOriginals")}</span>
+              <Switch
+                onChange={v =>
+                  updateSettigns({ ...settings, downloadOriginals: v })
+                }
+                checked={settings.downloadOriginals}
+              />
+              <span className="desc">{t("downloadOriginals_desc")}</span>
+            </div>
           </div>
 
           <button
