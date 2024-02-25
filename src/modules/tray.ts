@@ -18,7 +18,7 @@ export let tray: Tray = null
 export function setupTray() {
   debug("Setting up tray")
   tray = new Tray(trayImg)
-  tray.setToolTip("Webeep Sync")
+  tray.setToolTip("WeBeep Sync")
   tray.on("click", () => {
     process.platform === "win32" ? focus() : undefined
   })
@@ -35,7 +35,6 @@ export async function updateTrayContext() {
   const ae = store.data.settings.autosyncEnabled
   tray.setContextMenu(
     Menu.buildFromTemplate([
-      // { label: 'WebeepSync', type: 'submenu' },
       { label: t("open"), click: () => focus() },
       {
         label: t("openFolder"),

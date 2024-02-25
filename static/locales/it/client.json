@@ -1,104 +1,104 @@
 {
-    "mainView": {
-        "lastSynced": "Sincronizzato l'ultima volta",
-        "readableTime": {
-            "never": "Mai",
-            "now": "Ora",
-            "minute_one": "Un minuto fa",
-            "minute_other": "{{count}} minuti fa",
-            "hour_one": "Un'ora fa",
-            "hour_other": "{{count}} ore fa",
-            "day_one": "Ieri",
-            "day_other": "{{count}} giorni fa",
-            "months": "Mesi fa +"
-        },
-        "stop": "Stop",
-        "sync": "Avvia sync",
-        "loginToSync": "fai il login",
-        "login": "Accedi...",
-        "notConnected": "Non connesso",
-        "updateAvailable": "Aggiornamento disponibile, clicca per installare",
-        "notifications": {
-            "no_notifications": "Buone notizie! Nessuna notifica ✨",
-            "setAllRead": "Segna tutte come lette"
-        }
+  "mainView": {
+    "lastSynced": "Sincronizzato l'ultima volta",
+    "readableTime": {
+      "never": "Mai",
+      "now": "Ora",
+      "minute_one": "Un minuto fa",
+      "minute_other": "{{count}} minuti fa",
+      "hour_one": "Un'ora fa",
+      "hour_other": "{{count}} ore fa",
+      "day_one": "Ieri",
+      "day_other": "{{count}} giorni fa",
+      "months": "Mesi fa +"
     },
-    "syncSettings": {
-        "downloadFolder": "Cartella dei download",
-        "open": "Apri",
-        "edit": "Cambia",
-        "syncEvery": "Sync ogni",
-        "ai": {
-            "hour_one": "1 ora",
-            "hour_other": "{{count}} ore",
-            "day_one": "1 giorno",
-            "day_other": "{{count}} giorni",
-            "week": "1 settimana"
-        }
-    },
-    "syncProgress": {
-        "total": "Totale",
-        "noConnection": "Aspetto connessione...",
-        "noLogin": "Fai il login per incominciare a sincronizzare!",
-        "newFiles_one": "{{count}} nuovo file scaricato",
-        "newFiles_other": "{{count}} nuovi file scaricati",
-        "prevNewFiles_one": "{{count}} nuovo file scaricato in background",
-        "prevNewFiles_other": "{{count}} nuovi file scaricati in background",
-        "viewFiles": "Mostra i file",
-        "resultMessage": {
-            "success": "Tutto sincronizzato!",
-            "stopped": "Sincronizzazione annullata",
-            "networkError": "Impossibile raggiungere il server, controlla la tua connessione o prova più tardi",
-            "fsError": "Impossibile salvare il file su disco: c'è qualche file aperto che va sovrascritto oppure non hai i permessi di scrittura nella cartella dei download",
-            "unknownError": "C'è stato un errore sconosciuto, riprova più tardi"
-        },
-        "statusMessage": {
-            "idle": "Pronto per sincronizzare!",
-            "fetchingCourses": "Recupero corsi...",
-            "fetchingFiles": "Cerco nuovi file da scaricare...",
-            "downloading": "Scarico..."
-        }
-    },
-    "newFiles": {
-        "newFiles_one": "{{count}} nuovo file scaricato",
-        "newFiles_other": "{{count}} nuovi file scaricati",
-        "reveal": "Mostra",
-        "open": "Apri"
-    },
-    "settings": {
-        "settings": "Impostazioni",
-        "colorTheme": "Tema dei colori",
-        "theme": {
-            "system": "usa sistema",
-            "light": "tema chiaro",
-            "dark": "tema scuro"
-        },
-        "language": "Lingua",
-        "automaticUpdates": "Tieni l'app aggiornata",
-        "automaticUpdates_desc": "WeBeep Sync controllerà periodicamente la disponibilità di nuovi aggiornamenti, e li installerà automaticamente",
-        "openAtLogin": "Apri l'app al login",
-        "keepOpenInBackground": "Lascia aperta in background",
-        "keepOpenInBackground_desc": "Lascia l'app aperta in backround quando tutte le finestre sono chiuse. Se gli autosync sono abilitati, anche questi avverranno in background",
-        "showInTray": "Mostra l'app nel tray",
-        "trayWarning": "Con il tray disabilitato, non potrai vedere se l'app è aperta. Quando chiudi la finestra, dovrai rilanciare l'app per aprirla di nuovo. Se hai gli autosync abilitati, quelli continueranno in background.",
-        "notifications": "Mandami una notifica quando trovi nuovi file in background",
-        "msgNotifications": "Mandami una notifica quando ricevo un messaggio su WeBeep",
-        "newCourses": "Sincronizza nuovi corsi",
-        "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
-        "concurrentDownloads": "Download contemporanei",
-        "concurrentDownloads_desc": "Un numero più alto di download contemporanei può aumentare la velocità di download, ma rischia di occupare più banda. Si consiglia un numero più basso per connessioni più lente.",
-        "logout": "Log out",
-        "cancel": "Annulla",
-        "ok": "Ok"
-    },
-    "courseList": {
-        "courses": "Corsi",
-        "courses_desc": "Seleziona quali corsi vuoi tenere sincronizzati e rinomina le cartelle",
-        "row": {
-            "tooShort": "Il nome non può essere vuoto",
-            "tooLong": "Massimo 255 caratteri!",
-            "invalidCharacters": "Questi caratteri non possono essere usati: ",
-            "errPerm": "Impossibile rinominare la cartella, potresti aver aperto dei file al suo interno"
-        }
+    "stop": "Stop",
+    "sync": "Avvia sync",
+    "loginToSync": "Accedi per sincronizzare",
+    "login": "Accedi...",
+    "notConnected": "Non connesso",
+    "updateAvailable": "Aggiornamento disponibile, clicca per installare",
+    "notifications": {
+      "no_notifications": "Buone notizie! Nessuna notifica ✨",
+      "setAllRead": "Segna tutte come lette"
     }
+  },
+  "syncSettings": {
+    "downloadFolder": "Cartella dei download",
+    "open": "Apri",
+    "edit": "Cambia",
+    "syncEvery": "Sync ogni",
+    "ai": {
+      "hour_one": "1 ora",
+      "hour_other": "{{count}} ore",
+      "day_one": "1 giorno",
+      "day_other": "{{count}} giorni",
+      "week": "1 settimana"
+    }
+  },
+  "syncProgress": {
+    "total": "Totale",
+    "noConnection": "Aspetto connessione...",
+    "noLogin": "Fai il login per incominciare a sincronizzare!",
+    "newFiles_one": "{{count}} nuovo file scaricato",
+    "newFiles_other": "{{count}} nuovi file scaricati",
+    "prevNewFiles_one": "{{count}} nuovo file scaricato in background",
+    "prevNewFiles_other": "{{count}} nuovi file scaricati in background",
+    "viewFiles": "Mostra i file",
+    "resultMessage": {
+      "success": "Tutto sincronizzato!",
+      "stopped": "Sincronizzazione annullata",
+      "networkError": "Impossibile raggiungere il server, controlla la tua connessione o prova più tardi",
+      "fsError": "Impossibile salvare il file su disco: c'è qualche file aperto che va sovrascritto oppure non hai i permessi di scrittura nella cartella dei download",
+      "unknownError": "C'è stato un errore sconosciuto, riprova più tardi"
+    },
+    "statusMessage": {
+      "idle": "Pronto per sincronizzare!",
+      "fetchingCourses": "Recupero corsi...",
+      "fetchingFiles": "Cerco nuovi file da scaricare...",
+      "downloading": "Scarico..."
+    }
+  },
+  "newFiles": {
+    "newFiles_one": "{{count}} nuovo file scaricato",
+    "newFiles_other": "{{count}} nuovi file scaricati",
+    "reveal": "Mostra",
+    "open": "Apri"
+  },
+  "settings": {
+    "settings": "Impostazioni",
+    "colorTheme": "Tema dei colori",
+    "theme": {
+      "system": "Usa sistema",
+      "light": "Tema chiaro",
+      "dark": "Tema scuro"
+    },
+    "language": "Lingua",
+    "automaticUpdates": "Tieni l'app aggiornata",
+    "automaticUpdates_desc": "WeBeep Sync controllerà periodicamente la disponibilità di nuovi aggiornamenti, e li installerà automaticamente",
+    "openAtLogin": "Apri l'app al login",
+    "keepOpenInBackground": "Lascia aperta in background",
+    "keepOpenInBackground_desc": "Lascia l'app aperta in backround quando tutte le finestre sono chiuse. Se gli autosync sono abilitati, anche questi avverranno in background",
+    "showInTray": "Mostra l'app nel tray",
+    "trayWarning": "Con il tray disabilitato, non potrai vedere se l'app è aperta. Quando chiudi la finestra, dovrai rilanciare l'app per aprirla di nuovo. Se hai gli autosync abilitati, quelli continueranno in background.",
+    "notifications": "Mandami una notifica quando trovi nuovi file in background",
+    "msgNotifications": "Mandami una notifica quando ricevo un messaggio su WeBeep",
+    "newCourses": "Sincronizza nuovi corsi",
+    "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
+    "concurrentDownloads": "Download contemporanei",
+    "concurrentDownloads_desc": "Un numero più alto di download contemporanei può aumentare la velocità di download, ma rischia di occupare più banda. Si consiglia un numero più basso per connessioni più lente.",
+    "logout": "Log out",
+    "cancel": "Annulla",
+    "ok": "Ok"
+  },
+  "courseList": {
+    "courses": "Corsi",
+    "courses_desc": "Seleziona quali corsi vuoi tenere sincronizzati e rinomina le cartelle",
+    "row": {
+      "tooShort": "Il nome non può essere vuoto",
+      "tooLong": "Massimo 255 caratteri!",
+      "invalidCharacters": "Questi caratteri non possono essere usati: ",
+      "errPerm": "Impossibile rinominare la cartella, potresti aver aperto dei file al suo interno"
+    }
+  }
 }
