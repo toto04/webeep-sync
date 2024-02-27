@@ -72,6 +72,7 @@ export class DownloadManager extends EventEmitter {
         () => {
           const autosync = () => {
             if (!store.data.settings.autosyncEnabled) return
+            if (!store.data.persistence.lastSynced) return
             const dt = Date.now() - (store.data.persistence.lastSynced ?? 0)
             if (dt > store.data.settings.autosyncInterval && !this.syncing) {
               log("Scheduled autosync beginning!")
@@ -81,8 +82,8 @@ export class DownloadManager extends EventEmitter {
           setInterval(() => autosync(), 60000) // try autosync every minute
           autosync()
         },
-        60000 - (Date.now() % 60000),
-      ) // align the timer with the tick of the minute
+        60000 - (Date.now() % 60000), // align the timer with the tick of the minute
+      )
     })
   }
 
