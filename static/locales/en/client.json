@@ -14,7 +14,7 @@
     },
     "stop": "Stop",
     "sync": "Sync now",
-    "loginToSync": "login to sync",
+    "loginToSync": "Login to sync",
     "login": "Log in...",
     "notConnected": "Not connected",
     "updateAvailable": "Update available, click to install",
@@ -69,9 +69,9 @@
     "settings": "Settings",
     "colorTheme": "Color theme",
     "theme": {
-      "system": "use system",
-      "light": "light theme",
-      "dark": "dark theme"
+      "system": "Use system",
+      "light": "Light theme",
+      "dark": "Dark theme"
     },
     "language": "Language",
     "automaticUpdates": "Keep the app up to date",
