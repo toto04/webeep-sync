@@ -16,7 +16,7 @@ import { DownloadState } from "./util"
 import { createLogger } from "./modules/logger"
 import { loginManager } from "./modules/login"
 import { moodleClient, MoodleNotification } from "./modules/moodle"
-import { storeIsReady, store } from "./modules/store"
+import { storeIsReady, store, Settings } from "./modules/store"
 import { downloadManager, NewFilesList } from "./modules/download"
 import { createWindow, send, focus } from "./modules/window"
 import { setupTray, updateTrayContext, tray } from "./modules/tray"
@@ -388,6 +388,7 @@ app.on("activate", () => {
 
 ipcMain.handle("window-control", (e, command: string) => {
   const win = BrowserWindow.getFocusedWindow()
+  if (!win) return
   switch (command) {
     case "min":
       win.minimize()
@@ -473,7 +474,7 @@ ipcMain.handle("lastsynced", e => {
 })
 
 ipcMain.handle("settings", e => {
-  const settingsCopy = { ...store.data.settings }
+  const settingsCopy: Partial<Settings> = { ...store.data.settings }
   // this three settings are not managed in the settings menu
   delete settingsCopy.autosyncEnabled
   delete settingsCopy.downloadPath
@@ -543,7 +544,8 @@ ipcMain.handle("rename-course", async (e, id: number, newName: string) => {
     const newPath = path.resolve(store.data.settings.downloadPath, newName)
     debug(`Renamed course ${id} to ${newName}`)
     await fs.rename(oldPath, newPath)
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- cringe i know, but it works
+  } catch (err: any) {
     // catch the error, if it's ENOENT it just means that the folder doesn't exist, and the error
     // should be ignored, otherwise something happened while renaming the folder
     if (err.code !== "ENOENT") {
@@ -556,7 +558,8 @@ ipcMain.handle("rename-course", async (e, id: number, newName: string) => {
   } finally {
     if (success) {
       // update the cache for the UI
-      moodleClient.cachedCourses.find(c => c.id === id).name = newName
+      const cc = moodleClient.cachedCourses.find(c => c.id === id)
+      if (cc) cc.name = newName
       // update the store
       store.data.persistence.courses[id].name = newName
       await store.write()

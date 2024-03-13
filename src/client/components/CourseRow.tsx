@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useRef, useState } from "react"
 import { Checkbox } from "./Checkbox"
 import { Course } from "../../modules/moodle"
 import { ipcRenderer } from "electron"
@@ -11,7 +11,7 @@ export const CourseRow: FC<{
   index: number
   length: number
 }> = props => {
-  const [input, setInput] = useState<HTMLInputElement>()
+  const inputRef = useRef<HTMLInputElement>(null)
   const [checked, setChecked] = useState(props.course.shouldSync)
   const [folder, setFolder] = useState(props.course.name)
   const [editing, setEditing] = useState(false)
@@ -19,6 +19,8 @@ export const CourseRow: FC<{
   const { t } = useTranslation("client", { keyPrefix: "courseList.row" })
 
   const checkInputValidity = () => {
+    const input = inputRef.current
+    if (!input) return
     if (input.value.length < 1) input.setCustomValidity(t("tooShort"))
     else if (input.value.length >= 255) input.setCustomValidity(t("tooLong"))
     else if (!/^[^:*?"<>|]*$/.test(input.value))
@@ -28,12 +30,16 @@ export const CourseRow: FC<{
   }
 
   const cancelEditing = () => {
+    const input = inputRef.current
+    if (!input) return
     setFolder(props.course.name)
     setEditing(false)
     input.blur()
   }
 
   const confirmEditing = async () => {
+    const input = inputRef.current
+    if (!input) return
     checkInputValidity()
     if (input.validity.valid) {
       // updates the state with the trimmed string
@@ -73,7 +79,7 @@ export const CourseRow: FC<{
       <div className="course-folder-info">
         <span>{props.course.fullname}</span>
         <input
-          ref={i => setInput(i)}
+          ref={inputRef}
           className={editing ? "editing" : undefined}
           type="text"
           value={folder}

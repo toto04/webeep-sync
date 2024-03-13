@@ -122,5 +122,5 @@ const App: FC = () => {
   )
 }
 
-const root = createRoot(document.querySelector(".App"))
+const root = createRoot(document.querySelector(".App")!)
 root.render(<App />)

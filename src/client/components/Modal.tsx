@@ -11,7 +11,7 @@ export const Modal: FC<{
 
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (ref) ref.current.focus()
+    if (ref.current) ref.current.focus()
   }, [ref])
 
   return (

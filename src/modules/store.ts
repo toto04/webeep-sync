@@ -21,19 +21,19 @@ const CURRENT_MANIFEST_VERSION = 2
  * Check in the Settings page in the app for detailed explanation of what each setting does
  */
 export interface Settings {
-  syncNewCourses?: boolean
-  downloadPath?: string
-  autosyncEnabled?: boolean
-  autosyncInterval?: number
-  nativeThemeSource?: typeof nativeTheme.themeSource
-  keepOpenInBackground?: boolean
-  trayIcon?: boolean
-  automaticUpdates?: boolean
-  openAtLogin?: boolean
-  language?: "it" | "en"
-  notificationOnNewFiles?: boolean
-  notificationOnMessage?: boolean
-  maxConcurrentDownloads?: number
+  syncNewCourses: boolean
+  downloadPath: string
+  autosyncEnabled: boolean
+  autosyncInterval: number
+  nativeThemeSource: typeof nativeTheme.themeSource
+  keepOpenInBackground: boolean
+  trayIcon: boolean
+  automaticUpdates: boolean
+  openAtLogin: boolean
+  language: "it" | "en"
+  notificationOnNewFiles: boolean
+  notificationOnMessage: boolean
+  maxConcurrentDownloads: number
 }
 
 export interface Persistence {
@@ -75,7 +75,7 @@ export const defaultSettings: Required<Settings> = {
 
 const storePath = path.join(app.getPath("userData"), "store.json")
 export const store = new Low<Store>(new JSONFile(storePath), {
-  settings: {},
+  settings: defaultSettings,
   persistence: {
     courses: {},
     sentMessageNotifications: {},
@@ -95,7 +95,7 @@ const storeInitializationEE = new EventEmitter()
 function checkStoreIntegrity() {
   if (!store.data)
     store.data = {
-      settings: {},
+      settings: defaultSettings,
       persistence: {
         courses: {},
         sentMessageNotifications: {},

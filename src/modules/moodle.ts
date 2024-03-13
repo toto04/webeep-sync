@@ -174,7 +174,8 @@ export class MoodleClient extends EventEmitter {
         return parsed
       }
     } catch (e) {
-      delete e.timings // useless info to log
+      // @ts-expect-error delete on undefined does nothing, this info is useless, i want it gone
+      delete e.timings
       debug(
         `Network error on call [${callUID}], catching: ${catchNetworkError}`,
       )
@@ -243,7 +244,7 @@ export class MoodleClient extends EventEmitter {
             arr.push(j)
           }
           return arr
-        }, [])
+        }, [] as number[])
 
         store.data.persistence.courses[id] = {
           // if multiple courses share the same name, just use the fullname instead

@@ -63,7 +63,7 @@ class Logger extends EventEmitter {
       this.once("finished_writing", () => this.writeToFile(str))
     else {
       this.isWriting = true
-      await this.logFile.write(str + "\n")
+      await this.logFile!.write(str + "\n")
       this.isWriting = false
       this.emit("finished_writing")
     }

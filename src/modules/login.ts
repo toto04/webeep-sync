@@ -19,7 +19,7 @@ declare interface LoginManager {
 }
 class LoginManager extends EventEmitter {
   ready = false
-  token: string
+  token?: string
   isLogged = false
 
   loginWindow?: BrowserWindow
@@ -131,7 +131,7 @@ class LoginManager extends EventEmitter {
         // when the token is retrieved, remove the logout listener and resolve the promise
         log("Login process completed!")
         resolve(true)
-        this.loginWindow.removeListener("close", onclose)
+        this.loginWindow?.removeListener("close", onclose)
         fs.writeFile(tokenPath, safeStorage.encryptString(token)) // writes the token to file
       })
     })

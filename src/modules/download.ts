@@ -168,6 +168,7 @@ export class DownloadManager extends EventEmitter {
       const pushNewRequest = async () => {
         if (this.stopped) return
         const file = files.pop() // pop a file from the list,
+        if (!file) return // if there are no more files, return
 
         const fullpath = path.join(file.filepath, file.filename)
         const absolutePath = path.join(downloadPath, fullpath)
@@ -208,7 +209,8 @@ export class DownloadManager extends EventEmitter {
             new Date(),
             new Date(file.timemodified * 1000),
           )
-        } catch (e) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- still cringe, still works
+        } catch (e: any) {
           switch (e.name) {
             case "AbortError":
               debug(`Cancelled request for file ${fullpath}`)
@@ -233,6 +235,7 @@ export class DownloadManager extends EventEmitter {
                 "If you see this error just manually delete the download folder",
               )
               error(e)
+              // @ts-expect-error -- it's literally just logging
               error(`Path: ${e.path}`)
               error("\n")
             }
@@ -284,7 +287,8 @@ export class DownloadManager extends EventEmitter {
 
       if (this.stopped) return SyncResult.stopped
       return SyncResult.success
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- isn't this just awful
+    } catch (e: any) {
       // other request chains other than the one which threw the error need to be stopped
       this.cancelAllRequests()
       switch (e.name) {

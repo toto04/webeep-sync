@@ -10,6 +10,7 @@
       "name": "Launch via pnpm",
       "runtimeExecutable": "pnpm",
       "cwd": "${workspaceFolder}",
+      "console": "externalTerminal",
       "runtimeArgs": [
         "start"
       ],

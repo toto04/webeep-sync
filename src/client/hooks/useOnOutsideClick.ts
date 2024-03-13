@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect } from "react"
+import { useEffect } from "react"
 
 /**
  * Hooks that calls a function when the user clicks outside of the element.
@@ -6,7 +6,7 @@ import { MutableRefObject, useEffect } from "react"
  * Doesn't fire if the click is on the headbar.
  */
 export default function useOnOutsideClick(
-  ref: MutableRefObject<Element>,
+  ref: React.RefObject<Element>,
   callback: () => void,
 ): void {
   useEffect(() => {

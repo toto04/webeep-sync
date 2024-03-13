@@ -140,13 +140,13 @@ export const SyncProgress: FC = props => {
   return (
     <div className="sync-progress section">
       {elem}
-      {viewingFiles ? (
+      {viewingFiles && newFilesList ? (
         <NewFilesModal
           files={newFilesList}
           onClose={() => setViewingFiles(false)}
         />
       ) : undefined}
-      {viewingPrevFiles ? (
+      {viewingPrevFiles && prevNewFilesList ? (
         <NewFilesModal
           files={prevNewFilesList}
           onClose={() => setViewingPrevFiles(false)}

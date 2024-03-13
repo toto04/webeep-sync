@@ -13,7 +13,7 @@ const trayImg = nativeImage.createFromPath(
 
 const { debug } = createLogger("TRAY")
 
-export let tray: Tray = null
+export let tray: Tray | null = null
 
 export function setupTray() {
   debug("Setting up tray")
@@ -29,6 +29,7 @@ export async function updateTrayContext() {
   if (tray.isDestroyed()) return
   debug("Updating tray context")
   await storeIsReady()
+  // @ts-expect-error this is literally copied from their docs ????
   const t = i18n.getFixedT(null, "tray", null)
 
   const s = downloadManager.syncing

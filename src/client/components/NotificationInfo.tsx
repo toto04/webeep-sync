@@ -26,16 +26,6 @@ export const NotificationInfo: FC<{
 
   const contentRef = useRef<HTMLDivElement>(null)
 
-  const elem = sanitize(htmlbody, { RETURN_DOM: true })
-  const post = elem.querySelector(".forum-post")
-  try {
-    post.querySelectorAll(".header .picture").forEach(e => e.remove())
-    post.querySelectorAll(".link").forEach(e => e.remove())
-    post.querySelectorAll(".commands").forEach(e => e.remove())
-  } catch (e) {
-    console.error("Error while removing elements from notification")
-  }
-
   useEffect(() => {
     if (showing) props.onShow?.()
   }, [showing])
@@ -50,16 +40,22 @@ export const NotificationInfo: FC<{
           shell.openExternal(a.href)
         })
       })
-      try {
-        // slightly modify margins
-        contentRef.current.querySelector<HTMLDivElement>(
-          ".content",
-        ).style.marginBottom = "0"
-      } catch (e) {
-        /** fail silenty if elements are not found */
-      }
+      // slightly modify margins
+      const el = contentRef.current.querySelector<HTMLDivElement>(".content")
+      if (el) el.style.marginBottom = "0"
     }
   }, [contentRef, showing])
+
+  const elem = sanitize(htmlbody, { RETURN_DOM: true })
+  const post = elem.querySelector(".forum-post")
+  if (!post) return null
+  try {
+    post.querySelectorAll(".header .picture").forEach(e => e.remove())
+    post.querySelectorAll(".link").forEach(e => e.remove())
+    post.querySelectorAll(".commands").forEach(e => e.remove())
+  } catch (e) {
+    console.error("Error while removing elements from notification")
+  }
 
   return (
     <div
