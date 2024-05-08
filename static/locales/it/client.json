@@ -14,7 +14,7 @@
     },
     "stop": "Stop",
     "sync": "Avvia sync",
-    "loginToSync": "Accedi per sincronizzare",
+    "loginToSync": "Accedi per il sync",
     "login": "Accedi...",
     "notConnected": "Non connesso",
     "updateAvailable": "Aggiornamento disponibile, clicca per installare",
@@ -87,6 +87,8 @@
     "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
     "concurrentDownloads": "Download contemporanei",
     "concurrentDownloads_desc": "Un numero più alto di download contemporanei può aumentare la velocità di download, ma rischia di occupare più banda. Si consiglia un numero più basso per connessioni più lente.",
+    "downloadOriginals": "Mantieni una copia originale dei file modificati",
+    "downloadOriginals_desc": "Se attivo, quando modifichi un file, la sua versione originale sarà scaricata e sovrascritta aggiungendo \"_ORIGINAL\" al nome del file.",
     "logout": "Log out",
     "cancel": "Annulla",
     "ok": "Ok"

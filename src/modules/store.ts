@@ -34,6 +34,7 @@ export interface Settings {
   notificationOnNewFiles?: boolean
   notificationOnMessage?: boolean
   maxConcurrentDownloads?: number
+  downloadOriginals?: boolean
 }
 
 export interface Persistence {
@@ -71,6 +72,7 @@ export const defaultSettings: Required<Settings> = {
   notificationOnNewFiles: true,
   notificationOnMessage: true,
   maxConcurrentDownloads: 5,
+  downloadOriginals: true,
 }
 
 const storePath = path.join(app.getPath("userData"), "store.json")
@@ -199,3 +201,18 @@ export async function storeIsReady(): Promise<void> {
   })
 }
 storeIsReady()
+
+export interface ModifiedDateFilePersistence {
+  [filehash: string]: {
+    lastModified: number
+  }
+}
+
+const modifiedDateFileStorePath = path.join(
+  app.getPath("userData"),
+  "modifiedDateFileStore.json",
+)
+export const modifiedDateFileStore = new Low<ModifiedDateFilePersistence>(
+  new JSONFile(modifiedDateFileStorePath),
+  {},
+)

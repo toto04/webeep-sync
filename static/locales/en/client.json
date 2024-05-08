@@ -87,6 +87,8 @@
     "newCourses_desc": "When new courses are found, automatically add them to the courses that will be synced",
     "concurrentDownloads": "Concurrent downloads",
     "concurrentDownloads_desc": "A higher number of concurrent downloads can increase download speeds, but could put more load on your network. A lower number is preferable for slower connections.",
+    "downloadOriginals": "Keep an original copy of modified files",
+    "downloadOriginals_desc": "If active, when you modify a file, its original version will be downloaded and overwrutten with \"_ORIGINAL\" appended to the file name.",
     "logout": "Log out",
     "cancel": "Cancel",
     "ok": "Ok"

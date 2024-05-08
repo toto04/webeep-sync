@@ -1,4 +1,5 @@
 import path from "path"
+import crypto from "crypto"
 import fs from "fs/promises"
 import { createWriteStream } from "fs"
 import stream from "stream/promises"
@@ -7,7 +8,7 @@ import got from "got"
 
 import { createLogger } from "./logger"
 import { FileInfo, moodleClient } from "./moodle"
-import { storeIsReady, store } from "./store"
+import { storeIsReady, store, modifiedDateFileStore } from "./store"
 import { loginManager } from "./login"
 
 import { DownloadState, SyncResult } from "../util"
@@ -334,7 +335,12 @@ export class DownloadManager extends EventEmitter {
    */
   async getFilesToDownload(): Promise<FileInfo[]> {
     this.updateState(DownloadState.fetchingCourses)
-    const cs = await moodleClient.getCoursesWithoutCache()
+    // 800ms for the single call
+    const [cs] = await Promise.all([
+      moodleClient.getCoursesWithoutCache(),
+      modifiedDateFileStore.read(),
+      storeIsReady(), // just to be sure, store is for sure ready at this point but it's better to be safe
+    ])
 
     const filesToDownload: FileInfo[] = []
     const { courses } = store.data.persistence
@@ -343,21 +349,62 @@ export class DownloadManager extends EventEmitter {
     this.updateState(DownloadState.fetchingFiles)
 
     // get files for all courses in parallel, otherwise it takes a shit ton of time
+    // this way it takes about 4 seconds in my testings
     const syncableCourses = cs.filter(c => courses[c.id].shouldSync)
     const courseFiles = await Promise.all(
       syncableCourses.map(c => moodleClient.getFileInfos(c)),
     )
 
     // honestly, this takes around 20ms total, it's not even worth to do in parallel
+    // update as of Feb 2024: it now takes around 200ms total, still not worth it tho
     for (const files of courseFiles)
       for (const file of files) {
-        const fullpath = path.join(file.filepath, file.filename)
-        const absolutePath = path.join(downloadPath, fullpath)
+        let fullpath = path.join(file.filepath, file.filename)
+        let absolutePath = path.join(downloadPath, fullpath)
+
+        const filehash = crypto
+          .createHash("md5")
+          .update(file.fileurl)
+          .digest("base64")
 
         try {
-          const stats = await fs.stat(absolutePath)
+          // fileurl is theoretically unique to the file and should not change
+          let stats = await fs.stat(absolutePath)
+
+          if (!modifiedDateFileStore.data[filehash]) {
+            // if the file has not been registered, register it and keep going
+            modifiedDateFileStore.data[filehash] = {
+              lastModified: file.timemodified,
+            }
+          } else if (
+            Math.floor(stats.mtime.getTime() / 1000) !==
+            modifiedDateFileStore.data[filehash].lastModified
+          ) {
+            // the user has modified the file!
+            if (!store.data.settings.downloadOriginals) {
+              // if the user does not want to keep the original, skip the file
+              debug("File has been modified, skipping")
+              debug(`  -(hash: ${filehash}, ${fullpath})`)
+              continue
+            }
+
+            // we should check the original!
+            debug("File has been modified, moving to original")
+            debug(`  -(hash: ${filehash}, ${fullpath})`)
+            // modify the actual file name to include _ORIGINAL
+            file.filename =
+              path.basename(file.filename, path.extname(file.filename)) +
+              "_ORIGINAL" +
+              path.extname(file.filename)
+
+            // update the stats for normal checks
+            fullpath = path.join(file.filepath, file.filename)
+            absolutePath = path.join(downloadPath, fullpath)
+            stats = await fs.stat(absolutePath)
+          }
+
           if (
-            stats.mtime.getTime() / 1000 !== file.timemodified ||
+            Math.floor(stats.mtime.getTime() / 1000) !== file.timemodified ||
             (file.filesize !== 0 && stats.size !== file.filesize)
           ) {
             // if the file is there, the size on webeep is not 0 and
@@ -372,6 +419,8 @@ export class DownloadManager extends EventEmitter {
         }
       }
 
+    // write the modified date file store to disk, we don't need to wait for this to finish
+    void modifiedDateFileStore.write()
     return filesToDownload
   }
 
