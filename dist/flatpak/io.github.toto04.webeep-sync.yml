@@ -1,0 +1,49 @@
+app-id: io.github.toto04.webeep-sync
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+branch: stable
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '24.08'
+command: run.sh
+separate-locales: false
+finish-args:
+  - --device=dri
+  - --share=ipc
+  - --share=network
+  - --socket=x11
+  - "--filesystem=xdg-documents/WeBeep\ Sync:create"
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --talk-name=com.canonical.AppMenu.Registrar
+  - --talk-name=org.freedesktop.secrets
+  - --env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons
+modules:
+  - name: webeep-sync
+    buildsystem: simple
+    sources:
+      - type: script
+        dest-filename: run.sh
+        commands:
+          - zypak-wrapper /app/bin/webeep-sync "$@"
+      - type: file
+        only-arches:
+          - x86_64
+        url: https://github.com/toto04/webeep-sync/releases/download/v1.0.3/webeep-sync-debian.deb
+        sha256: 8e77681185c6795fbfbf038a5cde95f78c2aadf19108804fb1a4d64c6d2c615a
+      - type: file
+        url: https://raw.githubusercontent.com/toto04/webeep-sync/refs/heads/main/.github/resources/logo.svg
+        sha256: 90d260d78248768bddda8c886e6a41eb641688832b7fadce4e8f3b1f07d9da85
+      - type: file
+        path: io.github.toto04.webeep-sync.metainfo.xml
+    build-commands:
+      - ar x webeep-sync-debian.deb
+      - tar xf data.tar.zst
+      - desktop-file-edit --set-key=Exec --set-value "/app/bin/run.sh %u" usr/share/applications/webeep-sync.desktop
+      - desktop-file-edit --set-icon ${FLATPAK_ID} usr/share/applications/webeep-sync.desktop
+      - mv usr/share/applications/webeep-sync.desktop usr/share/applications/${FLATPAK_ID}.desktop
+      - find usr/share -type f -name "webeep-sync.png" -execdir mv {} ${FLATPAK_ID}.png \;
+      - cp -ra usr/* /app/
+      - install -Dm755 run.sh /app/bin/
+      - install -Dm644 logo.svg /app/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg
+      - install -Dm644 ${FLATPAK_ID}.metainfo.xml -t /app/share/metainfo/
