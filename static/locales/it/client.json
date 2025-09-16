@@ -85,6 +85,8 @@
     "msgNotifications": "Mandami una notifica quando ricevo un messaggio su WeBeep",
     "newCourses": "Sincronizza nuovi corsi",
     "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
+    "shortenFolderNames": "Accorcia il nome delle cartelle",
+    "shortenFolderNames_desc": "Quando possibile, usa solamente il nome dell'insegnamento invece del nome completo del corso su WeBeep (che include professori, codice corso, ecc.)",
     "concurrentDownloads": "Download contemporanei",
     "concurrentDownloads_desc": "Un numero più alto di download contemporanei può aumentare la velocità di download, ma rischia di occupare più banda. Si consiglia un numero più basso per connessioni più lente.",
     "logout": "Log out",
