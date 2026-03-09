@@ -209,6 +209,21 @@ export class DownloadManager extends EventEmitter {
             new Date(file.timemodified * 1000),
           )
         } catch (e) {
+          // 404 error handling: skip missing files on the server
+          if (e.name === "HTTPError" && (e as any).response?.statusCode === 404) {
+            error(`Ignored missing file (404 Not Found): ${fullpath}`)
+
+            // remove the empty file that might have been created on disk
+            await fs.rm(absolutePath, { force: true }).catch(() => {}) 
+
+            // remove from current downloads and proceed with the next file
+            const idx = this.currentDownloads.indexOf(download)
+            if (idx !== -1) this.currentDownloads.splice(idx, 1)
+
+            if (files.length) await pushNewRequest()
+            return // exit gracefully without crashing the sync process
+          }
+
           switch (e.name) {
             case "AbortError":
               debug(`Cancelled request for file ${fullpath}`)
