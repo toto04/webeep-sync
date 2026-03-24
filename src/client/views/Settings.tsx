@@ -182,6 +182,16 @@ export const SettingsModal: FC<{ onClose: () => void }> = props => {
               <span className="desc">{t("newCourses_desc")}</span>
             </div>
             <div className="setting">
+              <span>{t("shortenFolderNames")}</span>
+              <Switch
+                onChange={v =>
+                  updateSettigns({ ...settings, shortenFolderNames: v })
+                }
+                checked={settings.shortenFolderNames}
+              />
+              <span className="desc">{t("shortenFolderNames_desc")}</span>
+            </div>
+            <div className="setting">
               <span>{t("concurrentDownloads")}</span>
               <input
                 type="number"

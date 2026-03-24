@@ -34,6 +34,7 @@ export interface Settings {
   notificationOnNewFiles?: boolean
   notificationOnMessage?: boolean
   maxConcurrentDownloads?: number
+  shortenFolderNames?: boolean
 }
 
 export interface Persistence {
@@ -71,6 +72,7 @@ export const defaultSettings: Required<Settings> = {
   notificationOnNewFiles: true,
   notificationOnMessage: true,
   maxConcurrentDownloads: 5,
+  shortenFolderNames: true,
 }
 
 const storePath = path.join(app.getPath("userData"), "store.json")

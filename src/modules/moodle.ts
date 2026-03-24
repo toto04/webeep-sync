@@ -247,7 +247,11 @@ export class MoodleClient extends EventEmitter {
 
         store.data.persistence.courses[id] = {
           // if multiple courses share the same name, just use the fullname instead
-          name: allInstances.length > 1 ? fullname : defaultNames[i],
+          name:
+            store.data.settings.shortenFolderNames === false ||
+            allInstances.length > 1
+              ? fullname
+              : defaultNames[i],
           shouldSync: store.data.settings.syncNewCourses,
         }
       }

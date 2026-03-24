@@ -85,6 +85,8 @@
     "msgNotifications": "Send a notification when I recieve a new message in WeBeep",
     "newCourses": "Sync new courses",
     "newCourses_desc": "When new courses are found, automatically add them to the courses that will be synced",
+    "shortenFolderNames": "Shorten folder names",
+    "shortenFolderNames_desc": "When possible, use only the course name instead of the full course name on WeBeep (which includes professors, course code, etc.)",
     "concurrentDownloads": "Concurrent downloads",
     "concurrentDownloads_desc": "A higher number of concurrent downloads can increase download speeds, but could put more load on your network. A lower number is preferable for slower connections.",
     "logout": "Log out",
