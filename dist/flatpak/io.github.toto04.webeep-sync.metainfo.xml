@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2025 Tommaso Morganti -->
+<component type="desktop-application">
+  <id>io.github.toto04.webeep-sync</id>
+
+  <name>WeBeep Sync</name>
+  <name xml:lang="it">WeBeep Sync</name>
+
+  <summary>Keep WeBeep files synced on your computer</summary>
+  <summary xml:lang="it">Tieni i file di WeBeep sincronizzati sul tuo computer</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <developer id="io.github.toto04">
+    <name>Tommaso Morganti</name>
+    <url>https://github.com/toto04</url>
+  </developer>
+
+  <description>
+    <p>
+      WeBeep Sync is a simple and user-friendly application that keeps all your WeBeep files synchronized on your computer.
+    </p>
+    <p xml:lang="it">
+      WeBeep Sync è una semplice app che serve per tenere sincronizzati tutti i tuoi file di WeBeep, user-friendly e senza compromessi.
+    </p>
+
+    <p>
+      You can run it in the background and set how often it checks for updates, or disable autosync and manually download all files when needed.
+    </p>
+    <p xml:lang="it">
+      Se vuoi un'esperienza senza pensieri, puoi lasciare che l'app si apra in background e puoi scegliere ogni quanto avverranno le sincronizzazioni, così da avere sempre tutti i file aggiornati. Oppure puoi disattivare l'autosync e scaricare tutti i file in una volta sola quando preferisci.
+    </p>
+
+    <p><em>Features:</em></p>
+    <p xml:lang="it"><em>Funzionalità:</em></p>
+
+    <ul>
+      <li>Download all WeBeep files with a single click to your preferred folder</li>
+      <li xml:lang="it">Scarica tutti i file da WeBeep con un solo click nella cartella che preferisci</li>
+      <li>Rename individual course folders</li>
+      <li xml:lang="it">Puoi rinominare le cartelle dei singoli corsi</li>
+      <li>Select which of your courses to synchronize</li>
+      <li xml:lang="it">Puoi selezionare quali dei tuoi corsi sincronizzare</li>
+      <li>Configure the app to stay open in the background and set how often to autosync</li>
+      <li xml:lang="it">Puoi configurare l'app per rimanere aperta in background, e impostare ogni quanto fare un autosync</li>
+      <li>Choose between light 🌞 and dark 🌚 themes</li>
+      <li xml:lang="it">Puoi selezionare tra tema chiaro 🌞 e scuro 🌚</li>
+      <li>Available in both Italian 🇮🇹 and English 🇬🇧</li>
+      <li xml:lang="it">Disponibile sia in Italiano 🇮🇹 che in Inglese 🇬🇧</li>
+    </ul>
+  </description>
+  
+  <url type="homepage">https://github.com/toto04/webeep-sync</url>
+  <url type="bugtracker">https://github.com/toto04/webeep-sync/issues</url>
+  <url type="vcs-browser">https://github.com/toto04/webeep-sync</url>
+  <url type="donation">https://www.paypal.com/donate/?hosted_button_id=JXRZNQKNHYJ2Y</url>
+
+  <launchable type="desktop-id">io.github.toto04.webeep-sync.desktop</launchable>
+
+  <screenshots>
+
+    <screenshot type="default">
+      <image>https://github.com/bordam/webeep-sync-flatpak/blob/6ae4ce0735650a63de69dd97d570456eae47588a/main-light-eng.png?raw=true</image>
+      <caption>Main window, light theme</caption>
+      <image xml:lang="it">https://github.com/bordam/webeep-sync-flatpak/blob/6ae4ce0735650a63de69dd97d570456eae47588a/main-light-ita.png?raw=true</image>
+      <caption xml:lang="it">Finestra principale, tema chiaro</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/bordam/webeep-sync-flatpak/blob/6ae4ce0735650a63de69dd97d570456eae47588a/main-dark-eng.png?raw=true</image>
+      <caption>Main window, dark theme</caption>
+      <image xml:lang="it">https://github.com/bordam/webeep-sync-flatpak/blob/6ae4ce0735650a63de69dd97d570456eae47588a/main-dark-ita.png?raw=true</image>
+      <caption xml:lang="it">Finestra principale, tema scuro</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/bordam/webeep-sync-flatpak/blob/6ae4ce0735650a63de69dd97d570456eae47588a/settings-eng.png?raw=true</image>
+      <caption>Settings dialog</caption>
+      <image xml:lang="it">https://github.com/bordam/webeep-sync-flatpak/blob/6ae4ce0735650a63de69dd97d570456eae47588a/settings-ita.png?raw=true</image>
+      <caption xml:lang="it">Impostazioni</caption>
+    </screenshot>
+  </screenshots>
+  
+  <branding>
+    <color type="primary" scheme_preference="light">#5fc2a6</color>
+    <color type="primary" scheme_preference="dark">#418874</color>
+  </branding>
+  
+  <releases>
+    <release version="v1.0.3" date="2023-7-13">
+      <url type="details">https://github.com/toto04/webeep-sync/releases/tag/v1.0.3</url>
+      <description>
+        <ul>
+          <li>Fixed a bug where the app crashes when downloading big files</li>
+          <li>Fixed a bug where macOS repeatedly notified about adding WeBeep Sync to login elements</li>
+          <li>Dependency upgrades</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+
+  <content_rating type="oars-1.1" />
+
+</component>
