@@ -3,7 +3,7 @@ import fs from "fs/promises"
 import { createWriteStream } from "fs"
 import stream from "stream/promises"
 import { EventEmitter } from "events"
-import got from "got"
+import got, { HTTPError } from "got"
 
 import { createLogger } from "./logger"
 import { FileInfo, moodleClient } from "./moodle"
@@ -210,11 +210,14 @@ export class DownloadManager extends EventEmitter {
           )
         } catch (e) {
           // 404 error handling: skip missing files on the server
-          if (e.name === "HTTPError" && (e as any).response?.statusCode === 404) {
+          if (
+            e.name === "HTTPError" &&
+            (e as HTTPError).response?.statusCode === 404
+          ) {
             error(`Ignored missing file (404 Not Found): ${fullpath}`)
 
             // remove the empty file that might have been created on disk
-            await fs.rm(absolutePath, { force: true }).catch(() => {}) 
+            await fs.rm(absolutePath, { force: true }).catch(() => {})
 
             // remove from current downloads and proceed with the next file
             const idx = this.currentDownloads.indexOf(download)

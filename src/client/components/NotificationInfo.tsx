@@ -26,7 +26,7 @@ export const NotificationInfo: FC<{
 
   const contentRef = useRef<HTMLDivElement>(null)
 
-  const elem = sanitize(htmlbody, { RETURN_DOM: true })
+  const elem = sanitize(htmlbody, { RETURN_DOM_FRAGMENT: true })
   const post = elem.querySelector(".forum-post")
   try {
     post.querySelectorAll(".header .picture").forEach(e => e.remove())
