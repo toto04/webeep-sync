@@ -1,3 +1,5 @@
+packages:
+  - '.'
 allowBuilds:
   '@parcel/watcher': true
   electron: true
