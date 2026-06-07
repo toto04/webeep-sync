@@ -22,6 +22,18 @@ export const NotificationList: FC = props => {
   const [toBeOpened, setToBeOpened] = useState<number | null>(null)
   const [unread, setUnread] = useState(0)
   const [shadow, setShadow] = useState(false)
+
+  const [dimensions, setDimensions] = useState(() => {
+    const saved = localStorage.getItem("notification-panel-dimensions")
+    if (saved) {
+      try {
+        return JSON.parse(saved)
+      } catch (e) {
+        console.warn(e)
+      }
+    }
+    return { width: 260, height: 300 }
+  })
   const { t } = useTranslation("client", {
     keyPrefix: "mainView.notifications",
   })
@@ -54,6 +66,29 @@ export const NotificationList: FC = props => {
   useEffect(() => {
     if (showingTooltip)
       ipcRenderer.invoke("get-notifications").then(n => setNotifications(n))
+
+    if (showingTooltip && wrapRef.current) {
+      let timeout: NodeJS.Timeout
+      const observer = new ResizeObserver(entries => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+          for (const entry of entries) {
+            const el = entry.target as HTMLDivElement
+            const newDim = { width: el.offsetWidth, height: el.offsetHeight }
+            setDimensions(newDim)
+            localStorage.setItem(
+              "notification-panel-dimensions",
+              JSON.stringify(newDim),
+            )
+          }
+        }, 300)
+      })
+      observer.observe(wrapRef.current)
+      return () => {
+        observer.disconnect()
+        clearTimeout(timeout)
+      }
+    }
   }, [showingTooltip])
 
   return (
@@ -85,6 +120,7 @@ export const NotificationList: FC = props => {
         <div
           ref={wrapRef}
           className="notification-list"
+          style={{ width: dimensions.width, height: dimensions.height }}
           onScroll={e => {
             if (e.currentTarget.scrollTop > 5 && !shadow) setShadow(true)
             else if (e.currentTarget.scrollTop <= 5 && shadow) setShadow(false)

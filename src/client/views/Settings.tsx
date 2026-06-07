@@ -1,11 +1,12 @@
 import { platform } from "os"
 import { ipcRenderer } from "electron"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useState, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { IoWarning } from "react-icons/io5"
 import { Settings } from "../../modules/store"
 import { Modal } from "../components/Modal"
 import { Link } from "../components/Link"
+import { LoginContext } from "../LoginContext"
 
 import PolinetworkLogo from "../assets/polinetwork.svg"
 import { Switch } from "../components/Switch"
@@ -16,8 +17,10 @@ type Theme = (typeof themes)[number]
 const isLinux = platform() === "linux"
 
 let prevTheme: Theme // the previous theme is stored in case the users cancel the settigns change
+let prevLanguage: "it" | "en"
 export const SettingsModal: FC<{ onClose: () => void }> = props => {
   const { t } = useTranslation("client", { keyPrefix: "settings" })
+  const { isLogged } = useContext(LoginContext)
 
   const [settings, updateSettigns] =
     useState<
@@ -27,7 +30,10 @@ export const SettingsModal: FC<{ onClose: () => void }> = props => {
   const [version, setVersion] = useState("")
 
   useEffect(() => {
-    ipcRenderer.invoke("settings").then(s => updateSettigns(s))
+    ipcRenderer.invoke("settings").then(s => {
+      updateSettigns(s)
+      prevLanguage = s.language
+    })
     ipcRenderer.invoke("get-native-theme").then(t => {
       setTheme(t)
       prevTheme = t
@@ -35,8 +41,16 @@ export const SettingsModal: FC<{ onClose: () => void }> = props => {
     ipcRenderer.invoke("version").then(v => setVersion(v))
   }, [])
 
+  const handleCancel = () => {
+    if (prevTheme) ipcRenderer.send("set-native-theme", prevTheme)
+    if (prevLanguage && settings && settings.language !== prevLanguage) {
+      ipcRenderer.send("set-preview-language", prevLanguage)
+    }
+    props.onClose()
+  }
+
   return (
-    <Modal title={t("settings")} onClose={() => props.onClose()}>
+    <Modal title={t("settings")} onClose={handleCancel}>
       {settings ? (
         <div className="settings">
           <div className="setting-section">
@@ -65,6 +79,7 @@ export const SettingsModal: FC<{ onClose: () => void }> = props => {
                 value={settings.language}
                 onChange={e => {
                   const language = e.target.value as "it" | "en"
+                  ipcRenderer.send("set-preview-language", language)
                   updateSettigns({ ...settings, language })
                 }}
               >
@@ -198,14 +213,25 @@ export const SettingsModal: FC<{ onClose: () => void }> = props => {
             </div>
           </div>
 
-          <button
-            className="danger-button"
-            onClick={() => {
-              ipcRenderer.send("logout")
-            }}
-          >
-            {t("logout")}
-          </button>
+          {isLogged ? (
+            <button
+              className="danger-button"
+              onClick={() => {
+                ipcRenderer.send("logout")
+              }}
+            >
+              {t("logout")}
+            </button>
+          ) : (
+            <button
+              className="confirm-button"
+              onClick={() => {
+                ipcRenderer.send("request-login")
+              }}
+            >
+              {t("login", "Log In")}
+            </button>
+          )}
 
           <span className="credits">
             <span>v{version}</span>
@@ -230,13 +256,7 @@ export const SettingsModal: FC<{ onClose: () => void }> = props => {
           </span>
 
           <div className="button-line-container">
-            <button
-              className="discard-button"
-              onClick={() => {
-                if (prevTheme) ipcRenderer.send("set-native-theme", prevTheme)
-                props.onClose()
-              }}
-            >
+            <button className="discard-button" onClick={handleCancel}>
               {t("cancel")}
             </button>
             <button

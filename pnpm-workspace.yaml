@@ -1,6 +1,9 @@
 allowBuilds:
-  '@parcel/watcher': true
+  "@parcel/watcher": true
   electron: true
   electron-winstaller: true
   fs-xattr: true
   macos-alias: true
+  unrs-resolver: true
+
+nodeLinker: "hoisted"

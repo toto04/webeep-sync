@@ -39,13 +39,27 @@ export const MainView: FC<{
       const ls = await ipcRenderer.invoke("lastsynced")
       setElapsedTime(readableTime(ls))
     }
-    setInterval(() => updateTime(), 60000)
-    i18n.on("languageChanged", () => updateTime())
-    ipcRenderer.on("syncing", () => updateTime())
+    const interval = setInterval(() => updateTime(), 60000)
+    const onLanguageChanged = () => updateTime()
+    const onSyncing = () => updateTime()
+    const onNewUpdate = (e: unknown, update: boolean) =>
+      setUpdateAvailable(update)
+    const onUpdateAvailable = (e: unknown) => setUpdateAvailable(true)
+
+    i18n.on("languageChanged", onLanguageChanged)
+    ipcRenderer.on("syncing", onSyncing)
+    ipcRenderer.on("new-update", onNewUpdate)
+    ipcRenderer.on("update-available", onUpdateAvailable)
+
     updateTime()
 
-    ipcRenderer.on("new-update", (e, update) => setUpdateAvailable(update))
-    ipcRenderer.on("update-available", e => setUpdateAvailable(true))
+    return () => {
+      clearInterval(interval)
+      i18n.off("languageChanged", onLanguageChanged)
+      ipcRenderer.off("syncing", onSyncing)
+      ipcRenderer.off("new-update", onNewUpdate)
+      ipcRenderer.off("update-available", onUpdateAvailable)
+    }
   }, [])
 
   return (

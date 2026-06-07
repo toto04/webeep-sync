@@ -1,13 +1,13 @@
 {
-    "open": "Open app",
-    "openFolder": "Open download folder",
-    "syncNow": "Sync now",
-    "stopSyncing": "Stop syncing",
-    "syncInProgress": "Sync in progress...",
-    "toggleAutosync": "Turn autosync {{toggle}}",
-    "quit": "Quit",
-    "toggle": {
-        "on": "on",
-        "off": "off"
-    }
+  "open": "Open app",
+  "openFolder": "Open download folder",
+  "syncNow": "Sync now",
+  "stopSyncing": "Stop syncing",
+  "syncInProgress": "Sync in progress...",
+  "toggleAutosync": "Turn autosync {{toggle}}",
+  "quit": "Quit",
+  "toggle": {
+    "on": "on",
+    "off": "off"
+  }
 }

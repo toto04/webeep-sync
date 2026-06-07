@@ -93,7 +93,9 @@
   },
   "courseList": {
     "courses": "Corsi",
-    "courses_desc": "Seleziona quali corsi vuoi tenere sincronizzati e rinomina le cartelle",
+    "selectAll": "Seleziona tutti",
+    "deselectAll": "Deseleziona tutti",
+    "courses_desc": "Seleziona i corsi che vuoi mantenere sincronizzati e rinomina le cartelle",
     "row": {
       "tooShort": "Il nome non può essere vuoto",
       "tooLong": "Massimo 255 caratteri!",

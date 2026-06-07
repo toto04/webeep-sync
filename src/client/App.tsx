@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, Suspense } from "react"
-import { platform } from "os"
+
 import { createRoot } from "react-dom/client"
 import { ipcRenderer } from "electron"
 import {
@@ -21,12 +21,12 @@ import { SyncProgress } from "./views/SyncProgress"
 
 import { Course } from "../modules/moodle"
 
-const shouldDisplayHeadbar = platform() !== "linux"
-const shouldDisplayWindowsControls = platform() === "win32"
+const shouldDisplayHeadbar = true
+const shouldDisplayWindowsControls = true
 
 i18next.use(initReactI18next).init({ fallbackLng: "en" })
 
-const App: FC = () => {
+export const App: FC = () => {
   const [setting, setSetting] = useState(false)
 
   const [isLogged, setLogged] = useState(false)
@@ -122,5 +122,8 @@ const App: FC = () => {
   )
 }
 
-const root = createRoot(document.querySelector(".App"))
-root.render(<App />)
+const rootElement = document.querySelector(".App")
+if (rootElement) {
+  const root = createRoot(rootElement)
+  root.render(<App />)
+}

@@ -7,22 +7,26 @@ module.exports = {
   packagerConfig: {
     icon: path.resolve(__dirname, "static/icons/icon"),
     appBundleId: "org.polinetwork.webeep-sync",
-    osxSign: {
-      identity:
-        process.env.MACOS_IDENTITY ||
-        "Developer ID Application: PoliNetwork APS (842636PS9J)",
-      "hardened-runtime": true,
-      entitlements: "entitlements.plist",
-      "entitlements-inherit": "entitlements.plist",
-      "signature-flags": "library",
-      "gatekeeper-assess": false,
-    },
-    osxNotarize: {
-      appleId: process.env.APPLEID,
-      appleIdPassword: process.env.APPLEPWD,
-      teamId: process.env.TEAMID,
-      ascProvider: process.env.TEAMID,
-    },
+    osxSign: process.env.APPLEID
+      ? {
+          identity:
+            process.env.MACOS_IDENTITY ||
+            "Developer ID Application: PoliNetwork APS (842636PS9J)",
+          "hardened-runtime": true,
+          entitlements: "entitlements.plist",
+          "entitlements-inherit": "entitlements.plist",
+          "signature-flags": "library",
+          "gatekeeper-assess": false,
+        }
+      : undefined,
+    osxNotarize: process.env.APPLEID
+      ? {
+          appleId: process.env.APPLEID,
+          appleIdPassword: process.env.APPLEPWD,
+          teamId: process.env.TEAMID,
+          ascProvider: process.env.TEAMID,
+        }
+      : undefined,
   },
   makers: [
     {
@@ -51,7 +55,7 @@ module.exports = {
             {
               path: path.resolve(
                 __dirname,
-                `out/WeBeep Sync-darwin-${arch}/WeBeep Sync.app`
+                `out/WeBeep Sync-darwin-${arch}/WeBeep Sync.app`,
               ),
               type: "file",
               x: 120,
@@ -127,8 +131,12 @@ module.exports = {
       name: "@electron-forge/publisher-github",
       config: {
         repository: {
-          name: "webeep-sync",
-          owner: "toto04",
+          name: process.env.GITHUB_REPOSITORY
+            ? process.env.GITHUB_REPOSITORY.split("/")[1]
+            : "webeep-sync",
+          owner: process.env.GITHUB_REPOSITORY
+            ? process.env.GITHUB_REPOSITORY.split("/")[0]
+            : "toto04",
         },
         prerelease: !!process.env.PRERELEASE,
         draft: true,
@@ -147,7 +155,6 @@ module.exports = {
               name: "main_window",
               html: "./src/index.html",
               js: "./src/renderer.ts",
-              name: "main_window",
             },
           ],
         },
@@ -158,7 +165,7 @@ module.exports = {
     postMake: (_config, makeResults) => {
       // this hook is here to zip the .exe installer, because windows doesnt trust when you
       // download an unsigned .exe from the internet, but it's ok if you unzip it first
-      let winRelease = makeResults.find(m => m.platform === "win32")
+      const winRelease = makeResults.find(m => m.platform === "win32")
       if (winRelease) {
         let zipPath // will be set to the .zip file, will be used for new artifact array
         console.log("Zipping exe installer...")
@@ -183,7 +190,7 @@ module.exports = {
             if (art.endsWith(".deb")) {
               const newName = path.resolve(
                 path.dirname(art),
-                "webeep-sync-debian.deb"
+                "webeep-sync-debian.deb",
               )
               console.log(`Renaming ${art} to ${newName}`)
               fs.renameSync(art, newName)
@@ -192,7 +199,7 @@ module.exports = {
             if (art.endsWith(".rpm")) {
               const newName = path.resolve(
                 path.dirname(art),
-                "webeep-sync-redhat.rpm"
+                "webeep-sync-redhat.rpm",
               )
               console.log(`Renaming ${art} to ${newName}`)
               fs.renameSync(art, newName)

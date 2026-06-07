@@ -98,7 +98,7 @@ export class MoodleClient extends EventEmitter {
               this.getNotifications()
             },
             1000 * 60 * 2,
-          )
+          ).unref()
         })
     })
   }
@@ -188,7 +188,7 @@ export class MoodleClient extends EventEmitter {
               resolve(await this.call(wsfunction, data, false, callUID))
               debug(`Retry successful on call [${callUID}]`)
             } catch (e) {
-              setTimeout(() => tryConnection(), 2000)
+              setTimeout(() => tryConnection(), 2000).unref()
             }
           }
           tryConnection()
@@ -276,9 +276,14 @@ export class MoodleClient extends EventEmitter {
     if (!this.waitingForCourses) {
       // if not already waiting for the api resposne, make the call and retrieve updated courses
       this.waitingForCourses = true
-      this.getCoursesWithoutCache(true).then(() => {
-        this.waitingForCourses = false
-      })
+      this.getCoursesWithoutCache(true)
+        .then(() => {
+          this.waitingForCourses = false
+        })
+        .catch(err => {
+          this.waitingForCourses = false
+          debug(`Background courses refresh failed: ${err.message}`)
+        })
     }
     return this.cachedCourses
   }

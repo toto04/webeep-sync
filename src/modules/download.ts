@@ -79,11 +79,11 @@ export class DownloadManager extends EventEmitter {
               this.sync()
             }
           }
-          setInterval(() => autosync(), 60000) // try autosync every minute
+          setInterval(() => autosync(), 60000).unref() // try autosync every minute
           autosync()
         },
-        60000 - (Date.now() % 60000), // align the timer with the tick of the minute
-      )
+        60000 - (Date.now() % 60000),
+      ).unref() // align the timer with the tick of the minute
     })
   }
 

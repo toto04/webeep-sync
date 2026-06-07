@@ -10,9 +10,7 @@
       "name": "Launch via pnpm",
       "runtimeExecutable": "pnpm",
       "cwd": "${workspaceFolder}",
-      "runtimeArgs": [
-        "start"
-      ],
+      "runtimeArgs": ["start"]
     }
   ]
 }

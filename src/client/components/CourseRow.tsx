@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useState, useEffect } from "react"
 import { Checkbox } from "./Checkbox"
 import { Course } from "../../modules/moodle"
 import { ipcRenderer } from "electron"
@@ -16,13 +16,16 @@ export const CourseRow: FC<{
   const [folder, setFolder] = useState(props.course.name)
   const [editing, setEditing] = useState(false)
 
+  useEffect(() => {
+    setChecked(props.course.shouldSync)
+  }, [props.course.shouldSync])
+
   const { t } = useTranslation("client", { keyPrefix: "courseList.row" })
 
   const checkInputValidity = () => {
     if (input.value.length < 1) input.setCustomValidity(t("tooShort"))
     else if (input.value.length >= 255) input.setCustomValidity(t("tooLong"))
     else if (!/^[^:*?"<>|]*$/.test(input.value))
-      // eslint-disable-next-line quotes
       input.setCustomValidity(t("invalidCharacters") + ':*?"<>|')
     else input.setCustomValidity("")
   }

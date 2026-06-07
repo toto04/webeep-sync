@@ -93,6 +93,8 @@
   },
   "courseList": {
     "courses": "Courses",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
     "courses_desc": "Select which courses you want to keep synced and rename the folders",
     "row": {
       "tooShort": "The name cannot be empty",

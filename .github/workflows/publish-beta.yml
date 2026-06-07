@@ -16,38 +16,20 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 8
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - name: Import macOS Certs
-        if: matrix.os == 'macos-latest'
-        uses: apple-actions/import-codesign-certs@v2
-        with:
-          p12-file-base64: ${{ secrets.MACOS_CERT_BASE64 }}
-          p12-password: ${{ secrets.MACOS_CERT_PWD }}
-      - name: see directory
-        run: ls
+          node-version: 22
       - name: install dependecies
         run: pnpm install --frozen-lockfile
       - name: Build packages
         run: pnpm run publish
         env:
-          APPLEID: ${{ secrets.APPLEID }}
-          APPLEPWD: ${{ secrets.APPLEPWD }}
-          TEAMID: ${{ secrets.TEAMID }}
           PRERELEASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build for M1
         if: matrix.os == 'macos-latest'
         run: pnpm run publish --arch=arm64
         env:
-          APPLEID: ${{ secrets.APPLEID }}
-          APPLEPWD: ${{ secrets.APPLEPWD }}
-          TEAMID: ${{ secrets.TEAMID }}
           PRERELEASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: see build
-        run: ls out/make

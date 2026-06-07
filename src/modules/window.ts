@@ -16,7 +16,7 @@ const { debug } = createLogger("WINDOW")
 export let mainWindow: BrowserWindow
 
 export async function createWindow(): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _reject) => {
     app.dock?.show()
     debug("Creating new main windows")
 
@@ -25,8 +25,7 @@ export async function createWindow(): Promise<void> {
       height: 600,
       width: 800,
       autoHideMenuBar: true,
-      titleBarStyle: "hidden",
-      trafficLightPosition: { x: 9, y: 9 },
+      frame: false,
       minHeight: 460,
       minWidth: 600,
       webPreferences: {

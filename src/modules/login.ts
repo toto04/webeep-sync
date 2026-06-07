@@ -1,7 +1,14 @@
 import path from "path"
 import { EventEmitter } from "events"
 import fs from "fs/promises"
-import { app, BrowserWindow, protocol, session, safeStorage } from "electron"
+import {
+  app,
+  BrowserWindow,
+  protocol,
+  session,
+  safeStorage,
+  dialog,
+} from "electron"
 
 import { createLogger } from "./logger"
 const { log, debug } = createLogger("LoginManager")
@@ -31,7 +38,15 @@ class LoginManager extends EventEmitter {
     fs.readFile(tokenPath)
       .then(enc => {
         log("previous token found!")
-        this.token = safeStorage.decryptString(enc)
+        if (safeStorage.isEncryptionAvailable()) {
+          try {
+            this.token = safeStorage.decryptString(enc)
+          } catch (e) {
+            this.token = enc.toString("utf8")
+          }
+        } else {
+          this.token = enc.toString("utf8")
+        }
         this.isLogged = true
       })
       .catch(() => log("token not found"))
@@ -132,7 +147,20 @@ class LoginManager extends EventEmitter {
         log("Login process completed!")
         resolve(true)
         this.loginWindow.removeListener("close", onclose)
-        fs.writeFile(tokenPath, safeStorage.encryptString(token)) // writes the token to file
+        const tokenToStore = safeStorage.isEncryptionAvailable()
+          ? safeStorage.encryptString(token)
+          : token
+        fs.writeFile(tokenPath, tokenToStore) // writes the token to file
+
+        if (!safeStorage.isEncryptionAvailable()) {
+          dialog.showMessageBox({
+            type: "warning",
+            title: "Encryption Unavailable",
+            message:
+              "Missing tools for safe storage. Your login token is being stored in plaintext. Please install a keyring/secret service for better security.",
+            buttons: ["OK"],
+          })
+        }
       })
     })
   }
