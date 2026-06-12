@@ -53,7 +53,7 @@ class LoginManager extends EventEmitter {
       )
 
       // the moodlemobile:// protocol gets intercepted and the token is extracted from the response
-      protocol.registerHttpProtocol("moodlemobile", (req, cb) => {
+      protocol.handle("moodlemobile", req => {
         debug("Intercepted call to moodlemobile protocol")
         const b64token = req.url.split("token=")[1]
         const token = Buffer.from(b64token, "base64").toString().split(":::")[1]
@@ -61,6 +61,8 @@ class LoginManager extends EventEmitter {
         this.token = token
         this.emit("token", token)
         this.loginWindow?.destroy?.()
+        // the window is destroyed right away, the response body is irrelevant
+        return new Response(null, { status: 200 })
       })
     })
   }
