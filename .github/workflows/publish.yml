@@ -15,11 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
-        with:
-          version: 8
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Import macOS Certs
         if: matrix.os == 'macos-latest'
         uses: apple-actions/import-codesign-certs@v2
