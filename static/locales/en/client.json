@@ -94,6 +94,12 @@
   "courseList": {
     "courses": "Courses",
     "courses_desc": "Select which courses you want to keep synced and rename the folders",
+    "filter": {
+      "all": "All",
+      "other": "Other"
+    },
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
     "row": {
       "tooShort": "The name cannot be empty",
       "tooLong": "Max 255 characters!",

@@ -4,7 +4,7 @@ import { IoCheckbox, IoSquareOutline } from "react-icons/io5"
 
 interface CheckboxProps {
   value: boolean
-  onChange: (v: boolean) => void
+  onChange: (v: boolean, e: React.MouseEvent) => void
   color?: string
   PositiveIcon?: IconType
   NegativeIcon?: IconType
@@ -21,11 +21,11 @@ export const Checkbox: FC<CheckboxProps> = props => {
       {props.value ? (
         <PositiveIcon
           className="active"
-          onClick={() => props.onChange(false)}
+          onClick={e => props.onChange(false, e)}
         />
       ) : (
         <NegativeIcon
-          onClick={() => props.onChange(true)}
+          onClick={e => props.onChange(true, e)}
           color={props.color}
         />
       )}

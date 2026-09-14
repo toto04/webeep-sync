@@ -10,9 +10,10 @@ export const CourseRow: FC<{
   course: Course
   index: number
   length: number
+  checked: boolean
+  onCheckChange: (v: boolean, shiftKey: boolean) => void
 }> = props => {
   const [input, setInput] = useState<HTMLInputElement>()
-  const [checked, setChecked] = useState(props.course.shouldSync)
   const [folder, setFolder] = useState(props.course.name)
   const [editing, setEditing] = useState(false)
 
@@ -61,14 +62,11 @@ export const CourseRow: FC<{
   return (
     <div className="course-row">
       <Checkbox
-        value={checked}
+        value={props.checked}
         color={`hsl(${props.index * 40}, 80%, 55%)`}
         PositiveIcon={IoCheckmarkCircle}
         NegativeIcon={IoAddCircleOutline}
-        onChange={v => {
-          ipcRenderer.send("set-should-sync", props.course.id, v)
-          setChecked(v)
-        }}
+        onChange={(v, e) => props.onCheckChange(v, e.shiftKey)}
       />
       <div className="course-folder-info">
         <span>{props.course.fullname}</span>

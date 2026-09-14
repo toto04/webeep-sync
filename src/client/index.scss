@@ -768,19 +768,48 @@ $modal-anim-time: 0.15s;
   flex: 1;
   overflow: hidden;
   padding: 0;
+  display: flex;
+  flex-direction: column;
   .course-header {
-    height: 45px;
     padding: 8px;
     transition: box-shadow 0.2s ease-in-out;
     &.shadow {
       box-shadow: 0px 0px 8px 5px #0001;
+    }
+    .course-toolbar {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 6px;
+      .year-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      button {
+        border: none;
+        border-radius: 10px;
+        padding: 2px 10px;
+        font-size: 11px;
+        font-family: "Poppins", sans-serif;
+        background-color: $very-light-gray;
+        color: inherit;
+        cursor: pointer;
+        white-space: nowrap;
+        &.selected {
+          background-color: $bright;
+          color: white;
+        }
+      }
     }
   }
   .course-container {
     padding: 8px 4px;
     padding-top: 0px;
     box-sizing: border-box;
-    max-height: calc(100% - 45px - 16px);
+    flex: 1;
     overflow: auto;
   }
   .course-row {
@@ -1086,6 +1115,12 @@ $modal-anim-time: 0.15s;
   .course-list {
     .course-header.shadow {
       box-shadow: 0px 0px 8px 5px #0002;
+    }
+    .course-header .course-toolbar button {
+      background-color: $very-dark-gray;
+      &.selected {
+        background-color: $bright;
+      }
     }
     .course-row {
       input.editing {
