@@ -100,6 +100,8 @@
     },
     "selectAll": "Seleziona tutti",
     "deselectAll": "Deseleziona tutti",
+    "search": "Cerca un corso…",
+    "noResults": "Nessun corso trovato",
     "row": {
       "tooShort": "Il nome non può essere vuoto",
       "tooLong": "Massimo 255 caratteri!",

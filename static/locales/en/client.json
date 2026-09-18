@@ -100,6 +100,8 @@
     },
     "selectAll": "Select all",
     "deselectAll": "Deselect all",
+    "search": "Search courses…",
+    "noResults": "No courses found",
     "row": {
       "tooShort": "The name cannot be empty",
       "tooLong": "Max 255 characters!",

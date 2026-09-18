@@ -15,11 +15,20 @@ function getAcademicYear(fullname: string): string | undefined {
   return fullname.match(yearRegex)?.[1]
 }
 
+// lowercases and strips accents, so that "citta" matches "Città"
+function normalize(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+}
+
 export const CourseList: FC<{ courses: Course[] }> = props => {
   const [shadow, setShadow] = useState(false)
   const [selectedYear, setSelectedYear] = useState<string | undefined>(
     () => localStorage.getItem(FILTER_STORAGE_KEY) ?? undefined,
   )
+  const [search, setSearch] = useState("")
   const [checked, setChecked] = useState<Record<number, boolean>>(() =>
     Object.fromEntries(props.courses.map(c => [c.id, c.shouldSync])),
   )
@@ -68,17 +77,22 @@ export const CourseList: FC<{ courses: Course[] }> = props => {
 
   // visible courses paired with their original index, so that each course keeps
   // its checkbox color (which depends on the index) regardless of the filter
-  const visibleCourses = useMemo(
-    () =>
-      props.courses
-        .map((course, index) => ({ course, index }))
-        .filter(({ course }) => {
-          if (!activeYear) return true
+  const visibleCourses = useMemo(() => {
+    // every word of the query must appear in the full name or in the folder name
+    const words = normalize(search)
+      .split(/\s+/)
+      .filter(w => w.length > 0)
+    return props.courses
+      .map((course, index) => ({ course, index }))
+      .filter(({ course }) => {
+        if (activeYear) {
           const year = getAcademicYear(course.fullname)
-          return activeYear === OTHER ? !year : year === activeYear
-        }),
-    [props.courses, activeYear],
-  )
+          if (activeYear === OTHER ? year : year !== activeYear) return false
+        }
+        const haystack = normalize(course.fullname + " " + course.name)
+        return words.every(w => haystack.includes(w))
+      })
+  }, [props.courses, activeYear, search])
 
   const setShouldSync = (ids: number[], value: boolean) => {
     const changed = ids.filter(id => checked[id] !== value)
@@ -120,6 +134,16 @@ export const CourseList: FC<{ courses: Course[] }> = props => {
       <div className={`course-header ${shadow ? "shadow" : ""}`}>
         <h3>{t("courses")}</h3>
         <span>{t("courses_desc")}</span>
+        <input
+          className="course-search"
+          type="search"
+          placeholder={t("search")}
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === "Escape") setSearch("")
+          }}
+        />
         <div className="course-toolbar">
           {showFilter ? (
             <div className="year-filters">
@@ -182,6 +206,9 @@ export const CourseList: FC<{ courses: Course[] }> = props => {
             key={"courserow" + course.id}
           />
         ))}
+        {visibleCourses.length === 0 ? (
+          <div className="no-courses">{t("noResults")}</div>
+        ) : undefined}
       </div>
     </div>
   )
