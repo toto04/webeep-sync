@@ -104,6 +104,8 @@ e dovrebbe tutto funzionare senza problemi
 
 ### Installazione manuale (istruzioni di compilazione)
 
+⚠️ Per aarch64, usa [queste istruzioni](https://github.com/toto04/webeep-sync#aarch64-it).
+
 Prerequisiti:
 
 -   [git](https://git-scm.com)
@@ -136,6 +138,25 @@ Per maggiori informazioni, dai un'occhiata agli script in `package.json` e alla 
 della CLI di [Electron Forge](https://www.electronforge.io/cli), dove puoi trovare istruzioni su
 come modificare il file `forge.config.js` a tuo gradimento per creare un package che fa al caso
 tuo
+
+#### aarch64-it
+
+```bash
+git clone https://github.com/toto04/webeep-sync
+cd webeep-sync
+cat > pnpm-workspace.yaml <<'EOF'
+nodeLinker: hoisted
+EOF
+nvm install 20
+nvm use 20
+corepack disable
+corepack enable
+corepack prepare pnpm@10.12.4 --activate
+npm pkg set packageManager="pnpm@10.12.4"
+pnpm install --frozen-lockfile
+pnpm approve-builds # richiede approvazione manuale
+pnpm start
+```
 
 ## Informazioni sull'app
 
@@ -250,6 +271,8 @@ and everything should work without problems
 
 ### Manual installation (compile instructions)
 
+⚠️ For aarch64, use [these instructions](https://github.com/toto04/webeep-sync#aarch64-en).
+
 Prerequisites:
 
 -   [git](https://git-scm.com)
@@ -282,6 +305,25 @@ For more information, have a look at the scripts in `package.json` and the docum
 CLI documentation for [Electron Forge](https://www.electronforge.io/cli), where you can find
 instructions on how to modify the file `forge.config.js` to your liking to create a package
 that suits your needs
+
+#### aarch64-en
+
+```bash
+git clone https://github.com/toto04/webeep-sync
+cd webeep-sync
+cat > pnpm-workspace.yaml <<'EOF'
+nodeLinker: hoisted
+EOF
+nvm install 20
+nvm use 20
+corepack disable
+corepack enable
+corepack prepare pnpm@10.12.4 --activate
+npm pkg set packageManager="pnpm@10.12.4"
+pnpm install --frozen-lockfile
+pnpm approve-builds # requires manual approval
+pnpm start
+```
 
 ## About the app
 
