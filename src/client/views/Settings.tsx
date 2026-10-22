@@ -15,6 +15,15 @@ type Theme = (typeof themes)[number]
 
 const isLinux = platform() === "linux"
 
+// what can be saved from a course besides its files, one switch each
+const courseInfoSettings = [
+  "syncAnnouncements",
+  "syncForums",
+  "syncCourseOverview",
+  "syncAssignments",
+  "syncGrades",
+] as const
+
 let prevTheme: Theme // the previous theme is stored in case the users cancel the settigns change
 export const SettingsModal: FC<{ onClose: () => void }> = props => {
   const { t } = useTranslation("client", { keyPrefix: "settings" })
@@ -196,6 +205,22 @@ export const SettingsModal: FC<{ onClose: () => void }> = props => {
               />
               <span className="desc">{t("concurrentDownloads_desc")}</span>
             </div>
+          </div>
+
+          <div className="setting-section">
+            <div className="setting">
+              <span>{t("courseInfo")}</span>
+              <span className="desc">{t("courseInfo_desc")}</span>
+            </div>
+            {courseInfoSettings.map(key => (
+              <div className="setting" key={key}>
+                <span>{t(key)}</span>
+                <Switch
+                  onChange={v => updateSettigns({ ...settings, [key]: v })}
+                  checked={settings[key]}
+                />
+              </div>
+            ))}
           </div>
 
           <button

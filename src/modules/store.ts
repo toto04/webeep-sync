@@ -34,6 +34,11 @@ export interface Settings {
   notificationOnNewFiles?: boolean
   notificationOnMessage?: boolean
   maxConcurrentDownloads?: number
+  syncAnnouncements?: boolean
+  syncForums?: boolean
+  syncCourseOverview?: boolean
+  syncAssignments?: boolean
+  syncGrades?: boolean
 }
 
 export interface Persistence {
@@ -71,6 +76,11 @@ export const defaultSettings: Required<Settings> = {
   notificationOnNewFiles: true,
   notificationOnMessage: true,
   maxConcurrentDownloads: 5,
+  syncAnnouncements: false,
+  syncForums: false,
+  syncCourseOverview: false,
+  syncAssignments: false,
+  syncGrades: false,
 }
 
 const storePath = path.join(app.getPath("userData"), "store.json")

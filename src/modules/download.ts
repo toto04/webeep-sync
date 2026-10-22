@@ -9,6 +9,7 @@ import { createLogger } from "./logger"
 import { FileInfo, moodleClient } from "./moodle"
 import { storeIsReady, store } from "./store"
 import { loginManager } from "./login"
+import { syncCourseInfo } from "./courseinfo"
 
 import { DownloadState, SyncResult } from "../util"
 
@@ -363,7 +364,12 @@ export class DownloadManager extends EventEmitter {
     // get files for all courses in parallel, otherwise it takes a shit ton of time
     const syncableCourses = cs.filter(c => courses[c.id].shouldSync)
     const courseFiles = await Promise.all(
-      syncableCourses.map(c => moodleClient.getFileInfos(c)),
+      syncableCourses.map(async c => {
+        const files = await moodleClient.getFileInfos(c)
+        // announcements, forums, etc. are written directly, their attachments are downloaded here
+        const attachments = await syncCourseInfo(c)
+        return [...files, ...attachments]
+      }),
     )
 
     // honestly, this takes around 20ms total, it's not even worth to do in parallel

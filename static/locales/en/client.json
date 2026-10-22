@@ -87,6 +87,13 @@
     "newCourses_desc": "When new courses are found, automatically add them to the courses that will be synced",
     "concurrentDownloads": "Concurrent downloads",
     "concurrentDownloads_desc": "A higher number of concurrent downloads can increase download speeds, but could put more load on your network. A lower number is preferable for slower connections.",
+    "courseInfo": "Besides files, also save",
+    "courseInfo_desc": "Saved as Markdown files in the \"_WeBeep Info\" folder of each course, updated at every sync",
+    "syncAnnouncements": "Announcements (with attachments)",
+    "syncForums": "Other forums (with attachments)",
+    "syncCourseOverview": "Course overview: sections, labels, links and pages",
+    "syncAssignments": "Assignments and upcoming deadlines",
+    "syncGrades": "Grades",
     "logout": "Log out",
     "cancel": "Cancel",
     "ok": "Ok"

@@ -87,6 +87,13 @@
     "newCourses_desc": "Quando nuovi corsi vengono trovati, verranno aggiunti automaticamente alla lista dei corsi che verranno sincronizzati",
     "concurrentDownloads": "Download contemporanei",
     "concurrentDownloads_desc": "Un numero più alto di download contemporanei può aumentare la velocità di download, ma rischia di occupare più banda. Si consiglia un numero più basso per connessioni più lente.",
+    "courseInfo": "Oltre ai file, salva anche",
+    "courseInfo_desc": "Salvati come file Markdown nella cartella \"_WeBeep Info\" di ogni corso, aggiornati a ogni sincronizzazione",
+    "syncAnnouncements": "Avvisi (con allegati)",
+    "syncForums": "Altri forum (con allegati)",
+    "syncCourseOverview": "Panoramica del corso: sezioni, etichette, link e pagine",
+    "syncAssignments": "Compiti e prossime scadenze",
+    "syncGrades": "Valutazioni",
     "logout": "Log out",
     "cancel": "Annulla",
     "ok": "Ok"
