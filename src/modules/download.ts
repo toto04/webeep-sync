@@ -10,7 +10,7 @@ import { FileInfo, moodleClient } from "./moodle"
 import { storeIsReady, store } from "./store"
 import { loginManager } from "./login"
 
-import { DownloadState, SyncResult } from "../util"
+import { DownloadState, SyncResult, resolveInside } from "../util"
 
 const { log, error, debug } = createLogger("DownloadManager")
 
@@ -170,7 +170,11 @@ export class DownloadManager extends EventEmitter {
         const file = files.pop() // pop a file from the list,
 
         const fullpath = path.join(file.filepath, file.filename)
-        const absolutePath = path.join(downloadPath, fullpath)
+        const absolutePath = resolveInside(
+          downloadPath,
+          file.filepath,
+          file.filename,
+        )
 
         // make the request to get the file
         const reqAc = new AbortController()
@@ -369,8 +373,11 @@ export class DownloadManager extends EventEmitter {
     // honestly, this takes around 20ms total, it's not even worth to do in parallel
     for (const files of courseFiles)
       for (const file of files) {
-        const fullpath = path.join(file.filepath, file.filename)
-        const absolutePath = path.join(downloadPath, fullpath)
+        const absolutePath = resolveInside(
+          downloadPath,
+          file.filepath,
+          file.filename,
+        )
 
         try {
           const stats = await fs.stat(absolutePath)

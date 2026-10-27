@@ -40,16 +40,47 @@ export function breakableString(str: string): string {
 }
 
 /**
- * replaces a couple of problematic characters that cause havoc in the FS (expecially on windows)
+ * Sanitizes a relative path while preserving its folder structure.
  * @param str the string to be sanitized
  * @returns the sanitized string
  */
 export function sanitizePath(str: string): string {
-  str = str.replace(/[\n\t\r]+/g, " ") // replace invalid white spaces
-  str = str.replace(/[:*?"<>|]/g, "_") // remove invalid windows characters
-  str = str.replace(/ *\.? *\/ */g, "/") // remove trailing/leading dots and spaces from folders
-  str = str.replace(/ *\.? *\\ */g, "\\") // remove trailing/leading dots and spaces from Windows
-  return str
+  const reservedName = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i
+  return (
+    str
+      .replace(/[\n\t\r]+/g, " ")
+      .replace(/\\/g, "/")
+      // Moodle folder paths end with a separator. It is not an empty folder name.
+      .replace(/\/+$/g, "")
+      .split("/")
+      .map(part => {
+        const name = Array.from(part, character =>
+          character.charCodeAt(0) < 32 ? "_" : character,
+        )
+          .join("")
+          .replace(/[:*?"<>|]/g, "_")
+          .trim()
+          .replace(/[. ]+$/g, "")
+        if (!name || name === "." || name === "..") return "_"
+        return reservedName.test(name) ? `_${name}` : name
+      })
+      .join(path.sep)
+  )
+}
+
+/** Resolves sanitized path components within the configured download directory. */
+export function resolveInside(root: string, ...segments: string[]): string {
+  const base = path.resolve(root)
+  const target = path.resolve(base, ...segments.map(sanitizePath))
+  const relative = path.relative(base, target)
+  if (
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("Path escapes the configured download directory")
+  }
+  return target
 }
 
 /**
